@@ -1,0 +1,29 @@
+# Site settings
+name: McLoughlin.World
+url: https://mcloughlin.world
+baseurl: ""
+
+# Build settings
+theme: minima
+markdown: kramdown
+plugins:
+  - jekyll-feed
+  - jekyll-seo-tag
+
+# Collections
+collections:
+  posts:
+    output: true
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+      type: "posts"
+    values:
+      layout: post
+      author: "Sarah Ailish McLoughlin"
+      categories: [governance]
+
+# Custom data
+edulinked_charter_version: "1.2"

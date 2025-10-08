@@ -1,0 +1,32 @@
+---
+layout: default
+title: "McLoughlin.World"
+---
+<section class="hero">
+  <h1>McLoughlin.World</h1>
+  <p>An experimental garden for inclusive governance systems, maintained by Sarah Ailish McLoughlin.</p>
+</section>
+
+<section class="members">
+  <h2>Stewardship Circle</h2>
+  <ul>
+    {% for member in site.data.members %}
+    <li>
+      <strong>{{ member.name }}</strong><br>
+      {{ member.role }} &mdash; {{ member.focus }}
+    </li>
+    {% endfor %}
+  </ul>
+</section>
+
+<section class="latest-posts">
+  <h2>Latest Dispatches</h2>
+  <ul>
+    {% for post in site.posts limit: 2 %}
+    <li>
+      <a href="{{ post.url | relative_url }}">{{ post.title }}</a>
+      <small>{{ post.date | date: '%B %d, %Y' }}</small>
+    </li>
+    {% endfor %}
+  </ul>
+</section>
