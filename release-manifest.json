@@ -1,0 +1,56 @@
+{
+  "name": "Strategic Self-Advocacy Lexicon",
+  "version": "0.2.0",
+  "releaseDate": "2026-07-29",
+  "pageCount": 145,
+  "ssaPageCount": 142,
+  "conceptCount": 93,
+  "schemeCount": 17,
+  "standards": [
+    "HTML5",
+    "WAI-ARIA",
+    "JSON-LD",
+    "SKOS",
+    "Schema.org",
+    "Dublin Core Terms",
+    "PROV-O",
+    "OWL"
+  ],
+  "files": [
+    {
+      "name": "website_pages.json",
+      "bytes": 3760012,
+      "sha256": "1c7790d0c44cf99e5d46b62a7c64fc64ca6665b143e9dd4756721a24aac0f706"
+    },
+    {
+      "name": "ssa-concepts.csv",
+      "bytes": 59549,
+      "sha256": "388c45cfe314c727f19791256d2c41f8f31be188369fcf32f13df6baa0f802ad"
+    },
+    {
+      "name": "ssa-lexicon.jsonld",
+      "bytes": 348230,
+      "sha256": "90662d393d9f7b6dbc2643ea092e6614bf821914b6f245c4afe9c3aa003857fe"
+    },
+    {
+      "name": "context.jsonld",
+      "bytes": 454,
+      "sha256": "c85e7896b113ac65c8f993beb6648b9f243c216e6d7ec01158ef7737605ead97"
+    },
+    {
+      "name": "PUBLICATION-RULES.md",
+      "bytes": 956,
+      "sha256": "e8974ab5e6d4031ad2e83ba15901b24bf0aae429f8407c4f7e88b654fba05b80"
+    },
+    {
+      "name": "CHANGELOG.md",
+      "bytes": 461,
+      "sha256": "0bf54de52a6cbe9a399163e90f3b04530da9ae906dfaac1dcc238bd7add1a559"
+    },
+    {
+      "name": "README.md",
+      "bytes": 574,
+      "sha256": "ac189abe26a1c0246c155648f734ed4912b4d5284a8549e484c4b5ab908b9aaf"
+    }
+  ]
+}
