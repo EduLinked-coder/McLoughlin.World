@@ -33,6 +33,8 @@ Repository documentation for the current public architecture is maintained under
 - [docs/website/GLOSSARIES.md](docs/website/GLOSSARIES.md)
 - [docs/website/DATASETS.md](docs/website/DATASETS.md)
 - [docs/website/PUBLICATION-MODEL.md](docs/website/PUBLICATION-MODEL.md)
+- [docs/website/SSA-ONTOLOGY.md](docs/website/SSA-ONTOLOGY.md)
+- [docs/website/RELEASES.md](docs/website/RELEASES.md)
 
 ## Publication rule
 
@@ -47,6 +49,17 @@ Definitions, identifiers, provenance and changes should be published through exp
 ## SSA Ontology and SSA Lexicon
 
 The live site currently features **SSA Ontology v0.1.0**, a versioned semantic dataset for inclusion that publishes lived-experience-derived concepts as permanent webpages and interoperable semantic data.
+
+**Canonical ontology:** https://www.mcloughlin.world/glossaries/ssa-lexicon/
+
+Repository resources:
+
+- [SSA Ontology releases](releases/ssa-ontology/README.md)
+- [SSA Ontology v0.1.0 release record](releases/ssa-ontology/v0.1.0/README.md)
+- [93-concept v0.1.0 registry](concepts/ssa-ontology-v0.1.0/README.md)
+- [Glossary and concept-scheme index](glossaries/README.md)
+
+The legacy repository route `/ssa/` is retained for compatibility only and must not be treated as the canonical ontology root.
 
 McLoughlin.world publishes human-readable and machine-readable controlled vocabularies through the **SSA Lexicon**. These glossaries are designed so people, AI systems, software, researchers, safeguarding systems, and data pipelines can refer to the same concepts using stable identifiers, explicit provenance, versioned definitions, and clear decision boundaries.
 
