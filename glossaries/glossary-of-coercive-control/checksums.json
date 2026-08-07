@@ -1,0 +1,58 @@
+{
+  "object_type": "glossary_integrity_manifest",
+  "schema_version": "1.0.0",
+  "vocabulary_version": "1.0.0",
+  "status": "canonical",
+  "canonical_glossary_url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/",
+  "hash_algorithm": "SHA-256",
+  "files": [
+    {
+      "filename": "glossary-of-coercive-control.csv",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.csv",
+      "bytes": 16843,
+      "sha256": "29f2153ff6d2411688339c5eb1919181073ccc04ef32b28dc3e87fb7a0be39e5"
+    },
+    {
+      "filename": "glossary-of-coercive-control.ttl",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.ttl",
+      "bytes": 43319,
+      "sha256": "3b343f2acbad4285868116564ac11e7932ff862e96a4014c5fac65d953c2cf7e"
+    },
+    {
+      "filename": "glossary-of-coercive-control.rdf",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.rdf",
+      "bytes": 23566,
+      "sha256": "c07827a4f2f9ea15ad5d25872782a97eff37883fc19d140e5ef72e85390eee4b"
+    },
+    {
+      "filename": "glossary-of-coercive-control.jsonld",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.jsonld",
+      "bytes": 12689,
+      "sha256": "fd36b188669ac600e7b275ba200a8fcafb7826a08abc1730cc986e1ae7f3bf6f"
+    },
+    {
+      "filename": "manifest.json",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/manifest.json",
+      "bytes": 2357,
+      "sha256": "a27481313b1a21e099b64d6b6579ba0bcbb73e05bdaaaf20fd50719839d4bf13"
+    },
+    {
+      "filename": "schema.json",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/schema.json",
+      "bytes": 15461,
+      "sha256": "63f1f682d9ca215dd4e891bf77226ce5883104c1aef934b5950fc0e29c139afb"
+    },
+    {
+      "filename": "examples.json",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/examples.json",
+      "bytes": 7442,
+      "sha256": "234255c0f2a623815ba5a842be3d77feb918e377ce4b18f118c5fe858ac57845"
+    },
+    {
+      "filename": "sources.json",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/sources.json",
+      "bytes": 7319,
+      "sha256": "32ef55f41801cce816513ee68d490cc7d39a4634176c5c9b5cace8cf79ccd907"
+    }
+  ]
+}

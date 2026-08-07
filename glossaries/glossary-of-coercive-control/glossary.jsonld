@@ -1,0 +1,373 @@
+{
+  "@context": {
+    "@vocab": "https://schema.org/",
+    "cc": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#",
+    "skos": "http://www.w3.org/2004/02/skos/core#",
+    "dcterms": "http://purl.org/dc/terms/",
+    "xsd": "http://www.w3.org/2001/XMLSchema#"
+  },
+  "@type": [
+    "DefinedTermSet",
+    "skos:ConceptScheme"
+  ],
+  "@id": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/",
+  "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/",
+  "name": "Glossary of Coercive Control",
+  "description": "A controlled human-readable and machine-readable vocabulary for recognising, describing and reasoning about observable behaviours, effects and patterns associated with coercive control.",
+  "inLanguage": "en-AU",
+  "version": "1.0.0",
+  "cc:semanticStatus": "canonical",
+  "cc:isLegalDetermination": false,
+  "cc:isAutomatedOffenderDetermination": false,
+  "cc:isAutomatedVictimDetermination": false,
+  "cc:humanReviewRequiredForConsequentialAction": true,
+  "cc:reasoningModel": [
+    "CC-OBSERVATION",
+    "CC-EVIDENCE",
+    "CC-INDICATOR",
+    "CC-PATTERN",
+    "CC-RISK-ASSESSMENT",
+    "CC-SAFEGUARDING-ACTION",
+    "AUTHORISED-HUMAN-DECISION"
+  ],
+  "cc:evidenceRelationships": [
+    "supporting",
+    "corroborating",
+    "counterevidence",
+    "alternative_explanation",
+    "uncertain"
+  ],
+  "cc:agencyVocabulary": [
+    "voluntary",
+    "requested",
+    "pressured",
+    "coerced",
+    "compelled",
+    "unknown"
+  ],
+  "cc:revocabilityVocabulary": [
+    "freely_revocable",
+    "revocable_with_consequences",
+    "not_revocable",
+    "unknown"
+  ],
+  "hasDefinedTerm": [
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-THREAT-VIOLENCE",
+      "termCode": "CCI-THREAT-VIOLENCE",
+      "name": "Threat of violence",
+      "description": "A threat to physically harm a person where the threat may be used to frighten, intimidate, compel or control.",
+      "cc:domain": "threats_and_intimidation",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-THREAT-SELF-HARM-AS-CONTROL",
+      "termCode": "CCI-THREAT-SELF-HARM-AS-CONTROL",
+      "name": "Threat of self-harm used as control",
+      "description": "Threatening self-harm in circumstances where the threat is being used to frighten, compel or prevent another person from exercising autonomy.",
+      "cc:domain": "threats_and_intimidation",
+      "cc:requiresContext": true,
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-SURVEILLANCE-LOCATION",
+      "termCode": "CCI-SURVEILLANCE-LOCATION",
+      "name": "Location monitoring",
+      "description": "Repeated or intrusive monitoring of a person's location where it contributes to control, fear or loss of autonomy.",
+      "cc:domain": "surveillance_and_monitoring",
+      "cc:requiresContext": true,
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-SURVEILLANCE-COMMUNICATION",
+      "termCode": "CCI-SURVEILLANCE-COMMUNICATION",
+      "name": "Communication monitoring",
+      "description": "Monitoring, intercepting or requiring disclosure of private communications as part of controlling conduct.",
+      "cc:domain": "surveillance_and_monitoring",
+      "cc:requiresContext": true,
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-ISOLATION-FAMILY",
+      "termCode": "CCI-ISOLATION-FAMILY",
+      "name": "Isolation from family",
+      "description": "Preventing, discouraging or materially interfering with relationships or communication with family.",
+      "cc:domain": "isolation",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-ISOLATION-SUPPORT-SERVICES",
+      "termCode": "CCI-ISOLATION-SUPPORT-SERVICES",
+      "name": "Isolation from support services",
+      "description": "Preventing or materially interfering with access to health, legal, disability, social or safeguarding services.",
+      "cc:domain": "isolation",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-ECONOMIC-INCOME-CONTROL",
+      "termCode": "CCI-ECONOMIC-INCOME-CONTROL",
+      "name": "Income control",
+      "description": "Taking, redirecting, withholding or controlling another person's income in circumstances that reduce financial autonomy.",
+      "cc:domain": "economic_control",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-ECONOMIC-COERCED-DEBT",
+      "termCode": "CCI-ECONOMIC-COERCED-DEBT",
+      "name": "Coerced debt",
+      "description": "Forcing, pressuring or deceptively causing another person to acquire debt or financial liabilities.",
+      "cc:domain": "economic_control",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-MOVEMENT-RESTRICTION",
+      "termCode": "CCI-MOVEMENT-RESTRICTION",
+      "name": "Restriction of movement",
+      "description": "Behaviour restricting where another person may go, when they may leave or their practical freedom of movement.",
+      "cc:domain": "movement_and_autonomy",
+      "cc:relatedConcept": "HTI-RESTRICTION-OF-MOVEMENT",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-DOCUMENT-PASSPORT",
+      "termCode": "CCI-DOCUMENT-PASSPORT",
+      "name": "Passport control",
+      "description": "Withholding or controlling another person's passport in circumstances that limit practical autonomy.",
+      "cc:domain": "documents_and_credentials",
+      "cc:relatedConcept": "HTI-DOCUMENT-RETENTION",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-DEPENDENCY-CARE",
+      "termCode": "CCI-DEPENDENCY-CARE",
+      "name": "Care dependency",
+      "description": "Exploiting reliance on another person for personal care, medication, mobility, communication or daily assistance.",
+      "cc:domain": "dependency",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-PSYCHOLOGICAL-INTIMIDATION",
+      "termCode": "CCI-PSYCHOLOGICAL-INTIMIDATION",
+      "name": "Intimidation",
+      "description": "Conduct creating apprehension or fear that is used to influence another person's behaviour.",
+      "cc:domain": "psychological_control",
+      "cc:relatedConcept": "HTI-THREATS",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-DIGITAL-ACCOUNT-TAKEOVER",
+      "termCode": "CCI-DIGITAL-ACCOUNT-TAKEOVER",
+      "name": "Account takeover",
+      "description": "Taking control of another person's digital account without meaningful consent or preventing them from regaining independent access.",
+      "cc:domain": "technology_facilitated_control",
+      "cc:independentlyConclusive": false
+    },
+    {
+      "@type": [
+        "DefinedTerm",
+        "skos:Concept"
+      ],
+      "@id": "cc:CCI-POSTSEP-SYSTEMS-ABUSE",
+      "termCode": "CCI-POSTSEP-SYSTEMS-ABUSE",
+      "name": "Systems abuse",
+      "description": "Using legal, administrative, institutional or complaint processes as part of a pattern intended to intimidate, exhaust, punish or maintain control.",
+      "cc:domain": "post_separation_control",
+      "cc:requiresContext": true,
+      "cc:independentlyConclusive": false
+    }
+  ],
+  "cc:patterns": [
+    {
+      "@id": "cc:CCP-AUTONOMY-EROSION",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Progressive erosion of autonomy"
+    },
+    {
+      "@id": "cc:CCP-ISOLATION-DEPENDENCY",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Isolation-dependency pattern"
+    },
+    {
+      "@id": "cc:CCP-SURVEILLANCE-INTIMIDATION",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Surveillance-intimidation pattern"
+    },
+    {
+      "@id": "cc:CCP-ECONOMIC-DEPENDENCY",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Economic-dependency pattern"
+    },
+    {
+      "@id": "cc:CCP-MOVEMENT-CONTROL",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Movement-control pattern"
+    },
+    {
+      "@id": "cc:CCP-DIGITAL-CONTROL",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Digital-control pattern"
+    },
+    {
+      "@id": "cc:CCP-ESCALATING-CONTROL",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Escalating-control pattern"
+    },
+    {
+      "@id": "cc:CCP-POST-SEPARATION-CONTROL",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Post-separation-control pattern"
+    },
+    {
+      "@id": "cc:CCP-MULTI-DOMAIN-CONTROL",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Multi-domain-control pattern"
+    },
+    {
+      "@id": "cc:CCP-FEAR-COMPLIANCE",
+      "@type": "cc:CoerciveControlPattern",
+      "name": "Fear-compliance pattern"
+    }
+  ],
+  "cc:jurisdictions": [
+    {
+      "@id": "cc:JUR-AU-COMMONWEALTH",
+      "@type": "cc:JurisdictionRule",
+      "name": "Commonwealth of Australia",
+      "cc:status": "national_framework_and_family_law",
+      "cc:standaloneCriminalOffence": false
+    },
+    {
+      "@id": "cc:JUR-AU-NSW",
+      "@type": "cc:JurisdictionRule",
+      "name": "New South Wales",
+      "cc:status": "standalone_criminal_offence_in_force",
+      "cc:commencement": "2024-07-01",
+      "cc:relationshipScope": "current_or_former_intimate_partner"
+    },
+    {
+      "@id": "cc:JUR-AU-QLD",
+      "@type": "cc:JurisdictionRule",
+      "name": "Queensland",
+      "cc:status": "standalone_criminal_offence_in_force",
+      "cc:commencement": "2025-05-26",
+      "cc:relationshipScope": "domestic_relationship"
+    },
+    {
+      "@id": "cc:JUR-AU-SA",
+      "@type": "cc:JurisdictionRule",
+      "name": "South Australia",
+      "cc:status": "legislated_not_yet_commenced",
+      "cc:relationshipScope": "current_or_former_intimate_partner",
+      "cc:requiresCommencementVerification": true
+    },
+    {
+      "@id": "cc:JUR-AU-ACT",
+      "@type": "cc:JurisdictionRule",
+      "name": "Australian Capital Territory",
+      "cc:status": "bill_introduced_not_in_force",
+      "cc:requiresCommencementVerification": true
+    },
+    {
+      "@id": "cc:JUR-AU-VIC",
+      "@type": "cc:JurisdictionRule",
+      "name": "Victoria",
+      "cc:status": "recognised_within_family_violence_framework"
+    },
+    {
+      "@id": "cc:JUR-AU-WA",
+      "@type": "cc:JurisdictionRule",
+      "name": "Western Australia",
+      "cc:status": "recognised_within_family_violence_framework"
+    },
+    {
+      "@id": "cc:JUR-AU-TAS",
+      "@type": "cc:JurisdictionRule",
+      "name": "Tasmania",
+      "cc:status": "specific_family_violence_offences_and_framework"
+    },
+    {
+      "@id": "cc:JUR-AU-NT",
+      "@type": "cc:JurisdictionRule",
+      "name": "Northern Territory",
+      "cc:status": "express_statutory_definition_within_domestic_violence_framework"
+    }
+  ],
+  "cc:machinePolicy": {
+    "@type": "cc:MachinePolicy",
+    "version": "1.0.0",
+    "cc:permitted": [
+      "recognise_candidate_indicators",
+      "translate_everyday_language_to_candidate_concepts",
+      "correlate_observations",
+      "identify_temporal_patterns",
+      "identify_escalation",
+      "surface_counterevidence",
+      "preserve_uncertainty",
+      "map_jurisdiction_rules",
+      "recommend_safeguarding_review"
+    ],
+    "cc:prohibited": [
+      "automatic_abuser_determination",
+      "automatic_victim_determination",
+      "automatic_legal_determination",
+      "automatic_punitive_action",
+      "automatic_contact_with_suspected_controlling_person",
+      "unnecessary_identity_disclosure",
+      "demographic_inference_as_evidence",
+      "keyword_only_determination"
+    ]
+  },
+  "cc:canonicalPrinciple": "People describe experiences. Machines identify candidate concepts. Evidence establishes context. Patterns support assessment. Jurisdiction rules determine legal relevance. Authorised humans make consequential decisions."
+}

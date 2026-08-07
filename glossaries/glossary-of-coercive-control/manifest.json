@@ -1,0 +1,60 @@
+{
+  "object_type": "glossary_distribution_manifest",
+  "schema_version": "1.0.0",
+  "vocabulary_version": "1.0.0",
+  "status": "canonical",
+  "canonical_id": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/",
+  "canonical_url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/",
+  "title": "Glossary of Coercive Control",
+  "language": "en-AU",
+  "namespace": {
+    "root": "CC",
+    "indicator": "CCI",
+    "pattern": "CCP"
+  },
+  "distributions": [
+    {
+      "format": "html",
+      "media_type": "text/html",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/",
+      "role": "canonical_human_representation"
+    },
+    {
+      "format": "json",
+      "media_type": "application/json",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.json",
+      "role": "canonical_machine_representation"
+    },
+    {
+      "format": "jsonld",
+      "media_type": "application/ld+json",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.jsonld",
+      "role": "linked_data_representation"
+    },
+    {
+      "format": "csv",
+      "media_type": "text/csv",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.csv",
+      "role": "tabular_representation"
+    },
+    {
+      "format": "turtle",
+      "media_type": "text/turtle",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.ttl",
+      "role": "rdf_turtle_representation"
+    },
+    {
+      "format": "rdfxml",
+      "media_type": "application/rdf+xml",
+      "url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/glossary.rdf",
+      "role": "rdf_xml_representation"
+    }
+  ],
+  "machine_policy": {
+    "human_review_required_for_consequential_action": true,
+    "automatic_legal_determination": false,
+    "automatic_offender_determination": false,
+    "automatic_victim_determination": false
+  },
+  "canonical_principle": "People describe experiences. Machines identify candidate concepts. Evidence establishes context. Patterns support assessment. Jurisdiction rules determine legal relevance. Authorised humans make consequential decisions."
+}

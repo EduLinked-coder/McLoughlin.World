@@ -1,0 +1,312 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rdf:RDF
+  xmlns:rdf="http://www.w3.org/1999/02/22-rdf-syntax-ns#"
+  xmlns:rdfs="http://www.w3.org/2000/01/rdf-schema#"
+  xmlns:skos="http://www.w3.org/2004/02/skos/core#"
+  xmlns:schema="https://schema.org/"
+  xmlns:dcterms="http://purl.org/dc/terms/"
+  xmlns:cc="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#">
+
+  <skos:ConceptScheme rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/">
+    <schema:name xml:lang="en-AU">Glossary of Coercive Control</schema:name>
+    <schema:description xml:lang="en-AU">A controlled human-readable and machine-readable vocabulary for recognising, describing and reasoning about observable behaviours, effects and patterns associated with coercive control.</schema:description>
+    <schema:inLanguage>en-AU</schema:inLanguage>
+    <schema:version>1.0.0</schema:version>
+    <schema:url rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <cc:semanticStatus>canonical</cc:semanticStatus>
+    <cc:isLegalDetermination rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:isLegalDetermination>
+    <cc:isAutomatedOffenderDetermination rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:isAutomatedOffenderDetermination>
+    <cc:isAutomatedVictimDetermination rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:isAutomatedVictimDetermination>
+    <cc:humanReviewRequiredForConsequentialAction rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</cc:humanReviewRequiredForConsequentialAction>
+    <dcterms:identifier>CC</dcterms:identifier>
+  </skos:ConceptScheme>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CC-OBSERVATION">
+    <skos:prefLabel xml:lang="en-AU">Observation</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">A factual, reported or machine-detected observation capable of being evaluated against one or more coercive-control indicators.</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CC-EVIDENCE">
+    <skos:prefLabel xml:lang="en-AU">Evidence</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Information that supports, corroborates, weakens or provides context for an indicator or pattern.</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CC-INDICATOR">
+    <skos:prefLabel xml:lang="en-AU">Indicator</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">A controlled concept describing conduct, circumstances or impact potentially relevant to coercive control.</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CC-PATTERN">
+    <skos:prefLabel xml:lang="en-AU">Pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">A meaningful relationship among multiple observations or indicators.</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CC-RISK-ASSESSMENT">
+    <skos:prefLabel xml:lang="en-AU">Risk assessment</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">An explainable assessment synthesising observations, evidence, counterevidence, patterns, impact and uncertainty.</skos:definition>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CC-SAFEGUARDING-ACTION">
+    <skos:prefLabel xml:lang="en-AU">Safeguarding action</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">A non-punitive protective or referral action recommended in response to identified concerns.</skos:definition>
+  </skos:Concept>
+
+  <!-- Core indicators -->
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-THREAT-VIOLENCE">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Threat of violence</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">A threat to physically harm a person where the threat may be used to frighten, intimidate, compel or control.</skos:definition>
+    <dcterms:identifier>CCI-THREAT-VIOLENCE</dcterms:identifier>
+    <cc:domain>threats_and_intimidation</cc:domain>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-THREAT-SELF-HARM-AS-CONTROL">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Threat of self-harm used as control</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Threatening self-harm in circumstances where the threat is being used to frighten, compel or prevent another person from exercising autonomy.</skos:definition>
+    <dcterms:identifier>CCI-THREAT-SELF-HARM-AS-CONTROL</dcterms:identifier>
+    <cc:domain>threats_and_intimidation</cc:domain>
+    <cc:requiresContext rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</cc:requiresContext>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-SURVEILLANCE-LOCATION">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Location monitoring</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Repeated or intrusive monitoring of a person's location where it contributes to control, fear or loss of autonomy.</skos:definition>
+    <dcterms:identifier>CCI-SURVEILLANCE-LOCATION</dcterms:identifier>
+    <cc:domain>surveillance_and_monitoring</cc:domain>
+    <cc:requiresContext rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</cc:requiresContext>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-ISOLATION-FAMILY">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Isolation from family</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Preventing, discouraging or materially interfering with relationships or communication with family.</skos:definition>
+    <dcterms:identifier>CCI-ISOLATION-FAMILY</dcterms:identifier>
+    <cc:domain>isolation</cc:domain>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-ECONOMIC-INCOME-CONTROL">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Income control</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Taking, redirecting, withholding or controlling another person's income in circumstances that reduce financial autonomy.</skos:definition>
+    <dcterms:identifier>CCI-ECONOMIC-INCOME-CONTROL</dcterms:identifier>
+    <cc:domain>economic_control</cc:domain>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-ECONOMIC-COERCED-DEBT">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Coerced debt</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Forcing, pressuring or deceptively causing another person to acquire debt or financial liabilities.</skos:definition>
+    <dcterms:identifier>CCI-ECONOMIC-COERCED-DEBT</dcterms:identifier>
+    <cc:domain>economic_control</cc:domain>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-MOVEMENT-RESTRICTION">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Restriction of movement</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Behaviour restricting where another person may go, when they may leave or their practical freedom of movement.</skos:definition>
+    <dcterms:identifier>CCI-MOVEMENT-RESTRICTION</dcterms:identifier>
+    <cc:domain>movement_and_autonomy</cc:domain>
+    <cc:relatedConcept>HTI-RESTRICTION-OF-MOVEMENT</cc:relatedConcept>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-DOCUMENT-PASSPORT">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Passport control</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Withholding or controlling another person's passport in circumstances that limit practical autonomy.</skos:definition>
+    <dcterms:identifier>CCI-DOCUMENT-PASSPORT</dcterms:identifier>
+    <cc:domain>documents_and_credentials</cc:domain>
+    <cc:relatedConcept>HTI-DOCUMENT-RETENTION</cc:relatedConcept>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-DEPENDENCY-CARE">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Care dependency</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Exploiting reliance on another person for personal care, medication, mobility, communication or daily assistance.</skos:definition>
+    <dcterms:identifier>CCI-DEPENDENCY-CARE</dcterms:identifier>
+    <cc:domain>dependency</cc:domain>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-PSYCHOLOGICAL-INTIMIDATION">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Intimidation</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Conduct creating apprehension or fear that is used to influence another person's behaviour.</skos:definition>
+    <dcterms:identifier>CCI-PSYCHOLOGICAL-INTIMIDATION</dcterms:identifier>
+    <cc:domain>psychological_control</cc:domain>
+    <cc:relatedConcept>HTI-THREATS</cc:relatedConcept>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-DIGITAL-ACCOUNT-TAKEOVER">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Account takeover</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Taking control of another person's digital account without meaningful consent or preventing them from regaining independent access.</skos:definition>
+    <dcterms:identifier>CCI-DIGITAL-ACCOUNT-TAKEOVER</dcterms:identifier>
+    <cc:domain>technology_facilitated_control</cc:domain>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCI-POSTSEP-SYSTEMS-ABUSE">
+    <skos:inScheme rdf:resource="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/"/>
+    <skos:prefLabel xml:lang="en-AU">Systems abuse</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Using legal, administrative, institutional or complaint processes as part of a pattern intended to intimidate, exhaust, punish or maintain control.</skos:definition>
+    <dcterms:identifier>CCI-POSTSEP-SYSTEMS-ABUSE</dcterms:identifier>
+    <cc:domain>post_separation_control</cc:domain>
+    <cc:requiresContext rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</cc:requiresContext>
+    <cc:independentlyConclusive rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:independentlyConclusive>
+  </skos:Concept>
+
+  <!-- Patterns -->
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-AUTONOMY-EROSION">
+    <skos:prefLabel xml:lang="en-AU">Progressive erosion of autonomy</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Multiple behaviours progressively reduce a person's practical ability to make or act on independent choices.</skos:definition>
+    <dcterms:identifier>CCP-AUTONOMY-EROSION</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-ISOLATION-DEPENDENCY">
+    <skos:prefLabel xml:lang="en-AU">Isolation-dependency pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Increasing isolation accompanied by increasing practical, financial, technological or care dependency.</skos:definition>
+    <dcterms:identifier>CCP-ISOLATION-DEPENDENCY</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-SURVEILLANCE-INTIMIDATION">
+    <skos:prefLabel xml:lang="en-AU">Surveillance-intimidation pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Monitoring accompanied by threatened or actual consequences.</skos:definition>
+    <dcterms:identifier>CCP-SURVEILLANCE-INTIMIDATION</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-ECONOMIC-DEPENDENCY">
+    <skos:prefLabel xml:lang="en-AU">Economic-dependency pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Economic control creates, increases or maintains reliance on another person.</skos:definition>
+    <dcterms:identifier>CCP-ECONOMIC-DEPENDENCY</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-MOVEMENT-CONTROL">
+    <skos:prefLabel xml:lang="en-AU">Movement-control pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Multiple behaviours collectively constrain physical movement or access to places and people.</skos:definition>
+    <dcterms:identifier>CCP-MOVEMENT-CONTROL</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-DIGITAL-CONTROL">
+    <skos:prefLabel xml:lang="en-AU">Digital-control pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Technology is systematically used to monitor, restrict, intimidate or control.</skos:definition>
+    <dcterms:identifier>CCP-DIGITAL-CONTROL</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-ESCALATING-CONTROL">
+    <skos:prefLabel xml:lang="en-AU">Escalating-control pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Controlling behaviour increases in frequency, severity, scope or consequences over time.</skos:definition>
+    <dcterms:identifier>CCP-ESCALATING-CONTROL</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-POST-SEPARATION-CONTROL">
+    <skos:prefLabel xml:lang="en-AU">Post-separation-control pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Control continues, changes form or escalates after a relationship ends.</skos:definition>
+    <dcterms:identifier>CCP-POST-SEPARATION-CONTROL</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-MULTI-DOMAIN-CONTROL">
+    <skos:prefLabel xml:lang="en-AU">Multi-domain-control pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">Control simultaneously affects several areas of a person's life.</skos:definition>
+    <dcterms:identifier>CCP-MULTI-DOMAIN-CONTROL</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <cc:CoerciveControlPattern rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CCP-FEAR-COMPLIANCE">
+    <skos:prefLabel xml:lang="en-AU">Fear-compliance pattern</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">A person changes their behaviour because they anticipate consequences for non-compliance.</skos:definition>
+    <dcterms:identifier>CCP-FEAR-COMPLIANCE</dcterms:identifier>
+  </cc:CoerciveControlPattern>
+
+  <!-- Jurisdiction status -->
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-COMMONWEALTH">
+    <schema:name xml:lang="en-AU">Commonwealth of Australia</schema:name>
+    <cc:status>national_framework_and_family_law</cc:status>
+    <cc:standaloneCriminalOffence rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">false</cc:standaloneCriminalOffence>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-NSW">
+    <schema:name xml:lang="en-AU">New South Wales</schema:name>
+    <cc:status>standalone_criminal_offence_in_force</cc:status>
+    <cc:commencement rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2024-07-01</cc:commencement>
+    <cc:relationshipScope>current_or_former_intimate_partner</cc:relationshipScope>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-QLD">
+    <schema:name xml:lang="en-AU">Queensland</schema:name>
+    <cc:status>standalone_criminal_offence_in_force</cc:status>
+    <cc:commencement rdf:datatype="http://www.w3.org/2001/XMLSchema#date">2025-05-26</cc:commencement>
+    <cc:relationshipScope>domestic_relationship</cc:relationshipScope>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-SA">
+    <schema:name xml:lang="en-AU">South Australia</schema:name>
+    <cc:status>legislated_not_yet_commenced</cc:status>
+    <cc:relationshipScope>current_or_former_intimate_partner</cc:relationshipScope>
+    <cc:requiresCommencementVerification rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</cc:requiresCommencementVerification>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-ACT">
+    <schema:name xml:lang="en-AU">Australian Capital Territory</schema:name>
+    <cc:status>bill_introduced_not_in_force</cc:status>
+    <cc:requiresCommencementVerification rdf:datatype="http://www.w3.org/2001/XMLSchema#boolean">true</cc:requiresCommencementVerification>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-VIC">
+    <schema:name xml:lang="en-AU">Victoria</schema:name>
+    <cc:status>recognised_within_family_violence_framework</cc:status>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-WA">
+    <schema:name xml:lang="en-AU">Western Australia</schema:name>
+    <cc:status>recognised_within_family_violence_framework</cc:status>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-TAS">
+    <schema:name xml:lang="en-AU">Tasmania</schema:name>
+    <cc:status>specific_family_violence_offences_and_framework</cc:status>
+  </cc:JurisdictionRule>
+
+  <cc:JurisdictionRule rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#JUR-AU-NT">
+    <schema:name xml:lang="en-AU">Northern Territory</schema:name>
+    <cc:status>express_statutory_definition_within_domestic_violence_framework</cc:status>
+  </cc:JurisdictionRule>
+
+  <!-- Machine policy -->
+  <cc:MachinePolicy rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#MachinePolicy-v1">
+    <schema:version>1.0.0</schema:version>
+    <cc:permits>recognise_candidate_indicators</cc:permits>
+    <cc:permits>translate_everyday_language_to_candidate_concepts</cc:permits>
+    <cc:permits>correlate_observations</cc:permits>
+    <cc:permits>identify_temporal_patterns</cc:permits>
+    <cc:permits>identify_escalation</cc:permits>
+    <cc:permits>surface_counterevidence</cc:permits>
+    <cc:permits>preserve_uncertainty</cc:permits>
+    <cc:permits>map_jurisdiction_rules</cc:permits>
+    <cc:permits>recommend_safeguarding_review</cc:permits>
+
+    <cc:prohibits>automatic_abuser_determination</cc:prohibits>
+    <cc:prohibits>automatic_victim_determination</cc:prohibits>
+    <cc:prohibits>automatic_legal_determination</cc:prohibits>
+    <cc:prohibits>automatic_punitive_action</cc:prohibits>
+    <cc:prohibits>automatic_contact_with_suspected_controlling_person</cc:prohibits>
+    <cc:prohibits>unnecessary_identity_disclosure</cc:prohibits>
+    <cc:prohibits>demographic_inference_as_evidence</cc:prohibits>
+    <cc:prohibits>keyword_only_determination</cc:prohibits>
+  </cc:MachinePolicy>
+
+  <skos:Concept rdf:about="https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#CanonicalPrinciple">
+    <skos:prefLabel xml:lang="en-AU">Canonical principle</skos:prefLabel>
+    <skos:definition xml:lang="en-AU">People describe experiences. Machines identify candidate concepts. Evidence establishes context. Patterns support assessment. Jurisdiction rules determine legal relevance. Authorised humans make consequential decisions.</skos:definition>
+  </skos:Concept>
+
+</rdf:RDF>

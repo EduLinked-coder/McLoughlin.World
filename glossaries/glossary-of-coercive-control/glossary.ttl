@@ -1,0 +1,833 @@
+@prefix cc: <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/#> .
+@prefix schema: <https://schema.org/> .
+@prefix skos: <http://www.w3.org/2004/02/skos/core#> .
+@prefix dcterms: <http://purl.org/dc/terms/> .
+@prefix xsd: <http://www.w3.org/2001/XMLSchema#> .
+
+<https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/>
+    a skos:ConceptScheme, schema:DefinedTermSet ;
+    schema:name "Glossary of Coercive Control"@en-AU ;
+    schema:description "A controlled human-readable and machine-readable vocabulary for recognising, describing and reasoning about observable behaviours, effects and patterns associated with coercive control."@en-AU ;
+    schema:inLanguage "en-AU" ;
+    schema:version "1.0.0" ;
+    schema:url <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    cc:semanticStatus "canonical" ;
+    cc:isLegalDetermination false ;
+    cc:isAutomatedOffenderDetermination false ;
+    cc:isAutomatedVictimDetermination false ;
+    cc:humanReviewRequiredForConsequentialAction true ;
+    dcterms:identifier "CC" .
+
+cc:CC-OBSERVATION
+    a skos:Concept ;
+    skos:prefLabel "Observation"@en-AU ;
+    skos:definition "A factual, reported or machine-detected observation capable of being evaluated against one or more coercive-control indicators."@en-AU .
+
+cc:CC-EVIDENCE
+    a skos:Concept ;
+    skos:prefLabel "Evidence"@en-AU ;
+    skos:definition "Information that supports, corroborates, weakens or provides context for an indicator or pattern."@en-AU .
+
+cc:CC-INDICATOR
+    a skos:Concept ;
+    skos:prefLabel "Indicator"@en-AU ;
+    skos:definition "A controlled concept describing conduct, circumstances or impact potentially relevant to coercive control."@en-AU .
+
+cc:CC-PATTERN
+    a skos:Concept ;
+    skos:prefLabel "Pattern"@en-AU ;
+    skos:definition "A meaningful relationship among multiple observations or indicators."@en-AU .
+
+cc:CC-RISK-ASSESSMENT
+    a skos:Concept ;
+    skos:prefLabel "Risk assessment"@en-AU ;
+    skos:definition "An explainable assessment synthesising observations, evidence, counterevidence, patterns, impact and uncertainty."@en-AU .
+
+cc:CC-SAFEGUARDING-ACTION
+    a skos:Concept ;
+    skos:prefLabel "Safeguarding action"@en-AU ;
+    skos:definition "A non-punitive protective or referral action recommended in response to identified concerns."@en-AU .
+
+# Threats and intimidation
+
+cc:CCI-THREAT-VIOLENCE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threat of violence"@en-AU ;
+    skos:definition "A threat to physically harm a person where the threat may be used to frighten, intimidate, compel or control."@en-AU ;
+    dcterms:identifier "CCI-THREAT-VIOLENCE" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-FAMILY
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threats against family or significant people"@en-AU ;
+    skos:definition "Threatening harm or adverse consequences to people important to the subject as a means of influencing behaviour."@en-AU ;
+    dcterms:identifier "CCI-THREAT-FAMILY" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-CHILDREN
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threats involving children"@en-AU ;
+    skos:definition "Using threatened harm, removal, withholding, manipulation or adverse consequences involving a child as a means of control."@en-AU ;
+    dcterms:identifier "CCI-THREAT-CHILDREN" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-SELF-HARM-AS-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threat of self-harm used as control"@en-AU ;
+    skos:definition "Threatening self-harm in circumstances where the threat is being used to frighten, compel or prevent another person from exercising autonomy."@en-AU ;
+    dcterms:identifier "CCI-THREAT-SELF-HARM-AS-CONTROL" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-REPUTATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threat to reputation"@en-AU ;
+    skos:definition "Threatening humiliation, disclosure or reputational damage in order to compel behaviour."@en-AU ;
+    dcterms:identifier "CCI-THREAT-REPUTATION" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-AUTHORITY
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threat involving authorities"@en-AU ;
+    skos:definition "Using actual or threatened involvement of institutions or authorities as a mechanism of control."@en-AU ;
+    dcterms:identifier "CCI-THREAT-AUTHORITY" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-HOUSING
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threat to housing"@en-AU ;
+    skos:definition "Threatening homelessness, eviction or loss of accommodation as a means of control."@en-AU ;
+    dcterms:identifier "CCI-THREAT-HOUSING" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-EMPLOYMENT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Threat to employment"@en-AU ;
+    skos:definition "Threatening employment, income or professional consequences to compel behaviour."@en-AU ;
+    dcterms:identifier "CCI-THREAT-EMPLOYMENT" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-THREAT-IMMIGRATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Immigration-related threat"@en-AU ;
+    skos:definition "Using immigration status, visa dependency or threatened reporting to migration authorities as a means of control."@en-AU ;
+    dcterms:identifier "CCI-THREAT-IMMIGRATION" ;
+    cc:domain "threats_and_intimidation" ;
+    cc:independentlyConclusive false .
+
+# Surveillance and monitoring
+
+cc:CCI-SURVEILLANCE-LOCATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Location monitoring"@en-AU ;
+    skos:definition "Repeated or intrusive monitoring of a person's location where it contributes to control, fear or loss of autonomy."@en-AU ;
+    dcterms:identifier "CCI-SURVEILLANCE-LOCATION" ;
+    cc:domain "surveillance_and_monitoring" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-SURVEILLANCE-DEVICE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Device monitoring"@en-AU ;
+    skos:definition "Monitoring or accessing another person's digital devices in circumstances associated with control."@en-AU ;
+    dcterms:identifier "CCI-SURVEILLANCE-DEVICE" ;
+    cc:domain "surveillance_and_monitoring" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-SURVEILLANCE-COMMUNICATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Communication monitoring"@en-AU ;
+    skos:definition "Monitoring, intercepting or requiring disclosure of private communications as part of controlling conduct."@en-AU ;
+    dcterms:identifier "CCI-SURVEILLANCE-COMMUNICATION" ;
+    cc:domain "surveillance_and_monitoring" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-SURVEILLANCE-ACCOUNT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Account monitoring"@en-AU ;
+    skos:definition "Monitoring financial, social, email or other accounts in a way that contributes to control or surveillance."@en-AU ;
+    dcterms:identifier "CCI-SURVEILLANCE-ACCOUNT" ;
+    cc:domain "surveillance_and_monitoring" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-SURVEILLANCE-IN-PERSON
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "In-person surveillance"@en-AU ;
+    skos:definition "Following, watching, waiting for or repeatedly checking on a person in circumstances that contribute to intimidation, fear or control."@en-AU ;
+    dcterms:identifier "CCI-SURVEILLANCE-IN-PERSON" ;
+    cc:domain "surveillance_and_monitoring" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-SURVEILLANCE-REPORTING-REQUIREMENT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Reporting requirement"@en-AU ;
+    skos:definition "Requiring a person to continually account for their location, activities or social contact where non-compliance carries consequences."@en-AU ;
+    dcterms:identifier "CCI-SURVEILLANCE-REPORTING-REQUIREMENT" ;
+    cc:domain "surveillance_and_monitoring" ;
+    cc:independentlyConclusive false .
+
+# Isolation
+
+cc:CCI-ISOLATION-FAMILY
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Isolation from family"@en-AU ;
+    skos:definition "Preventing, discouraging or materially interfering with relationships or communication with family."@en-AU ;
+    dcterms:identifier "CCI-ISOLATION-FAMILY" ;
+    cc:domain "isolation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ISOLATION-FRIENDS
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Isolation from friends"@en-AU ;
+    skos:definition "Restricting or undermining a person's ability to maintain friendships."@en-AU ;
+    dcterms:identifier "CCI-ISOLATION-FRIENDS" ;
+    cc:domain "isolation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ISOLATION-WORK
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Work isolation"@en-AU ;
+    skos:definition "Preventing or interfering with employment or workplace relationships as a mechanism of control."@en-AU ;
+    dcterms:identifier "CCI-ISOLATION-WORK" ;
+    cc:domain "isolation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ISOLATION-COMMUNITY
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Community isolation"@en-AU ;
+    skos:definition "Restricting participation in community, cultural, religious, sporting or social activities."@en-AU ;
+    dcterms:identifier "CCI-ISOLATION-COMMUNITY" ;
+    cc:domain "isolation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ISOLATION-COMMUNICATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Communication isolation"@en-AU ;
+    skos:definition "Restricting independent access to phones, internet, messaging, email or other communications."@en-AU ;
+    dcterms:identifier "CCI-ISOLATION-COMMUNICATION" ;
+    cc:domain "isolation" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ISOLATION-SUPPORT-SERVICES
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Isolation from support services"@en-AU ;
+    skos:definition "Preventing or materially interfering with access to health, legal, disability, social or safeguarding services."@en-AU ;
+    dcterms:identifier "CCI-ISOLATION-SUPPORT-SERVICES" ;
+    cc:domain "isolation" ;
+    cc:independentlyConclusive false .
+
+# Economic and financial control
+
+cc:CCI-ECONOMIC-INCOME-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Income control"@en-AU ;
+    skos:definition "Taking, redirecting, withholding or controlling another person's income in circumstances that reduce financial autonomy."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-INCOME-CONTROL" ;
+    cc:domain "economic_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ECONOMIC-BANK-ACCOUNT-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Bank-account control"@en-AU ;
+    skos:definition "Exercising unreasonable or coerced control over another person's bank account or access to funds."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-BANK-ACCOUNT-CONTROL" ;
+    cc:domain "economic_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ECONOMIC-SPENDING-RESTRICTION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Spending restriction"@en-AU ;
+    skos:definition "Imposing controlling restrictions on ordinary expenditure where those restrictions are not freely agreed."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-SPENDING-RESTRICTION" ;
+    cc:domain "economic_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ECONOMIC-ASSET-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Asset control"@en-AU ;
+    skos:definition "Taking or exercising unreasonable control over assets, property or financial interests belonging wholly or partly to another person."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-ASSET-CONTROL" ;
+    cc:domain "economic_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ECONOMIC-COERCED-DEBT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Coerced debt"@en-AU ;
+    skos:definition "Forcing, pressuring or deceptively causing another person to acquire debt or financial liabilities."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-COERCED-DEBT" ;
+    cc:domain "economic_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ECONOMIC-WITHHELD-RESOURCES
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Withheld resources"@en-AU ;
+    skos:definition "Unreasonably withholding money or essential resources needed for ordinary living, care or safety."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-WITHHELD-RESOURCES" ;
+    cc:domain "economic_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ECONOMIC-EMPLOYMENT-INTERFERENCE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Employment interference"@en-AU ;
+    skos:definition "Preventing, sabotaging or materially interfering with another person's employment or earning capacity."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-EMPLOYMENT-INTERFERENCE" ;
+    cc:domain "economic_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-ECONOMIC-CREDIT-INTERFERENCE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Credit interference"@en-AU ;
+    skos:definition "Damaging, exploiting or manipulating another person's credit or financial identity in circumstances associated with control."@en-AU ;
+    dcterms:identifier "CCI-ECONOMIC-CREDIT-INTERFERENCE" ;
+    cc:domain "economic_control" ;
+    cc:independentlyConclusive false .
+
+# Movement and autonomy
+
+cc:CCI-MOVEMENT-RESTRICTION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Restriction of movement"@en-AU ;
+    skos:definition "Behaviour restricting where another person may go, when they may leave or their practical freedom of movement."@en-AU ;
+    dcterms:identifier "CCI-MOVEMENT-RESTRICTION" ;
+    cc:domain "movement_and_autonomy" ;
+    cc:relatedConcept "HTI-RESTRICTION-OF-MOVEMENT" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-MOVEMENT-CONFINEMENT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Confinement"@en-AU ;
+    skos:definition "Preventing or materially obstructing a person's ability to leave a physical place."@en-AU ;
+    dcterms:identifier "CCI-MOVEMENT-CONFINEMENT" ;
+    cc:domain "movement_and_autonomy" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-MOVEMENT-TRANSPORT-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Transport control"@en-AU ;
+    skos:definition "Controlling access to transport in a way that materially limits independence or access to assistance."@en-AU ;
+    dcterms:identifier "CCI-MOVEMENT-TRANSPORT-CONTROL" ;
+    cc:domain "movement_and_autonomy" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-MOVEMENT-PERMISSION-REQUIREMENT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Permission requirement"@en-AU ;
+    skos:definition "Requiring permission before leaving, travelling or undertaking ordinary activities where non-compliance carries consequences."@en-AU ;
+    dcterms:identifier "CCI-MOVEMENT-PERMISSION-REQUIREMENT" ;
+    cc:domain "movement_and_autonomy" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-MOVEMENT-DAILY-ACTIVITY-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Daily activity control"@en-AU ;
+    skos:definition "Controlling ordinary activities such as eating, sleeping, dressing, working, studying or socialising as part of a broader pattern."@en-AU ;
+    dcterms:identifier "CCI-MOVEMENT-DAILY-ACTIVITY-CONTROL" ;
+    cc:domain "movement_and_autonomy" ;
+    cc:independentlyConclusive false .
+
+# Documents and credentials
+
+cc:CCI-DOCUMENT-PASSPORT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Passport control"@en-AU ;
+    skos:definition "Withholding or controlling another person's passport in circumstances that limit practical autonomy."@en-AU ;
+    dcterms:identifier "CCI-DOCUMENT-PASSPORT" ;
+    cc:domain "documents_and_credentials" ;
+    cc:relatedConcept "HTI-DOCUMENT-RETENTION" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DOCUMENT-IDENTITY
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Identity-document control"@en-AU ;
+    skos:definition "Withholding or controlling identity documents where this contributes to dependency or reduced autonomy."@en-AU ;
+    dcterms:identifier "CCI-DOCUMENT-IDENTITY" ;
+    cc:domain "documents_and_credentials" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DOCUMENT-FINANCIAL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Financial-document control"@en-AU ;
+    skos:definition "Restricting access to financial records required for independent financial decision-making."@en-AU ;
+    dcterms:identifier "CCI-DOCUMENT-FINANCIAL" ;
+    cc:domain "documents_and_credentials" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DOCUMENT-LEGAL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Legal-document control"@en-AU ;
+    skos:definition "Withholding, destroying, concealing or controlling access to legal documents in circumstances associated with domination or dependency."@en-AU ;
+    dcterms:identifier "CCI-DOCUMENT-LEGAL" ;
+    cc:domain "documents_and_credentials" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-CREDENTIAL-ACCOUNT-ACCESS
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Account-credential control"@en-AU ;
+    skos:definition "Taking or retaining credentials for digital, financial or other accounts in a way that reduces independent control."@en-AU ;
+    dcterms:identifier "CCI-CREDENTIAL-ACCOUNT-ACCESS" ;
+    cc:domain "documents_and_credentials" ;
+    cc:independentlyConclusive false .
+
+# Dependency
+
+cc:CCI-DEPENDENCY-HOUSING
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Housing dependency"@en-AU ;
+    skos:definition "Creating or exploiting reliance on another person for accommodation as part of a controlling pattern."@en-AU ;
+    dcterms:identifier "CCI-DEPENDENCY-HOUSING" ;
+    cc:domain "dependency" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DEPENDENCY-FINANCIAL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Financial dependency"@en-AU ;
+    skos:definition "Creating or deliberately maintaining financial reliance as a mechanism of control."@en-AU ;
+    dcterms:identifier "CCI-DEPENDENCY-FINANCIAL" ;
+    cc:domain "dependency" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DEPENDENCY-IMMIGRATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Immigration dependency"@en-AU ;
+    skos:definition "Exploiting immigration, sponsorship or visa dependency as a mechanism of control."@en-AU ;
+    dcterms:identifier "CCI-DEPENDENCY-IMMIGRATION" ;
+    cc:domain "dependency" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DEPENDENCY-CARE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Care dependency"@en-AU ;
+    skos:definition "Exploiting reliance on another person for personal care, medication, mobility, communication or daily assistance."@en-AU ;
+    dcterms:identifier "CCI-DEPENDENCY-CARE" ;
+    cc:domain "dependency" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DEPENDENCY-TRANSPORT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Transport dependency"@en-AU ;
+    skos:definition "Creating or exploiting reliance on another person for transportation where that dependency is used to control autonomy."@en-AU ;
+    dcterms:identifier "CCI-DEPENDENCY-TRANSPORT" ;
+    cc:domain "dependency" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DEPENDENCY-COMMUNICATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Communication dependency"@en-AU ;
+    skos:definition "Creating or exploiting reliance on another person for access to communications, interpretation, technology or external contact."@en-AU ;
+    dcterms:identifier "CCI-DEPENDENCY-COMMUNICATION" ;
+    cc:domain "dependency" ;
+    cc:independentlyConclusive false .
+
+# Psychological control
+
+cc:CCI-PSYCHOLOGICAL-HUMILIATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Humiliation"@en-AU ;
+    skos:definition "Repeated or strategically used conduct intended to humiliate and contribute to domination or compliance."@en-AU ;
+    dcterms:identifier "CCI-PSYCHOLOGICAL-HUMILIATION" ;
+    cc:domain "psychological_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-PSYCHOLOGICAL-DEGRADATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Degradation"@en-AU ;
+    skos:definition "Conduct that persistently demeans or devalues another person as part of a controlling pattern."@en-AU ;
+    dcterms:identifier "CCI-PSYCHOLOGICAL-DEGRADATION" ;
+    cc:domain "psychological_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-PSYCHOLOGICAL-INTIMIDATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Intimidation"@en-AU ;
+    skos:definition "Conduct creating apprehension or fear that is used to influence another person's behaviour."@en-AU ;
+    dcterms:identifier "CCI-PSYCHOLOGICAL-INTIMIDATION" ;
+    cc:domain "psychological_control" ;
+    cc:relatedConcept "HTI-THREATS" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-PSYCHOLOGICAL-MANIPULATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Manipulation"@en-AU ;
+    skos:definition "Deceptive, exploitative or psychologically coercive conduct used to influence another person's decisions or perception of available choices."@en-AU ;
+    dcterms:identifier "CCI-PSYCHOLOGICAL-MANIPULATION" ;
+    cc:domain "psychological_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-PSYCHOLOGICAL-INDUCED-FEAR
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Induced fear"@en-AU ;
+    skos:definition "Conduct causing or maintaining fear that materially affects another person's behaviour or autonomy."@en-AU ;
+    dcterms:identifier "CCI-PSYCHOLOGICAL-INDUCED-FEAR" ;
+    cc:domain "psychological_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-PSYCHOLOGICAL-UNPREDICTABLE-PUNISHMENT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Unpredictable punishment"@en-AU ;
+    skos:definition "Unpredictable adverse consequences for ordinary conduct or perceived non-compliance that produce vigilance, uncertainty or submission."@en-AU ;
+    dcterms:identifier "CCI-PSYCHOLOGICAL-UNPREDICTABLE-PUNISHMENT" ;
+    cc:domain "psychological_control" ;
+    cc:independentlyConclusive false .
+
+# Technology-facilitated control
+
+cc:CCI-DIGITAL-PASSWORD-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Password control"@en-AU ;
+    skos:definition "Demanding, taking or controlling another person's authentication credentials in circumstances contributing to surveillance or domination."@en-AU ;
+    dcterms:identifier "CCI-DIGITAL-PASSWORD-CONTROL" ;
+    cc:domain "technology_facilitated_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DIGITAL-ACCOUNT-TAKEOVER
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Account takeover"@en-AU ;
+    skos:definition "Taking control of another person's digital account without meaningful consent or preventing them from regaining independent access."@en-AU ;
+    dcterms:identifier "CCI-DIGITAL-ACCOUNT-TAKEOVER" ;
+    cc:domain "technology_facilitated_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DIGITAL-LOCATION-TRACKING
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Digital location tracking"@en-AU ;
+    skos:definition "Using technology to monitor another person's location as part of a controlling pattern."@en-AU ;
+    dcterms:identifier "CCI-DIGITAL-LOCATION-TRACKING" ;
+    cc:domain "technology_facilitated_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DIGITAL-DEVICE-MONITORING
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Digital device monitoring"@en-AU ;
+    skos:definition "Using technological means to monitor activity on another person's device without meaningful and freely revocable consent."@en-AU ;
+    dcterms:identifier "CCI-DIGITAL-DEVICE-MONITORING" ;
+    cc:domain "technology_facilitated_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DIGITAL-IMPERSONATION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Digital impersonation"@en-AU ;
+    skos:definition "Using another person's digital identity or accounts to impersonate them in circumstances associated with harassment, deception or control."@en-AU ;
+    dcterms:identifier "CCI-DIGITAL-IMPERSONATION" ;
+    cc:domain "technology_facilitated_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DIGITAL-COMMUNICATION-INTERFERENCE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Communication interference"@en-AU ;
+    skos:definition "Blocking, deleting, intercepting or otherwise interfering with independent communication."@en-AU ;
+    dcterms:identifier "CCI-DIGITAL-COMMUNICATION-INTERFERENCE" ;
+    cc:domain "technology_facilitated_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-DIGITAL-ACCESS-RESTRICTION
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Digital access restriction"@en-AU ;
+    skos:definition "Restricting access to devices, connectivity or online services in a manner that materially reduces independence."@en-AU ;
+    dcterms:identifier "CCI-DIGITAL-ACCESS-RESTRICTION" ;
+    cc:domain "technology_facilitated_control" ;
+    cc:independentlyConclusive false .
+
+# Post-separation control
+
+cc:CCI-POSTSEP-STALKING
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Post-separation stalking"@en-AU ;
+    skos:definition "Stalking conduct following separation that forms part of an ongoing attempt to monitor, intimidate or control."@en-AU ;
+    dcterms:identifier "CCI-POSTSEP-STALKING" ;
+    cc:domain "post_separation_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-POSTSEP-UNWANTED-CONTACT
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Persistent unwanted contact"@en-AU ;
+    skos:definition "Repeated unwanted communication after separation where its context or effect contributes to intimidation or control."@en-AU ;
+    dcterms:identifier "CCI-POSTSEP-UNWANTED-CONTACT" ;
+    cc:domain "post_separation_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-POSTSEP-DIGITAL-MONITORING
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Post-separation digital monitoring"@en-AU ;
+    skos:definition "Continued digital surveillance or unauthorised access following separation."@en-AU ;
+    dcterms:identifier "CCI-POSTSEP-DIGITAL-MONITORING" ;
+    cc:domain "post_separation_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-POSTSEP-FINANCIAL-INTERFERENCE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Post-separation financial interference"@en-AU ;
+    skos:definition "Using financial arrangements, liabilities or resources after separation to continue control."@en-AU ;
+    dcterms:identifier "CCI-POSTSEP-FINANCIAL-INTERFERENCE" ;
+    cc:domain "post_separation_control" ;
+    cc:independentlyConclusive false .
+
+cc:CCI-POSTSEP-THIRD-PARTY-CONTROL
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Third-party control"@en-AU ;
+    skos:definition "Using other people to monitor, contact, intimidate, influence or otherwise exert control."@en-AU ;
+    dcterms:identifier "CCI-POSTSEP-THIRD-PARTY-CONTROL" ;
+    cc:domain "post_separation_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-POSTSEP-SYSTEMS-ABUSE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Systems abuse"@en-AU ;
+    skos:definition "Using legal, administrative, institutional or complaint processes as part of a pattern intended to intimidate, exhaust, punish or maintain control."@en-AU ;
+    dcterms:identifier "CCI-POSTSEP-SYSTEMS-ABUSE" ;
+    cc:domain "post_separation_control" ;
+    cc:requiresContext true ;
+    cc:independentlyConclusive false .
+
+cc:CCI-POSTSEP-PROPERTY-INTERFERENCE
+    a skos:Concept, schema:DefinedTerm ;
+    skos:inScheme <https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/> ;
+    skos:prefLabel "Property interference"@en-AU ;
+    skos:definition "Using property, possessions or access to belongings after separation as a mechanism of intimidation or control."@en-AU ;
+    dcterms:identifier "CCI-POSTSEP-PROPERTY-INTERFERENCE" ;
+    cc:domain "post_separation_control" ;
+    cc:independentlyConclusive false .
+
+# Impacts
+
+cc:CCI-IMPACT-FEAR a skos:Concept ; skos:prefLabel "Fear"@en-AU ; dcterms:identifier "CCI-IMPACT-FEAR" .
+cc:CCI-IMPACT-REDUCED-AUTONOMY a skos:Concept ; skos:prefLabel "Reduced autonomy"@en-AU ; dcterms:identifier "CCI-IMPACT-REDUCED-AUTONOMY" .
+cc:CCI-IMPACT-SOCIAL-ISOLATION a skos:Concept ; skos:prefLabel "Social isolation"@en-AU ; dcterms:identifier "CCI-IMPACT-SOCIAL-ISOLATION" .
+cc:CCI-IMPACT-FINANCIAL-DEPENDENCY a skos:Concept ; skos:prefLabel "Financial dependency"@en-AU ; dcterms:identifier "CCI-IMPACT-FINANCIAL-DEPENDENCY" .
+cc:CCI-IMPACT-HOUSING-INSECURITY a skos:Concept ; skos:prefLabel "Housing insecurity"@en-AU ; dcterms:identifier "CCI-IMPACT-HOUSING-INSECURITY" .
+cc:CCI-IMPACT-EMPLOYMENT-DISRUPTION a skos:Concept ; skos:prefLabel "Employment disruption"@en-AU ; dcterms:identifier "CCI-IMPACT-EMPLOYMENT-DISRUPTION" .
+cc:CCI-IMPACT-DIGITAL-EXCLUSION a skos:Concept ; skos:prefLabel "Digital exclusion"@en-AU ; dcterms:identifier "CCI-IMPACT-DIGITAL-EXCLUSION" .
+cc:CCI-IMPACT-CHANGED-BEHAVIOUR a skos:Concept ; skos:prefLabel "Changed behaviour"@en-AU ; dcterms:identifier "CCI-IMPACT-CHANGED-BEHAVIOUR" .
+cc:CCI-IMPACT-SELF-CENSORSHIP a skos:Concept ; skos:prefLabel "Self-censorship"@en-AU ; dcterms:identifier "CCI-IMPACT-SELF-CENSORSHIP" .
+cc:CCI-IMPACT-RESTRICTED-MOVEMENT a skos:Concept ; skos:prefLabel "Restricted movement"@en-AU ; dcterms:identifier "CCI-IMPACT-RESTRICTED-MOVEMENT" .
+cc:CCI-IMPACT-DEPENDENCY a skos:Concept ; skos:prefLabel "Dependency"@en-AU ; dcterms:identifier "CCI-IMPACT-DEPENDENCY" .
+
+# Patterns
+
+cc:CCP-AUTONOMY-EROSION
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Progressive erosion of autonomy"@en-AU ;
+    skos:definition "Multiple behaviours progressively reduce a person's practical ability to make or act on independent choices."@en-AU ;
+    dcterms:identifier "CCP-AUTONOMY-EROSION" .
+
+cc:CCP-ISOLATION-DEPENDENCY
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Isolation-dependency pattern"@en-AU ;
+    skos:definition "Increasing isolation accompanied by increasing practical, financial, technological or care dependency."@en-AU ;
+    dcterms:identifier "CCP-ISOLATION-DEPENDENCY" .
+
+cc:CCP-SURVEILLANCE-INTIMIDATION
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Surveillance-intimidation pattern"@en-AU ;
+    skos:definition "Monitoring accompanied by threatened or actual consequences."@en-AU ;
+    dcterms:identifier "CCP-SURVEILLANCE-INTIMIDATION" .
+
+cc:CCP-ECONOMIC-DEPENDENCY
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Economic-dependency pattern"@en-AU ;
+    skos:definition "Economic control creates, increases or maintains reliance on another person."@en-AU ;
+    dcterms:identifier "CCP-ECONOMIC-DEPENDENCY" .
+
+cc:CCP-MOVEMENT-CONTROL
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Movement-control pattern"@en-AU ;
+    skos:definition "Multiple behaviours collectively constrain physical movement or access to places and people."@en-AU ;
+    dcterms:identifier "CCP-MOVEMENT-CONTROL" .
+
+cc:CCP-DIGITAL-CONTROL
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Digital-control pattern"@en-AU ;
+    skos:definition "Technology is systematically used to monitor, restrict, intimidate or control."@en-AU ;
+    dcterms:identifier "CCP-DIGITAL-CONTROL" .
+
+cc:CCP-ESCALATING-CONTROL
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Escalating-control pattern"@en-AU ;
+    skos:definition "Controlling behaviour increases in frequency, severity, scope or consequences over time."@en-AU ;
+    dcterms:identifier "CCP-ESCALATING-CONTROL" .
+
+cc:CCP-POST-SEPARATION-CONTROL
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Post-separation-control pattern"@en-AU ;
+    skos:definition "Control continues, changes form or escalates after a relationship ends."@en-AU ;
+    dcterms:identifier "CCP-POST-SEPARATION-CONTROL" .
+
+cc:CCP-MULTI-DOMAIN-CONTROL
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Multi-domain-control pattern"@en-AU ;
+    skos:definition "Control simultaneously affects several areas of a person's life."@en-AU ;
+    dcterms:identifier "CCP-MULTI-DOMAIN-CONTROL" .
+
+cc:CCP-FEAR-COMPLIANCE
+    a cc:CoerciveControlPattern, skos:Concept ;
+    skos:prefLabel "Fear-compliance pattern"@en-AU ;
+    skos:definition "A person changes their behaviour because they anticipate consequences for non-compliance."@en-AU ;
+    dcterms:identifier "CCP-FEAR-COMPLIANCE" .
+
+# Jurisdiction status objects
+
+cc:JUR-AU-COMMONWEALTH
+    a cc:JurisdictionRule ;
+    schema:name "Commonwealth of Australia"@en-AU ;
+    cc:status "national_framework_and_family_law" ;
+    cc:standaloneCriminalOffence false .
+
+cc:JUR-AU-NSW
+    a cc:JurisdictionRule ;
+    schema:name "New South Wales"@en-AU ;
+    cc:status "standalone_criminal_offence_in_force" ;
+    cc:commencement "2024-07-01"^^xsd:date ;
+    cc:relationshipScope "current_or_former_intimate_partner" .
+
+cc:JUR-AU-QLD
+    a cc:JurisdictionRule ;
+    schema:name "Queensland"@en-AU ;
+    cc:status "standalone_criminal_offence_in_force" ;
+    cc:commencement "2025-05-26"^^xsd:date ;
+    cc:relationshipScope "domestic_relationship" .
+
+cc:JUR-AU-SA
+    a cc:JurisdictionRule ;
+    schema:name "South Australia"@en-AU ;
+    cc:status "legislated_not_yet_commenced" ;
+    cc:relationshipScope "current_or_former_intimate_partner" ;
+    cc:requiresCommencementVerification true .
+
+cc:JUR-AU-ACT
+    a cc:JurisdictionRule ;
+    schema:name "Australian Capital Territory"@en-AU ;
+    cc:status "bill_introduced_not_in_force" ;
+    cc:requiresCommencementVerification true .
+
+cc:JUR-AU-VIC
+    a cc:JurisdictionRule ;
+    schema:name "Victoria"@en-AU ;
+    cc:status "recognised_within_family_violence_framework" .
+
+cc:JUR-AU-WA
+    a cc:JurisdictionRule ;
+    schema:name "Western Australia"@en-AU ;
+    cc:status "recognised_within_family_violence_framework" .
+
+cc:JUR-AU-TAS
+    a cc:JurisdictionRule ;
+    schema:name "Tasmania"@en-AU ;
+    cc:status "specific_family_violence_offences_and_framework" .
+
+cc:JUR-AU-NT
+    a cc:JurisdictionRule ;
+    schema:name "Northern Territory"@en-AU ;
+    cc:status "express_statutory_definition_within_domestic_violence_framework" .
+
+# Machine policy
+
+cc:MachinePolicy-v1
+    a cc:MachinePolicy ;
+    schema:version "1.0.0" ;
+    cc:permits "recognise_candidate_indicators",
+               "translate_everyday_language_to_candidate_concepts",
+               "correlate_observations",
+               "identify_temporal_patterns",
+               "identify_escalation",
+               "surface_counterevidence",
+               "preserve_uncertainty",
+               "map_jurisdiction_rules",
+               "recommend_safeguarding_review" ;
+    cc:prohibits "automatic_abuser_determination",
+                 "automatic_victim_determination",
+                 "automatic_legal_determination",
+                 "automatic_punitive_action",
+                 "automatic_contact_with_suspected_controlling_person",
+                 "unnecessary_identity_disclosure",
+                 "demographic_inference_as_evidence",
+                 "keyword_only_determination" .
+
+# Canonical principle
+
+cc:CanonicalPrinciple
+    a skos:Concept ;
+    skos:prefLabel "Canonical principle"@en-AU ;
+    skos:definition "People describe experiences. Machines identify candidate concepts. Evidence establishes context. Patterns support assessment. Jurisdiction rules determine legal relevance. Authorised humans make consequential decisions."@en-AU .

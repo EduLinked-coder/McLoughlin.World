@@ -1,0 +1,712 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/schema.json",
+  "title": "Glossary of Coercive Control Object Schema",
+  "description": "Validation schema for machine-readable coercive-control glossary objects. This schema validates structure and required decision boundaries; it does not establish legal or safeguarding conclusions.",
+  "type": "object",
+  "required": [
+    "object_type",
+    "schema_version"
+  ],
+  "properties": {
+    "object_type": {
+      "type": "string",
+      "enum": [
+        "cc_observation",
+        "cc_evidence",
+        "cc_indicator",
+        "cc_pattern",
+        "cc_temporal_pattern",
+        "cc_impact",
+        "cc_risk_assessment",
+        "cc_safeguarding_action",
+        "cc_jurisdiction_rule",
+        "cc_source_authority",
+        "cc_machine_policy"
+      ]
+    },
+    "schema_version": {
+      "type": "string",
+      "pattern": "^[0-9]+\\.[0-9]+\\.[0-9]+$"
+    }
+  },
+  "allOf": [
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_observation"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/observation"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_evidence"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/evidence"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_indicator"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/indicator"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_pattern"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/pattern"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_temporal_pattern"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/temporal_pattern"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_impact"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/impact"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_risk_assessment"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/risk_assessment"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_safeguarding_action"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/safeguarding_action"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_jurisdiction_rule"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/jurisdiction_rule"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_source_authority"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/source_authority"
+      }
+    },
+    {
+      "if": {
+        "properties": {
+          "object_type": {
+            "const": "cc_machine_policy"
+          }
+        }
+      },
+      "then": {
+        "$ref": "#/$defs/machine_policy"
+      }
+    }
+  ],
+  "$defs": {
+    "id": {
+      "type": "string",
+      "minLength": 1
+    },
+    "confidence": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1
+    },
+    "agency": {
+      "type": "string",
+      "enum": [
+        "voluntary",
+        "requested",
+        "pressured",
+        "coerced",
+        "compelled",
+        "unknown"
+      ]
+    },
+    "revocability": {
+      "type": "string",
+      "enum": [
+        "freely_revocable",
+        "revocable_with_consequences",
+        "not_revocable",
+        "unknown"
+      ]
+    },
+    "evidence_relationship": {
+      "type": "string",
+      "enum": [
+        "supporting",
+        "corroborating",
+        "counterevidence",
+        "alternative_explanation",
+        "uncertain"
+      ]
+    },
+    "risk_level": {
+      "type": "string",
+      "enum": [
+        "insufficient_information",
+        "possible",
+        "elevated",
+        "high",
+        "urgent"
+      ]
+    },
+    "decision_boundary": {
+      "type": "object",
+      "required": [
+        "is_legal_determination",
+        "is_automated_offender_determination",
+        "is_automated_victim_determination",
+        "human_review_required_for_consequential_action"
+      ],
+      "properties": {
+        "is_legal_determination": {
+          "const": false
+        },
+        "is_automated_offender_determination": {
+          "const": false
+        },
+        "is_automated_victim_determination": {
+          "const": false
+        },
+        "human_review_required_for_consequential_action": {
+          "const": true
+        },
+        "automated_enforcement_permitted": {
+          "type": "boolean",
+          "const": false
+        }
+      },
+      "additionalProperties": true
+    },
+    "observation": {
+      "required": [
+        "id",
+        "observed_fact",
+        "decision_boundary"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "indicator_id": {
+          "type": "string",
+          "pattern": "^CCI-[A-Z0-9-]+$"
+        },
+        "subject_ref": {
+          "type": "string"
+        },
+        "observed_fact": {
+          "type": "string",
+          "minLength": 1
+        },
+        "agency": {
+          "$ref": "#/$defs/agency"
+        },
+        "revocability": {
+          "$ref": "#/$defs/revocability"
+        },
+        "reported_fear": {
+          "type": [
+            "boolean",
+            "null"
+          ]
+        },
+        "timestamp": {
+          "type": "string",
+          "format": "date-time"
+        },
+        "source": {
+          "type": "object",
+          "properties": {
+            "type": {
+              "type": "string"
+            },
+            "channel": {
+              "type": "string"
+            },
+            "collector": {
+              "type": "string"
+            }
+          },
+          "additionalProperties": true
+        },
+        "decision_boundary": {
+          "$ref": "#/$defs/decision_boundary"
+        }
+      }
+    },
+    "evidence": {
+      "required": [
+        "id",
+        "relationship",
+        "observation"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "indicator_id": {
+          "type": "string",
+          "pattern": "^CCI-[A-Z0-9-]+$"
+        },
+        "relationship": {
+          "$ref": "#/$defs/evidence_relationship"
+        },
+        "observation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "corroborated": {
+          "type": "boolean"
+        },
+        "source_reliability": {
+          "$ref": "#/$defs/confidence"
+        },
+        "provenance": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "indicator": {
+      "required": [
+        "id",
+        "name",
+        "definition",
+        "domain",
+        "independently_conclusive"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^CCI-[A-Z0-9-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "domain": {
+          "type": "string",
+          "minLength": 1
+        },
+        "requires_context": {
+          "type": "boolean"
+        },
+        "independently_conclusive": {
+          "const": false
+        },
+        "related_concepts": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "possible_alternative_explanations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      }
+    },
+    "pattern": {
+      "required": [
+        "id",
+        "name",
+        "definition"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^CCP-[A-Z0-9-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "definition": {
+          "type": "string",
+          "minLength": 1
+        },
+        "indicator_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CCI-[A-Z0-9-]+$"
+          }
+        },
+        "requires_temporal_reasoning": {
+          "type": "boolean"
+        },
+        "diagnostic_status": {
+          "type": "string",
+          "const": "non_conclusive"
+        }
+      }
+    },
+    "temporal_pattern": {
+      "required": [
+        "id",
+        "name",
+        "sequence",
+        "interpretation"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^CCTP-[A-Z0-9-]+$"
+        },
+        "name": {
+          "type": "string",
+          "minLength": 1
+        },
+        "sequence": {
+          "type": "array",
+          "minItems": 2,
+          "items": {
+            "type": "object",
+            "required": [
+              "period",
+              "behaviour"
+            ],
+            "properties": {
+              "period": {
+                "type": "string"
+              },
+              "behaviour": {
+                "type": "string"
+              }
+            }
+          }
+        },
+        "interpretation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "formal_determination": {
+          "const": false
+        }
+      }
+    },
+    "impact": {
+      "required": [
+        "id",
+        "impact_type",
+        "observation"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "impact_type": {
+          "type": "string",
+          "pattern": "^CCI-IMPACT-[A-Z0-9-]+$"
+        },
+        "observation": {
+          "type": "string",
+          "minLength": 1
+        },
+        "linked_indicators": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CCI-[A-Z0-9-]+$"
+          }
+        }
+      }
+    },
+    "risk_assessment": {
+      "required": [
+        "id",
+        "risk_level",
+        "decision_boundary",
+        "reasoning_summary"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "subject_ref": {
+          "type": "string"
+        },
+        "observation_ids": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "indicator_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CCI-[A-Z0-9-]+$"
+          }
+        },
+        "pattern_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CCP-[A-Z0-9-]+$"
+          }
+        },
+        "impact_ids": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "pattern": "^CCI-IMPACT-[A-Z0-9-]+$"
+          }
+        },
+        "risk_level": {
+          "$ref": "#/$defs/risk_level"
+        },
+        "confidence": {
+          "$ref": "#/$defs/confidence"
+        },
+        "reasoning_summary": {
+          "type": "string",
+          "minLength": 1
+        },
+        "counterevidence": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "alternative_explanations": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "jurisdiction_rule_id": {
+          "type": "string",
+          "pattern": "^JUR-AU-[A-Z]+$"
+        },
+        "decision_boundary": {
+          "$ref": "#/$defs/decision_boundary"
+        }
+      }
+    },
+    "safeguarding_action": {
+      "required": [
+        "id",
+        "action_type",
+        "priority"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "action_type": {
+          "type": "string",
+          "enum": [
+            "information_only",
+            "specialist_safeguarding_review",
+            "support_service_referral",
+            "legal_information_referral",
+            "emergency_response_consideration"
+          ]
+        },
+        "priority": {
+          "type": "string",
+          "enum": [
+            "routine",
+            "prompt",
+            "urgent"
+          ]
+        },
+        "requires_human_review": {
+          "type": "boolean",
+          "const": true
+        }
+      }
+    },
+    "jurisdiction_rule": {
+      "required": [
+        "id",
+        "name",
+        "status"
+      ],
+      "properties": {
+        "id": {
+          "type": "string",
+          "pattern": "^JUR-AU-[A-Z]+$"
+        },
+        "name": {
+          "type": "string"
+        },
+        "status": {
+          "type": "string",
+          "enum": [
+            "national_framework_and_family_law",
+            "standalone_criminal_offence_in_force",
+            "legislated_not_yet_commenced",
+            "bill_introduced_not_in_force",
+            "recognised_within_family_violence_framework",
+            "specific_family_violence_offences_and_framework",
+            "express_statutory_definition_within_domestic_violence_framework"
+          ]
+        },
+        "commencement": {
+          "type": "string",
+          "format": "date"
+        },
+        "relationship_scope": {
+          "type": "string"
+        },
+        "requires_commencement_verification": {
+          "type": "boolean"
+        },
+        "source_urls": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "format": "uri"
+          }
+        }
+      }
+    },
+    "source_authority": {
+      "required": [
+        "id",
+        "authority",
+        "source_class"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "authority": {
+          "type": "string"
+        },
+        "framework": {
+          "type": "string"
+        },
+        "source_class": {
+          "type": "string"
+        },
+        "url": {
+          "type": "string",
+          "format": "uri"
+        },
+        "publication_date": {
+          "type": "string",
+          "format": "date"
+        },
+        "retrieved_at": {
+          "type": "string",
+          "format": "date-time"
+        }
+      }
+    },
+    "machine_policy": {
+      "required": [
+        "id",
+        "permitted",
+        "prohibited"
+      ],
+      "properties": {
+        "id": {
+          "$ref": "#/$defs/id"
+        },
+        "permitted": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "prohibited": {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        },
+        "human_review_required_for_consequential_action": {
+          "const": true
+        },
+        "automatic_legal_determination": {
+          "const": false
+        },
+        "automatic_offender_determination": {
+          "const": false
+        },
+        "automatic_victim_determination": {
+          "const": false
+        }
+      }
+    }
+  }
+}

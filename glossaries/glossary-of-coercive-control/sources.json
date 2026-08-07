@@ -1,0 +1,183 @@
+{
+  "object_type": "cc_source_authority_registry",
+  "schema_version": "1.0.0",
+  "vocabulary_version": "1.0.0",
+  "title": "Glossary of Coercive Control — Provenance and Source Authority Registry",
+  "canonical_glossary_url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/",
+  "canonical_url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/sources.json",
+  "retrieved_at": "2026-08-07",
+  "status": "canonical",
+  "sources": [
+    {
+      "id": "CCSRC-AU-NATIONAL-PRINCIPLES",
+      "authority": "Australian Government Attorney-General's Department",
+      "jurisdiction": "AU",
+      "source_class": "national_policy_framework",
+      "title": "National Principles to Address Coercive Control in Family and Domestic Violence",
+      "publication_date": "2023-09-22",
+      "url": "https://www.ag.gov.au/families-and-marriage/publications/national-principles-address-coercive-control-family-and-domestic-violence",
+      "supports": [
+        "national_conceptual_definition",
+        "pattern_based_reasoning",
+        "fear",
+        "liberty",
+        "autonomy",
+        "physical_and_non_physical_abuse"
+      ],
+      "legal_status": "policy_framework_not_standalone_criminal_offence",
+      "verification_required_for_future_use": false
+    },
+    {
+      "id": "CCSRC-AU-AGD-COERCIVE-CONTROL",
+      "authority": "Australian Government Attorney-General's Department",
+      "jurisdiction": "AU",
+      "source_class": "official_government_guidance",
+      "title": "Coercive Control",
+      "url": "https://www.ag.gov.au/families-and-marriage/families/family-violence/coercive-control",
+      "supports": [
+        "national_shared_understanding",
+        "digital_safety_notice",
+        "pattern_over_time",
+        "fear",
+        "loss_of_liberty_and_autonomy"
+      ],
+      "legal_status": "official_guidance",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-NSW-COERCIVE-CONTROL-LAW",
+      "authority": "NSW Government",
+      "jurisdiction": "AU-NSW",
+      "source_class": "official_government_legal_guidance",
+      "title": "Coercive control law",
+      "url": "https://www.nsw.gov.au/family-and-relationships/coercive-control/law",
+      "effective_date": "2024-07-01",
+      "supports": [
+        "standalone_criminal_offence_in_force",
+        "current_or_former_intimate_partner_scope",
+        "repeated_abusive_behaviour"
+      ],
+      "legal_status": "standalone_criminal_offence_in_force",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-QLD-COERCIVE-CONTROL-LAWS",
+      "authority": "Queensland Government",
+      "jurisdiction": "AU-QLD",
+      "source_class": "official_government_legal_guidance",
+      "title": "Coercive control laws",
+      "url": "https://www.qld.gov.au/community/getting-support-health-social-issue/support-victims-abuse/need-to-know/coercive-control/coercive-control-laws",
+      "effective_date": "2025-05-26",
+      "supports": [
+        "standalone_criminal_offence_in_force",
+        "domestic_relationship_scope",
+        "third_party_abuse_on_behalf_of_respondent"
+      ],
+      "legal_status": "standalone_criminal_offence_in_force",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-SA-COERCIVE-CONTROL",
+      "authority": "Government of South Australia, Attorney-General's Department",
+      "jurisdiction": "AU-SA",
+      "source_class": "official_government_legal_guidance",
+      "title": "Coercive control in South Australia",
+      "url": "https://www.agd.sa.gov.au/law-and-justice/consultation/coercive-control-in-south-australia",
+      "supports": [
+        "legislated_not_yet_commenced",
+        "current_or_former_intimate_partner_scope"
+      ],
+      "legal_status": "legislated_not_yet_commenced",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-ACT-COERCIVE-CONTROL-BILL",
+      "authority": "ACT Government",
+      "jurisdiction": "AU-ACT",
+      "source_class": "official_legislation_record",
+      "title": "Crimes (Coercive Control) Amendment Bill 2026",
+      "publication_date": "2026-05-28",
+      "url": "https://www.legislation.act.gov.au/b/db_74340",
+      "supports": [
+        "bill_introduced_not_in_force",
+        "before_the_assembly"
+      ],
+      "legal_status": "bill_introduced_not_in_force",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-VIC-FAMILY-VIOLENCE",
+      "authority": "Victoria Police",
+      "jurisdiction": "AU-VIC",
+      "source_class": "official_government_guidance",
+      "title": "What is family violence",
+      "url": "https://www.police.vic.gov.au/what-is-family-violence",
+      "supports": [
+        "family_violence_framework",
+        "control_or_domination",
+        "fear_for_safety_or_wellbeing"
+      ],
+      "legal_status": "recognised_within_family_violence_framework",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-WA-COERCIVE-CONTROL",
+      "authority": "Government of Western Australia",
+      "jurisdiction": "AU-WA",
+      "source_class": "official_government_guidance",
+      "title": "Coercive control",
+      "last_updated": "2026-07-24",
+      "url": "https://www.wa.gov.au/government/coercive-control",
+      "supports": [
+        "family_and_domestic_violence_framework",
+        "pattern_of_abusive_behaviours",
+        "freedom_and_independence",
+        "financial_abuse",
+        "isolation"
+      ],
+      "legal_status": "recognised_within_family_violence_framework",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-TAS-FAMILY-VIOLENCE-ACT",
+      "authority": "Tasmanian Government",
+      "jurisdiction": "AU-TAS",
+      "source_class": "legislation",
+      "title": "Family Violence Act 2004",
+      "url": "https://www.legislation.tas.gov.au/view/html/inforce/current/act-2004-067",
+      "supports": [
+        "economic_abuse_offence",
+        "emotional_abuse_or_intimidation_offence",
+        "family_violence_framework"
+      ],
+      "legal_status": "specific_family_violence_offences_and_framework",
+      "verification_required_for_future_use": true
+    },
+    {
+      "id": "CCSRC-AU-NT-DFV-ACT",
+      "authority": "Northern Territory Government",
+      "jurisdiction": "AU-NT",
+      "source_class": "legislation",
+      "title": "Domestic and Family Violence Act 2007",
+      "url": "https://legislation.nt.gov.au/Legislation/DOMESTIC-AND-FAMILY-VIOLENCE-ACT-2007",
+      "supports": [
+        "express_statutory_definition_of_coercive_control",
+        "pattern_of_conduct",
+        "fear",
+        "control_or_subordination",
+        "domination_or_monitoring",
+        "isolation",
+        "deprivation_of_freedom"
+      ],
+      "legal_status": "express_statutory_definition_within_domestic_violence_framework",
+      "verification_required_for_future_use": true
+    }
+  ],
+  "provenance_rules": {
+    "source_required_for_legal_status_claim": true,
+    "retrieval_date_required_for_time_sensitive_source": true,
+    "future_verification_required_for_legal_status": true,
+    "semantic_term_may_outlive_source_revision": true,
+    "legal_status_must_not_be_inferred_from_semantic_indicator": true
+  }
+}

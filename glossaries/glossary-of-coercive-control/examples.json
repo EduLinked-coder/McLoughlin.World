@@ -1,0 +1,203 @@
+{
+  "object_type": "cc_examples_package",
+  "schema_version": "1.0.0",
+  "title": "Glossary of Coercive Control — Machine-Readable Examples",
+  "canonical_url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/examples.json",
+  "schema_url": "https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/schema.json",
+  "examples": [
+    {
+      "name": "Observation — location monitoring with consequences",
+      "object": {
+        "object_type": "cc_observation",
+        "schema_version": "1.0.0",
+        "id": "CCO-EXAMPLE-0001",
+        "indicator_id": "CCI-SURVEILLANCE-LOCATION",
+        "subject_ref": "subject:pseudonymous:EXAMPLE-A",
+        "observed_fact": "The person reports that location sharing must remain enabled and that disabling it leads to threats and repeated questioning.",
+        "agency": "coerced",
+        "revocability": "revocable_with_consequences",
+        "reported_fear": true,
+        "timestamp": "2026-08-07T11:30:00+10:00",
+        "source": {
+          "type": "first_person_statement",
+          "channel": "support_interview",
+          "collector": "human"
+        },
+        "decision_boundary": {
+          "is_legal_determination": false,
+          "is_automated_offender_determination": false,
+          "is_automated_victim_determination": false,
+          "human_review_required_for_consequential_action": true,
+          "automated_enforcement_permitted": false
+        }
+      }
+    },
+    {
+      "name": "Supporting evidence — communication monitoring",
+      "object": {
+        "object_type": "cc_evidence",
+        "schema_version": "1.0.0",
+        "id": "CCE-EXAMPLE-0001",
+        "indicator_id": "CCI-SURVEILLANCE-COMMUNICATION",
+        "relationship": "supporting",
+        "observation": "The person reports that private messages are inspected every evening without freely revocable consent.",
+        "confidence": 0.88,
+        "corroborated": false,
+        "source_reliability": 0.85,
+        "provenance": [
+          "first_person_statement",
+          "support_interview"
+        ]
+      }
+    },
+    {
+      "name": "Counterevidence — consensual account access",
+      "object": {
+        "object_type": "cc_evidence",
+        "schema_version": "1.0.0",
+        "id": "CCE-EXAMPLE-0002",
+        "indicator_id": "CCI-ECONOMIC-BANK-ACCOUNT-CONTROL",
+        "relationship": "counterevidence",
+        "observation": "Both parties maintain independent accounts, voluntarily share access to one household account, and can revoke that shared access without adverse consequences.",
+        "confidence": 0.93,
+        "corroborated": true,
+        "source_reliability": 0.9,
+        "provenance": [
+          "banking_records",
+          "independent_statements"
+        ]
+      }
+    },
+    {
+      "name": "Alternative explanation — temporary document handling",
+      "object": {
+        "object_type": "cc_evidence",
+        "schema_version": "1.0.0",
+        "id": "CCE-EXAMPLE-0003",
+        "indicator_id": "CCI-DOCUMENT-PASSPORT",
+        "relationship": "alternative_explanation",
+        "observation": "The passport was provided voluntarily for a same-day visa application and returned immediately on request.",
+        "confidence": 0.95,
+        "corroborated": true,
+        "source_reliability": 0.92,
+        "provenance": [
+          "document_receipt",
+          "first_person_confirmation"
+        ]
+      }
+    },
+    {
+      "name": "Pattern — surveillance and intimidation",
+      "object": {
+        "object_type": "cc_pattern",
+        "schema_version": "1.0.0",
+        "id": "CCP-SURVEILLANCE-INTIMIDATION",
+        "name": "Surveillance-intimidation pattern",
+        "definition": "Monitoring accompanied by threatened or actual consequences.",
+        "indicator_ids": [
+          "CCI-SURVEILLANCE-LOCATION",
+          "CCI-SURVEILLANCE-COMMUNICATION",
+          "CCI-PSYCHOLOGICAL-INTIMIDATION"
+        ],
+        "requires_temporal_reasoning": true,
+        "diagnostic_status": "non_conclusive"
+      }
+    },
+    {
+      "name": "Temporal pattern — escalation of control",
+      "object": {
+        "object_type": "cc_temporal_pattern",
+        "schema_version": "1.0.0",
+        "id": "CCTP-ESCALATING-CONTROL",
+        "name": "Escalation of controlling behaviour",
+        "sequence": [
+          {
+            "period": "T1",
+            "behaviour": "Frequent requests for updates about location."
+          },
+          {
+            "period": "T2",
+            "behaviour": "Mandatory continuous location sharing."
+          },
+          {
+            "period": "T3",
+            "behaviour": "Private messages are inspected."
+          },
+          {
+            "period": "T4",
+            "behaviour": "Threats occur after attempts to disable monitoring."
+          }
+        ],
+        "interpretation": "The sequence may indicate increasing scope and severity of controlling behaviour over time.",
+        "formal_determination": false
+      }
+    },
+    {
+      "name": "Impact — self-censorship",
+      "object": {
+        "object_type": "cc_impact",
+        "schema_version": "1.0.0",
+        "id": "CCIM-EXAMPLE-0001",
+        "impact_type": "CCI-IMPACT-SELF-CENSORSHIP",
+        "observation": "The person reports avoiding contact with friends because they fear consequences if messages are discovered.",
+        "linked_indicators": [
+          "CCI-SURVEILLANCE-COMMUNICATION",
+          "CCI-PSYCHOLOGICAL-INDUCED-FEAR"
+        ]
+      }
+    },
+    {
+      "name": "Risk assessment — high safeguarding concern",
+      "object": {
+        "object_type": "cc_risk_assessment",
+        "schema_version": "1.0.0",
+        "id": "CCRA-EXAMPLE-0001",
+        "subject_ref": "subject:pseudonymous:EXAMPLE-A",
+        "observation_ids": [
+          "CCO-EXAMPLE-0001"
+        ],
+        "indicator_ids": [
+          "CCI-SURVEILLANCE-LOCATION",
+          "CCI-SURVEILLANCE-COMMUNICATION",
+          "CCI-ISOLATION-FAMILY",
+          "CCI-PSYCHOLOGICAL-INDUCED-FEAR"
+        ],
+        "pattern_ids": [
+          "CCP-SURVEILLANCE-INTIMIDATION",
+          "CCP-AUTONOMY-EROSION"
+        ],
+        "impact_ids": [
+          "CCI-IMPACT-FEAR",
+          "CCI-IMPACT-SELF-CENSORSHIP",
+          "CCI-IMPACT-REDUCED-AUTONOMY"
+        ],
+        "risk_level": "high",
+        "confidence": 0.87,
+        "reasoning_summary": "Multiple repeated behaviours across surveillance, isolation and intimidation domains are associated with reported fear and reduced autonomy.",
+        "counterevidence": [
+          "No evidence currently indicates unrestricted withdrawal of consent to monitoring."
+        ],
+        "alternative_explanations": [],
+        "jurisdiction_rule_id": "JUR-AU-QLD",
+        "decision_boundary": {
+          "is_legal_determination": false,
+          "is_automated_offender_determination": false,
+          "is_automated_victim_determination": false,
+          "human_review_required_for_consequential_action": true,
+          "automated_enforcement_permitted": false
+        }
+      }
+    },
+    {
+      "name": "Safeguarding action — specialist review",
+      "object": {
+        "object_type": "cc_safeguarding_action",
+        "schema_version": "1.0.0",
+        "id": "CCSA-EXAMPLE-0001",
+        "action_type": "specialist_safeguarding_review",
+        "priority": "urgent",
+        "requires_human_review": true
+      }
+    }
+  ]
+}
