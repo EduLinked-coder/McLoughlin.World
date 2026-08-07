@@ -1,0 +1,9 @@
+SSA Ontology v0.1.0 — Knowledge Licence
+
+Knowledge content published as part of the Strategic Self-Advocacy Ontology v0.1.0 is identified on McLoughlin.world as licensed under Creative Commons Attribution 4.0 International (CC BY 4.0).
+
+Licence: https://creativecommons.org/licenses/by/4.0/
+
+Attribution: Sarah Ailish McLoughlin / McLoughlin.world
+
+This file records the knowledge-content licence represented by the live website. Repository software, third-party material, tooling, or other artefacts may require separate licence terms and must not automatically inherit this licence unless explicitly stated.
