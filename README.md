@@ -20,6 +20,10 @@ Canonical public URL:
 
 https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-human-trafficking/
 
+Repository overview:
+
+[glossaries/glossary-of-human-trafficking/OVERVIEW.md](glossaries/glossary-of-human-trafficking/OVERVIEW.md)
+
 The glossary defines machine-readable concepts for observable trafficking and exploitation indicators, observations, evidence, counterevidence, patterns, risk assessment, safeguarding actions, source authorities, jurisdiction rules, and machine-policy boundaries.
 
 Its canonical reasoning model is:
@@ -33,6 +37,10 @@ Automated systems may recognise and correlate indicators, but the vocabulary doe
 Canonical public URL:
 
 https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/
+
+Repository overview:
+
+[glossaries/glossary-of-coercive-control/OVERVIEW.md](glossaries/glossary-of-coercive-control/OVERVIEW.md)
 
 **Version:** `1.0.0`  
 **Primary namespace:** `CCI-*`  
