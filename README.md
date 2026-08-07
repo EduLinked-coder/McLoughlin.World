@@ -1,20 +1,72 @@
 # McLoughlin.World
 
-McLoughlin.World is an **open-source** research, development, and publishing workspace for systems, controlled vocabularies, semantic artefacts, workflows, and documentation created by **Sarah Ailish McLoughlin** and associated with McLoughlin.world and the broader **EduLinked-Systems** ecosystem.
+McLoughlin.World is an **open-source public knowledge infrastructure** and publishing workspace for controlled vocabularies, semantic artefacts, datasets, concepts, research, workflows, and documentation created by **Sarah Ailish McLoughlin** and associated with McLoughlin.world and the broader **EduLinked-Systems** ecosystem.
 
 The repository is intended to make important human-readable knowledge and machine-operable public-interest infrastructure openly inspectable, reusable, interoperable, and improvable while preserving clear provenance, attribution, versioning, governance boundaries, and human accountability.
 
-Production work and live deployments may be governed separately under the **EduLinked Governance Framework v1.2** and **The McLoughlin Charter**, which establish ethical, inclusive, transparent, and human-accountable design principles for digital inclusion and machine-operable systems.
+**Live website:** https://www.mcloughlin.world/
 
-## SSA Lexicon
+## Current public website state
+
+The live McLoughlin.world homepage currently reports:
+
+- **93 published concepts**;
+- **17 glossaries and concept schemes**;
+- **6 open data formats**;
+- **CC BY 4.0** knowledge licensing.
+
+These figures are time-sensitive publication metadata and may change as the public knowledge base grows.
+
+The live site is organised around the following public infrastructure layers:
+
+- **Publications**;
+- **Glossaries**;
+- **Concepts**;
+- **Datasets**;
+- **Releases**;
+- **About**;
+- **Contact**.
+
+Repository documentation for the current public architecture is maintained under:
+
+- [docs/website/OVERVIEW.md](docs/website/OVERVIEW.md)
+- [docs/website/GLOSSARIES.md](docs/website/GLOSSARIES.md)
+- [docs/website/DATASETS.md](docs/website/DATASETS.md)
+- [docs/website/PUBLICATION-MODEL.md](docs/website/PUBLICATION-MODEL.md)
+
+## Publication rule
+
+McLoughlin.world follows a dual-publication model:
+
+> **Everything important should exist as a permanent, citable webpage. Every webpage should also have a machine-readable representation.**
+
+Human-readable pages are paired, where appropriate, with standards-based semantic and structured representations such as JSON-LD, RDF, Turtle, JSON, CSV and validation artefacts.
+
+Definitions, identifiers, provenance and changes should be published through explicit releases rather than silently overwritten.
+
+## SSA Ontology and SSA Lexicon
+
+The live site currently features **SSA Ontology v0.1.0**, a versioned semantic dataset for inclusion that publishes lived-experience-derived concepts as permanent webpages and interoperable semantic data.
 
 McLoughlin.world publishes human-readable and machine-readable controlled vocabularies through the **SSA Lexicon**. These glossaries are designed so people, AI systems, software, researchers, safeguarding systems, and data pipelines can refer to the same concepts using stable identifiers, explicit provenance, versioned definitions, and clear decision boundaries.
 
+The public homepage currently features SSA Lexicon glossaries covering:
+
+- Accessibility Abuse;
+- Coercive Collaboration;
+- Digital Sovereignty;
+- Institutional Mimicry;
+- Structural Disappearance.
+
+The broader public Glossaries layer also exposes the SSA Lexicon / Ontology, Taxonomy for Recognising Extraction, Glossary of Autistic Communication, Splaining Glossary and Lived Experience Glossary.
+
+See [docs/website/GLOSSARIES.md](docs/website/GLOSSARIES.md) for the current public glossary architecture and canonical links.
+
+## Safeguarding vocabularies
+
 The architecture separates observable information from consequential conclusions. Machine-readable safeguarding vocabularies should support recognition, evidence handling, counterevidence, pattern analysis, uncertainty, provenance, and referral while preserving human review for consequential decisions.
 
-### Canonical glossaries
-
-#### Glossary of Human Trafficking
+### Glossary of Human Trafficking
 
 Canonical public URL:
 
@@ -32,7 +84,7 @@ Its canonical reasoning model is:
 
 Automated systems may recognise and correlate indicators, but the vocabulary does not authorise automated victim determination, trafficker determination, punitive action, or unnecessary identity disclosure.
 
-#### Glossary of Coercive Control
+### Glossary of Coercive Control
 
 Canonical public URL:
 
@@ -77,6 +129,8 @@ Legal status is represented separately from semantic recognition. A match agains
 
 This repository is open source and supports public inspection, collaboration, interoperability, and reuse subject to the repository's applicable licence terms.
 
+The **live website is the source of truth for what is currently published publicly**. This repository is the open-source development, documentation, semantic interoperability and release-support surface. Where the two drift, the repository should be reconciled against verified public state without inventing unpublished content.
+
 Open publication does not remove the safeguards attached to the vocabularies themselves. Publication of a controlled vocabulary does not convert a machine-generated assessment into a legal, clinical, safeguarding, or enforcement determination.
 
 Machine-readable artefacts should preserve, where applicable:
@@ -96,6 +150,6 @@ McLoughlin.World is published as an **open-source project**.
 
 Original authorship and provenance remain attributed to **Sarah Ailish McLoughlin**. Open-source availability is intended to enable transparent inspection, responsible reuse, contribution, adaptation, and interoperability while maintaining source attribution and the governance and safeguarding boundaries documented in this repository.
 
-The specific permissions, conditions, and limitations applying to source code and other repository materials are governed by the repository's applicable licence. Where individual datasets, vocabularies, third-party sources, or artefacts carry separate terms, those terms should be preserved with the relevant material.
+The live website currently identifies **CC BY 4.0** as its knowledge licence. Repository-level software, code, third-party materials and other artefacts may require separate explicit licence terms; those terms should not be inferred solely from the website knowledge-licence statement.
 
 © 2025-2026 Sarah Ailish McLoughlin.
