@@ -1,8 +1,10 @@
 # McLoughlin.World
 
-This repository is the research, development, and testing workspace used by **Sarah Ailish McLoughlin** for systems, controlled vocabularies, semantic artefacts, workflows, and documentation associated with McLoughlin.world and the broader **EduLinked-Systems** enterprise.
+McLoughlin.World is an **open-source** research, development, and publishing workspace for systems, controlled vocabularies, semantic artefacts, workflows, and documentation created by **Sarah Ailish McLoughlin** and associated with McLoughlin.world and the broader **EduLinked-Systems** ecosystem.
 
-Production work and live deployments remain governed separately under the **EduLinked Governance Framework v1.2** and **The McLoughlin Charter**, which establish ethical, inclusive, transparent, and human-accountable design principles for digital inclusion and machine-operable systems.
+The repository is intended to make important human-readable knowledge and machine-operable public-interest infrastructure openly inspectable, reusable, interoperable, and improvable while preserving clear provenance, attribution, versioning, governance boundaries, and human accountability.
+
+Production work and live deployments may be governed separately under the **EduLinked Governance Framework v1.2** and **The McLoughlin Charter**, which establish ethical, inclusive, transparent, and human-accountable design principles for digital inclusion and machine-operable systems.
 
 ## SSA Lexicon
 
@@ -65,7 +67,9 @@ Legal status is represented separately from semantic recognition. A match agains
 
 ## Repository governance
 
-This repository is a development and research workspace. Publication of a controlled vocabulary does not itself convert a machine-generated assessment into a legal, clinical, safeguarding, or enforcement determination.
+This repository is open source and supports public inspection, collaboration, interoperability, and reuse subject to the repository's applicable licence terms.
+
+Open publication does not remove the safeguards attached to the vocabularies themselves. Publication of a controlled vocabulary does not convert a machine-generated assessment into a legal, clinical, safeguarding, or enforcement determination.
 
 Machine-readable artefacts should preserve, where applicable:
 
@@ -78,10 +82,12 @@ Machine-readable artefacts should preserve, where applicable:
 - explicit prohibited automated actions;
 - human review requirements for consequential action.
 
-## Intellectual property and governance
+## Open-source status and attribution
 
-© 2025-2026 Sarah Ailish McLoughlin. All rights reserved.
+McLoughlin.World is published as an **open-source project**.
 
-All code, systems, controlled vocabularies, documentation, semantic models, and related materials in this repository are the intellectual property of the author unless expressly stated otherwise.
+Original authorship and provenance remain attributed to **Sarah Ailish McLoughlin**. Open-source availability is intended to enable transparent inspection, responsible reuse, contribution, adaptation, and interoperability while maintaining source attribution and the governance and safeguarding boundaries documented in this repository.
 
-Use within EduLinked-Systems is authorised only under applicable governance alignment and licence arrangements, including **The McLoughlin Charter**.
+The specific permissions, conditions, and limitations applying to source code and other repository materials are governed by the repository's applicable licence. Where individual datasets, vocabularies, third-party sources, or artefacts carry separate terms, those terms should be preserved with the relevant material.
+
+© 2025-2026 Sarah Ailish McLoughlin.
