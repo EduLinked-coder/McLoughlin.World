@@ -1,0 +1,29 @@
+{
+  "object_type": "ssa_release_manifest",
+  "release": "0.1.0",
+  "datePublished": "2026-07-29",
+  "canonicalOntology": "https://www.mcloughlin.world/glossaries/ssa-lexicon/",
+  "conceptCount": 93,
+  "schemeCount": 17,
+  "license": "https://creativecommons.org/licenses/by/4.0/",
+  "creator": "Sarah Ailish McLoughlin",
+  "publicFileRoot": "https://www.mcloughlin.world/media/website_pages/glossaries/ssa-lexicon/downloads/",
+  "publishedArtifacts": [
+    {"filename": "ssa-ontology-v0.1.0.zip", "mediaType": "application/zip", "status": "published"},
+    {"filename": "ssa-ontology.jsonld", "mediaType": "application/ld+json", "status": "published"},
+    {"filename": "ssa-ontology.ttl", "mediaType": "text/turtle", "status": "published"},
+    {"filename": "ssa-ontology.rdf", "mediaType": "application/rdf+xml", "status": "published"},
+    {"filename": "ssa-ontology.json", "mediaType": "application/json", "status": "published"},
+    {"filename": "ssa-terms.csv", "mediaType": "text/csv", "status": "published"},
+    {"filename": "release-manifest.json", "mediaType": "application/json", "status": "published"},
+    {"filename": "CHANGELOG.md", "mediaType": "text/markdown", "status": "published"},
+    {"filename": "LICENSE.txt", "mediaType": "text/plain", "status": "published"},
+    {"filename": "README.md", "mediaType": "text/markdown", "status": "published"}
+  ],
+  "repositoryRepresentation": {
+    "source": "McLoughlin.world site export dated 2026-08-07",
+    "status": "site_export_derived",
+    "byteIdentityWithHostedFilesVerified": false,
+    "verificationRule": "Do not assert byte-for-byte equivalence with hosted release artefacts until public-file hashes are independently compared."
+  }
+}
