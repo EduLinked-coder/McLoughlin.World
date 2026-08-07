@@ -1,10 +1,87 @@
 # McLoughlin.World
-# EduLinked-coder
 
-This workspace is used by **Sarah Ailish McLoughlin** for the research, development, and testing of systems, workflows, and documentation that form part of the **EduLinked-Systems** enterprise.
+This repository is the research, development, and testing workspace used by **Sarah Ailish McLoughlin** for systems, controlled vocabularies, semantic artefacts, workflows, and documentation associated with McLoughlin.world and the broader **EduLinked-Systems** enterprise.
 
-All production work and live deployments are maintained within the **EduLinked-Systems** repositories under the **EduLinked Governance Framework v1.2** and guided by **The McLoughlin Charter** — a framework establishing ethical, inclusive, and transparent design principles for digital inclusion systems.
+Production work and live deployments remain governed separately under the **EduLinked Governance Framework v1.2** and **The McLoughlin Charter**, which establish ethical, inclusive, transparent, and human-accountable design principles for digital inclusion and machine-operable systems.
 
-> © 2025 Sarah Ailish McLoughlin.  
-> All code, systems, and documentation in this repository are the intellectual property of the author.  
-> Use within EduLinked-Systems is authorised under governance alignment and license, in accordance with **The McLoughlin Charter**.
+## SSA Lexicon
+
+McLoughlin.world publishes human-readable and machine-readable controlled vocabularies through the **SSA Lexicon**. These glossaries are designed so people, AI systems, software, researchers, safeguarding systems, and data pipelines can refer to the same concepts using stable identifiers, explicit provenance, versioned definitions, and clear decision boundaries.
+
+The architecture separates observable information from consequential conclusions. Machine-readable safeguarding vocabularies should support recognition, evidence handling, counterevidence, pattern analysis, uncertainty, provenance, and referral while preserving human review for consequential decisions.
+
+### Canonical glossaries
+
+#### Glossary of Human Trafficking
+
+Canonical public URL:
+
+https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-human-trafficking/
+
+The glossary defines machine-readable concepts for observable trafficking and exploitation indicators, observations, evidence, counterevidence, patterns, risk assessment, safeguarding actions, source authorities, jurisdiction rules, and machine-policy boundaries.
+
+Its canonical reasoning model is:
+
+`Observation -> Evidence -> Indicator -> Pattern -> Risk Assessment -> Safeguarding Action -> Authorised Human Decision`
+
+Automated systems may recognise and correlate indicators, but the vocabulary does not authorise automated victim determination, trafficker determination, punitive action, or unnecessary identity disclosure.
+
+#### Glossary of Coercive Control
+
+Canonical public URL:
+
+https://www.mcloughlin.world/glossaries/ssa-lexicon/glossary-of-coercive-control/
+
+**Version:** `1.0.0`  
+**Primary namespace:** `CCI-*`  
+**Pattern namespace:** `CCP-*`
+
+The glossary provides a controlled human-readable and machine-readable vocabulary for recognising, describing, and reasoning about observable behaviours, effects, and patterns associated with coercive control.
+
+Its canonical reasoning model is:
+
+`Observation -> Evidence -> Indicator -> Pattern -> Risk Assessment -> Safeguarding Action -> Authorised Human Decision`
+
+The model is intentionally pattern-sensitive. Individual behaviours are not independently conclusive. Systems using the vocabulary should consider context, repetition, fear, autonomy, dependency, consequences for resistance, escalation, counterevidence, alternative explanations, and jurisdiction-specific legal requirements.
+
+The coercive-control package is designed to support multiple representations, including:
+
+- human-readable HTML;
+- JSON;
+- JSON-LD;
+- CSV;
+- Turtle / RDF;
+- RDF/XML;
+- JSON Schema validation;
+- machine-readable examples;
+- source and provenance registries;
+- distribution and integrity manifests.
+
+Legal status is represented separately from semantic recognition. A match against a `CCI-*` indicator does not establish that any Australian criminal, civil, family-law, or other jurisdiction-specific legal test has been satisfied.
+
+## Machine-governance principle
+
+> **People describe experiences. Machines identify candidate concepts. Evidence establishes context. Patterns support assessment. Jurisdiction rules determine legal relevance. Authorised humans make consequential decisions.**
+
+## Repository governance
+
+This repository is a development and research workspace. Publication of a controlled vocabulary does not itself convert a machine-generated assessment into a legal, clinical, safeguarding, or enforcement determination.
+
+Machine-readable artefacts should preserve, where applicable:
+
+- stable canonical identifiers;
+- semantic versioning;
+- source authority and provenance;
+- evidence and counterevidence;
+- confidence and uncertainty;
+- jurisdiction and commencement status;
+- explicit prohibited automated actions;
+- human review requirements for consequential action.
+
+## Intellectual property and governance
+
+© 2025-2026 Sarah Ailish McLoughlin. All rights reserved.
+
+All code, systems, controlled vocabularies, documentation, semantic models, and related materials in this repository are the intellectual property of the author unless expressly stated otherwise.
+
+Use within EduLinked-Systems is authorised only under applicable governance alignment and licence arrangements, including **The McLoughlin Charter**.
