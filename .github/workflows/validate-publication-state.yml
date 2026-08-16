@@ -8,6 +8,8 @@ on:
       - "_includes/ssa-master-schema.html"
       - "concepts/ssa-ontology-v0.1.0/**"
       - "releases/ssa-ontology/**"
+      - "docs/ECOSYSTEM-AUTHORITY.json"
+      - "docs/website/verification-status.json"
       - "scripts/validate_publication_state.py"
       - ".github/workflows/validate-publication-state.yml"
   push:
@@ -19,6 +21,8 @@ on:
       - "_includes/ssa-master-schema.html"
       - "concepts/ssa-ontology-v0.1.0/**"
       - "releases/ssa-ontology/**"
+      - "docs/ECOSYSTEM-AUTHORITY.json"
+      - "docs/website/verification-status.json"
       - "scripts/validate_publication_state.py"
       - ".github/workflows/validate-publication-state.yml"
 
