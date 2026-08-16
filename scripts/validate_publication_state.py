@@ -20,6 +20,7 @@ EXPECTED_DATE = "2026-07-29"
 EXPECTED_CONCEPTS = 93
 EXPECTED_SCHEMES = 17
 EXPECTED_LICENSE = "https://creativecommons.org/licenses/by/4.0/"
+EXPECTED_REPOSITORY = "EduLinked-coder/McLoughlin.World"
 
 
 def fail(message: str) -> None:
@@ -32,12 +33,22 @@ def require(condition: bool, message: str) -> None:
         fail(message)
 
 
+def read_json(path: Path) -> dict:
+    try:
+        return json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError) as exc:
+        fail(f"cannot read valid JSON from {path.relative_to(ROOT)}: {exc}")
+
+
 def main() -> None:
     manifest_path = ROOT / "releases/ssa-ontology/v0.1.0/release-manifest.json"
     concepts_path = ROOT / "concepts/ssa-ontology-v0.1.0/README.md"
     root_readme_path = ROOT / "README.md"
     legacy_ssa_path = ROOT / "ssa/index.html"
     master_schema_path = ROOT / "_includes/ssa-master-schema.html"
+    authority_path = ROOT / "docs/ECOSYSTEM-AUTHORITY.json"
+    verification_path = ROOT / "docs/website/verification-status.json"
+    citation_path = ROOT / "releases/ssa-ontology/v0.1.0/CITATION.cff"
 
     for path in (
         manifest_path,
@@ -45,10 +56,13 @@ def main() -> None:
         root_readme_path,
         legacy_ssa_path,
         master_schema_path,
+        authority_path,
+        verification_path,
+        citation_path,
     ):
         require(path.exists(), f"required publication file is missing: {path.relative_to(ROOT)}")
 
-    manifest = json.loads(manifest_path.read_text(encoding="utf-8"))
+    manifest = read_json(manifest_path)
     require(manifest.get("release") == EXPECTED_RELEASE, "release version mismatch")
     require(manifest.get("datePublished") == EXPECTED_DATE, "release date mismatch")
     require(manifest.get("canonicalOntology") == CANONICAL_ONTOLOGY, "canonical ontology mismatch")
@@ -106,9 +120,32 @@ def main() -> None:
     require('"version": "0.1.0"' in master_schema, "master JSON-LD release version mismatch")
     require('"license": "https://creativecommons.org/licenses/by/4.0/"' in master_schema, "master JSON-LD licence mismatch")
 
+    authority = read_json(authority_path)
+    require(authority.get("canonical_publication_repository") == EXPECTED_REPOSITORY, "ecosystem authority repository mismatch")
+    require(authority.get("canonical_ontology") == CANONICAL_ONTOLOGY, "ecosystem authority canonical ontology mismatch")
+    require(authority.get("new_repository_assessment", {}).get("required") is False, "ecosystem authority unexpectedly requires a new repository")
+    precedence = authority.get("authority_precedence", [])
+    require(precedence and precedence[0] == "current_live_canonical_public_page", "authority precedence must start with the current live canonical public page")
+    require(all(item.get("may_override_public_release") is False for item in authority.get("repositories", [])), "an adjacent repository is incorrectly allowed to override the public release")
+
+    verification = read_json(verification_path)
+    require(verification.get("canonical_ontology") == CANONICAL_ONTOLOGY, "verification-status canonical ontology mismatch")
+    require(verification.get("release") == EXPECTED_RELEASE, "verification-status release mismatch")
+    require(verification.get("concept_count") == EXPECTED_CONCEPTS, "verification-status concept count mismatch")
+    require(verification.get("scheme_count") == EXPECTED_SCHEMES, "verification-status scheme count mismatch")
+    require(verification.get("hosted_artifact_integrity", {}).get("byte_identity_verified") is False, "verification status must not claim hosted byte identity before issue #3 is resolved")
+    require(verification.get("repository_licensing", {}).get("software_or_tooling_license_resolved") is False, "software/tooling licence must remain unresolved until an explicit repository licence is chosen")
+
+    citation = citation_path.read_text(encoding="utf-8")
+    require('version: "0.1.0"' in citation, "CITATION.cff release version mismatch")
+    require("date-released: 2026-07-29" in citation, "CITATION.cff release date mismatch")
+    require('url: "https://www.mcloughlin.world/glossaries/ssa-lexicon/"' in citation, "CITATION.cff canonical URL mismatch")
+    require("license: CC-BY-4.0" in citation, "CITATION.cff knowledge licence mismatch")
+
     print("Publication-state validation passed.")
     print(f"release={EXPECTED_RELEASE} concepts={EXPECTED_CONCEPTS} schemes={EXPECTED_SCHEMES}")
     print(f"canonical={CANONICAL_ONTOLOGY}")
+    print("authority=validated verification_metadata=validated citation=validated")
 
 
 if __name__ == "__main__":
