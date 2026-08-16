@@ -1,0 +1,21 @@
+cff-version: 1.2.0
+message: "If you use the Strategic Self-Advocacy Ontology, please cite it using the metadata below."
+title: "Strategic Self-Advocacy Ontology"
+version: "0.1.0"
+date-released: 2026-07-29
+type: dataset
+authors:
+  - family-names: "McLoughlin"
+    given-names: "Sarah Ailish"
+url: "https://www.mcloughlin.world/glossaries/ssa-lexicon/"
+license: CC-BY-4.0
+abstract: >-
+  A versioned semantic dataset for inclusion that publishes lived-experience-derived
+  concepts as permanent webpages and interoperable semantic data.
+keywords:
+  - Strategic Self-Advocacy
+  - ontology
+  - controlled vocabulary
+  - semantic data
+  - lived experience
+  - inclusion
