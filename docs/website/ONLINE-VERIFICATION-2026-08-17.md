@@ -46,6 +46,29 @@ The current public ontology/lexicon identity is rooted at:
 
 The older `/ssa/` route is a compatibility/legacy repository surface and must not be represented as the canonical ontology root.
 
+## Repository validation state
+
+The repository now includes a deterministic publication-state validator and GitHub Actions workflow.
+
+The first workflow run completed successfully on `main`:
+
+- workflow: `Validate publication state`;
+- run: `31974197400`;
+- commit: `dde356fe1e708b791ef19db2698fe28254af4333`;
+- conclusion: `success`.
+
+The validator checks repository-side canonical identity, release metadata, concept and scheme counts, knowledge licence, required release artefact declarations, 93 unique concept slugs, the `/ssa/` compatibility boundary and the current master JSON-LD metadata.
+
+A later validator revision also validates the machine-readable ecosystem authority map, verification status and SSA v0.1.0 citation metadata.
+
+## Repository licence boundary
+
+GitHub repository metadata currently reports no repository-level licence.
+
+This does not change the verified **CC BY 4.0** licence for published SSA knowledge content. It means repository software, scripts, Jekyll templates, workflows and tooling still require an explicit licensing decision rather than inheriting CC BY 4.0 by assumption.
+
+This decision is tracked in GitHub issue #4.
+
 ## Verification policy
 
 When the website, a historical repository file and an export disagree:
@@ -55,8 +78,11 @@ When the website, a historical repository file and an export disagree:
 3. retain older routes only as explicitly labelled compatibility or historical surfaces;
 4. preserve release/version history rather than silently rewriting historical evidence;
 5. do not infer availability of a machine-readable artefact solely from a generic navigation link;
-6. distinguish a published artefact from a repository-side reconstruction until hashes or byte identity are verified.
+6. distinguish a published artefact from a repository-side reconstruction until hashes or byte identity are verified;
+7. distinguish verified knowledge-content licensing from unresolved software/tooling licensing.
 
 ## Known next verification targets
 
 The dedicated SSA Ontology download and release URLs should be hash-verified against repository copies when their bytes are directly retrievable. Until then, repository reconstructions must retain `site-export-derived` or equivalent provenance and must not claim byte-for-byte identity with the hosted release files.
+
+The hosted-file comparison is tracked in GitHub issue #3.
