@@ -48,7 +48,9 @@ def main() -> None:
     master_schema_path = ROOT / "_includes/ssa-master-schema.html"
     authority_path = ROOT / "docs/ECOSYSTEM-AUTHORITY.json"
     verification_path = ROOT / "docs/website/verification-status.json"
-    citation_path = ROOT / "releases/ssa-ontology/v0.1.0/CITATION.cff"
+    release_citation_path = ROOT / "releases/ssa-ontology/v0.1.0/CITATION.cff"
+    root_citation_path = ROOT / "CITATION.cff"
+    licensing_path = ROOT / "docs/LICENSING.md"
 
     for path in (
         manifest_path,
@@ -58,7 +60,9 @@ def main() -> None:
         master_schema_path,
         authority_path,
         verification_path,
-        citation_path,
+        release_citation_path,
+        root_citation_path,
+        licensing_path,
     ):
         require(path.exists(), f"required publication file is missing: {path.relative_to(ROOT)}")
 
@@ -136,16 +140,26 @@ def main() -> None:
     require(verification.get("hosted_artifact_integrity", {}).get("byte_identity_verified") is False, "verification status must not claim hosted byte identity before issue #3 is resolved")
     require(verification.get("repository_licensing", {}).get("software_or_tooling_license_resolved") is False, "software/tooling licence must remain unresolved until an explicit repository licence is chosen")
 
-    citation = citation_path.read_text(encoding="utf-8")
-    require('version: "0.1.0"' in citation, "CITATION.cff release version mismatch")
-    require("date-released: 2026-07-29" in citation, "CITATION.cff release date mismatch")
-    require('url: "https://www.mcloughlin.world/glossaries/ssa-lexicon/"' in citation, "CITATION.cff canonical URL mismatch")
-    require("license: CC-BY-4.0" in citation, "CITATION.cff knowledge licence mismatch")
+    release_citation = release_citation_path.read_text(encoding="utf-8")
+    require('version: "0.1.0"' in release_citation, "release CITATION.cff version mismatch")
+    require("date-released: 2026-07-29" in release_citation, "release CITATION.cff date mismatch")
+    require('url: "https://www.mcloughlin.world/glossaries/ssa-lexicon/"' in release_citation, "release CITATION.cff canonical URL mismatch")
+    require("license: CC-BY-4.0" in release_citation, "release CITATION.cff knowledge licence mismatch")
+
+    root_citation = root_citation_path.read_text(encoding="utf-8")
+    require('repository-code: "https://github.com/EduLinked-coder/McLoughlin.World"' in root_citation, "root CITATION.cff repository mismatch")
+    require('version: "0.1.0"' in root_citation, "root CITATION.cff preferred release mismatch")
+    require("license: CC-BY-4.0" in root_citation, "root CITATION.cff preferred citation licence mismatch")
+
+    licensing = licensing_path.read_text(encoding="utf-8")
+    require("CC BY 4.0" in licensing, "licensing document does not record knowledge-content licence")
+    require("GitHub currently detects no repository-level licence" in licensing, "licensing document does not preserve repository-licence uncertainty")
+    require("must not be assumed to inherit CC BY 4.0" in licensing, "licensing document does not preserve code/content separation")
 
     print("Publication-state validation passed.")
     print(f"release={EXPECTED_RELEASE} concepts={EXPECTED_CONCEPTS} schemes={EXPECTED_SCHEMES}")
     print(f"canonical={CANONICAL_ONTOLOGY}")
-    print("authority=validated verification_metadata=validated citation=validated")
+    print("authority=validated verification_metadata=validated citations=validated licensing_boundary=validated")
 
 
 if __name__ == "__main__":
