@@ -4,6 +4,8 @@ on:
   pull_request:
     paths:
       - "README.md"
+      - "CITATION.cff"
+      - "docs/LICENSING.md"
       - "ssa/**"
       - "_includes/ssa-master-schema.html"
       - "concepts/ssa-ontology-v0.1.0/**"
@@ -17,6 +19,8 @@ on:
       - main
     paths:
       - "README.md"
+      - "CITATION.cff"
+      - "docs/LICENSING.md"
       - "ssa/**"
       - "_includes/ssa-master-schema.html"
       - "concepts/ssa-ontology-v0.1.0/**"
