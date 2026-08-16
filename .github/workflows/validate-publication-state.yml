@@ -1,0 +1,41 @@
+name: Validate publication state
+
+on:
+  pull_request:
+    paths:
+      - "README.md"
+      - "ssa/**"
+      - "_includes/ssa-master-schema.html"
+      - "concepts/ssa-ontology-v0.1.0/**"
+      - "releases/ssa-ontology/**"
+      - "scripts/validate_publication_state.py"
+      - ".github/workflows/validate-publication-state.yml"
+  push:
+    branches:
+      - main
+    paths:
+      - "README.md"
+      - "ssa/**"
+      - "_includes/ssa-master-schema.html"
+      - "concepts/ssa-ontology-v0.1.0/**"
+      - "releases/ssa-ontology/**"
+      - "scripts/validate_publication_state.py"
+      - ".github/workflows/validate-publication-state.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  validate:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Validate publication state
+        run: python scripts/validate_publication_state.py
