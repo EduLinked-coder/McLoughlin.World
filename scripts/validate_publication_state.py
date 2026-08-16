@@ -149,7 +149,8 @@ def main() -> None:
     root_citation = root_citation_path.read_text(encoding="utf-8")
     require('repository-code: "https://github.com/EduLinked-coder/McLoughlin.World"' in root_citation, "root CITATION.cff repository mismatch")
     require('version: "0.1.0"' in root_citation, "root CITATION.cff preferred release mismatch")
-    require("license: CC-BY-4.0" in root_citation, "root CITATION.cff preferred citation licence mismatch")
+    require('license: "CC-BY-4.0"' in root_citation, "root CITATION.cff preferred citation licence mismatch")
+    require("LicenseRef-Mixed-Pending-Software-License" not in root_citation, "root CITATION.cff must not invent an unresolved repository licence")
 
     licensing = licensing_path.read_text(encoding="utf-8")
     require("CC BY 4.0" in licensing, "licensing document does not record knowledge-content licence")
