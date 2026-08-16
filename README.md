@@ -35,6 +35,8 @@ Repository documentation for the current public architecture is maintained under
 - [docs/website/PUBLICATION-MODEL.md](docs/website/PUBLICATION-MODEL.md)
 - [docs/website/SSA-ONTOLOGY.md](docs/website/SSA-ONTOLOGY.md)
 - [docs/website/RELEASES.md](docs/website/RELEASES.md)
+- [docs/website/ONLINE-VERIFICATION-2026-08-17.md](docs/website/ONLINE-VERIFICATION-2026-08-17.md)
+- [docs/ECOSYSTEM-AUTHORITY.md](docs/ECOSYSTEM-AUTHORITY.md)
 
 ## Publication rule
 
@@ -143,6 +145,8 @@ Legal status is represented separately from semantic recognition. A match agains
 This repository is open source and supports public inspection, collaboration, interoperability, and reuse subject to the repository's applicable licence terms.
 
 The **live website is the source of truth for what is currently published publicly**. This repository is the open-source development, documentation, semantic interoperability and release-support surface. Where the two drift, the repository should be reconciled against verified public state without inventing unpublished content.
+
+The [ecosystem authority map](docs/ECOSYSTEM-AUTHORITY.md) defines how conflicts between the live site, releases, this repository, exports, research repositories and legacy/archive repositories are resolved. The current ecosystem review found no evidence-backed need for a separate SSA Ontology repository; this repository can absorb the public release, registry and interoperability gaps without creating another source of truth.
 
 Open publication does not remove the safeguards attached to the vocabularies themselves. Publication of a controlled vocabulary does not convert a machine-generated assessment into a legal, clinical, safeguarding, or enforcement determination.
 
