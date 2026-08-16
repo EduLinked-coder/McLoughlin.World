@@ -1,10 +1,18 @@
 # McLoughlin.World
 
+[![Validate publication state](https://github.com/EduLinked-coder/McLoughlin.World/actions/workflows/validate-publication-state.yml/badge.svg)](https://github.com/EduLinked-coder/McLoughlin.World/actions/workflows/validate-publication-state.yml)
+[![Check live publication](https://github.com/EduLinked-coder/McLoughlin.World/actions/workflows/check-live-publication.yml/badge.svg)](https://github.com/EduLinked-coder/McLoughlin.World/actions/workflows/check-live-publication.yml)
+
 McLoughlin.World is an **open-source public knowledge infrastructure** and publishing workspace for controlled vocabularies, semantic artefacts, datasets, concepts, research, workflows, and documentation created by **Sarah Ailish McLoughlin** and associated with McLoughlin.world and the broader **EduLinked-Systems** ecosystem.
 
 The repository is intended to make important human-readable knowledge and machine-operable public-interest infrastructure openly inspectable, reusable, interoperable, and improvable while preserving clear provenance, attribution, versioning, governance boundaries, and human accountability.
 
 **Live website:** https://www.mcloughlin.world/
+
+**Citation:** [CITATION.cff](CITATION.cff)  
+**Licensing boundary:** [docs/LICENSING.md](docs/LICENSING.md)  
+**Machine-readable authority map:** [docs/ECOSYSTEM-AUTHORITY.json](docs/ECOSYSTEM-AUTHORITY.json)  
+**Verification state:** [docs/website/verification-status.json](docs/website/verification-status.json)
 
 ## Current public website state
 
@@ -148,6 +156,11 @@ The **live website is the source of truth for what is currently published public
 
 The [ecosystem authority map](docs/ECOSYSTEM-AUTHORITY.md) defines how conflicts between the live site, releases, this repository, exports, research repositories and legacy/archive repositories are resolved. The current ecosystem review found no evidence-backed need for a separate SSA Ontology repository; this repository can absorb the public release, registry and interoperability gaps without creating another source of truth.
 
+Repository automation currently performs two complementary checks:
+
+- **publication-state validation** verifies repository-side canonical URLs, release identity, concept/scheme counts, provenance, citation and licensing boundaries;
+- **live-publication checking** performs read-only checks against the public McLoughlin.world surfaces and fails when expected publication markers drift.
+
 Open publication does not remove the safeguards attached to the vocabularies themselves. Publication of a controlled vocabulary does not convert a machine-generated assessment into a legal, clinical, safeguarding, or enforcement determination.
 
 Machine-readable artefacts should preserve, where applicable:
@@ -167,6 +180,11 @@ McLoughlin.World is published as an **open-source project**.
 
 Original authorship and provenance remain attributed to **Sarah Ailish McLoughlin**. Open-source availability is intended to enable transparent inspection, responsible reuse, contribution, adaptation, and interoperability while maintaining source attribution and the governance and safeguarding boundaries documented in this repository.
 
-The live website currently identifies **CC BY 4.0** as its knowledge licence. Repository-level software, code, third-party materials and other artefacts may require separate explicit licence terms; those terms should not be inferred solely from the website knowledge-licence statement.
+The live website currently identifies **CC BY 4.0** as its knowledge licence. Repository-level software, code, third-party materials and other artefacts may require separate explicit licence terms; those terms should not be inferred solely from the website knowledge-licence statement. See [docs/LICENSING.md](docs/LICENSING.md).
+
+Two boundaries remain intentionally unresolved until verified or explicitly decided:
+
+- hosted SSA v0.1.0 release files must not be claimed byte-identical to repository representations until SHA-256 comparison succeeds (issue #3);
+- the repository/software/tooling licence must not be inferred from the CC BY 4.0 knowledge licence (issue #4).
 
 © 2025-2026 Sarah Ailish McLoughlin.
