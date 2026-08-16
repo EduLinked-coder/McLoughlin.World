@@ -1,0 +1,27 @@
+cff-version: 1.2.0
+message: "If you use McLoughlin.World or its published knowledge infrastructure, please cite the relevant versioned release or canonical public resource."
+title: "McLoughlin.World"
+type: software
+authors:
+  - family-names: "McLoughlin"
+    given-names: "Sarah Ailish"
+repository-code: "https://github.com/EduLinked-coder/McLoughlin.World"
+url: "https://www.mcloughlin.world/"
+license: "LicenseRef-Mixed-Pending-Software-License"
+keywords:
+  - public knowledge infrastructure
+  - controlled vocabularies
+  - semantic web
+  - accessibility
+  - safeguarding
+  - strategic self-advocacy
+preferred-citation:
+  type: dataset
+  title: "Strategic Self-Advocacy Ontology"
+  version: "0.1.0"
+  date-released: "2026-07-29"
+  authors:
+    - family-names: "McLoughlin"
+      given-names: "Sarah Ailish"
+  url: "https://www.mcloughlin.world/glossaries/ssa-lexicon/"
+  license: "CC-BY-4.0"
