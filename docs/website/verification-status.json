@@ -1,0 +1,41 @@
+{
+  "object_type": "publication_verification_status",
+  "schema_version": "1.0.0",
+  "verified_date": "2026-08-17",
+  "canonical_ontology": "https://www.mcloughlin.world/glossaries/ssa-lexicon/",
+  "release": "0.1.0",
+  "release_date": "2026-07-29",
+  "concept_count": 93,
+  "scheme_count": 17,
+  "knowledge_license": "https://creativecommons.org/licenses/by/4.0/",
+  "repository_ci": {
+    "workflow": "Validate publication state",
+    "run_id": 31974197400,
+    "head_sha": "dde356fe1e708b791ef19db2698fe28254af4333",
+    "status": "completed",
+    "conclusion": "success",
+    "validated": [
+      "canonical_root",
+      "release_identity",
+      "release_date",
+      "concept_count",
+      "scheme_count",
+      "knowledge_license",
+      "release_artifact_declarations",
+      "concept_registry_count_and_uniqueness",
+      "legacy_ssa_compatibility_boundary",
+      "master_jsonld_publication_metadata"
+    ]
+  },
+  "hosted_artifact_integrity": {
+    "byte_identity_verified": false,
+    "tracking_issue": "https://github.com/EduLinked-coder/McLoughlin.World/issues/3",
+    "required_hash_algorithm": "SHA-256",
+    "status": "pending_direct_byte_retrieval_and_comparison"
+  },
+  "repository_licensing": {
+    "knowledge_content_license_verified": "CC BY 4.0",
+    "repository_level_license_detected_by_github": false,
+    "software_or_tooling_license_resolved": false
+  }
+}
