@@ -1,0 +1,43 @@
+{
+  "object_type": "ecosystem_authority_map",
+  "schema_version": "1.0.0",
+  "verified_date": "2026-08-17",
+  "canonical_publication_repository": "EduLinked-coder/McLoughlin.World",
+  "canonical_ontology": "https://www.mcloughlin.world/glossaries/ssa-lexicon/",
+  "authority_precedence": [
+    "current_live_canonical_public_page",
+    "explicit_current_release_record_and_verified_published_artifact",
+    "current_mcloughlin_world_repository_representation",
+    "verified_site_export_snapshot",
+    "governance_or_reference_repository_within_defined_domain",
+    "research_repository",
+    "archive_or_legacy_workspace"
+  ],
+  "repositories": [
+    {"repository":"EduLinked-coder/McLoughlin.World","classification":"canonical_repository_support","may_override_public_release":false},
+    {"repository":"EduLinked-coder/SSA-Website","classification":"legacy_noncanonical","may_override_public_release":false},
+    {"repository":"EduLinked-coder/SSA_Resistance_Archive-","classification":"archive_noncanonical","may_override_public_release":false},
+    {"repository":"EduLinked-coder/wiki","classification":"supporting_noncanonical","may_override_public_release":false},
+    {"repository":"EduLinked-coder/charter","classification":"governance_reference","may_override_public_release":false},
+    {"repository":"EduLinked-coder/Advocacy-AI","classification":"downstream_or_adjacent_system","may_override_public_release":false},
+    {"repository":"EduLinked-coder/SYSTEMS-CODEX","classification":"operational_reference","may_override_public_release":false},
+    {"repository":"EduLinked-coder/metadata-sovereignty","classification":"private_product_boundary","may_override_public_release":false,"automatic_cross_visibility_sync_permitted":false},
+    {"repository":"EduLinked-Systems/metadata-sovereignty-ai-research","classification":"public_research_reference","may_override_public_release":false,"automatic_private_dependency_permitted":false}
+  ],
+  "cross_repository_publication_requirements": [
+    "source_and_authorship_identified",
+    "publication_authority_clear",
+    "licensing_or_consent_permits_publication",
+    "no_private_topology_credentials_personal_data_or_protected_product_strategy",
+    "canonical_identifiers_assigned_or_preserved",
+    "provenance_retained",
+    "existing_concepts_checked_before_duplicate_creation",
+    "consequential_safeguarding_or_legal_claims_preserve_human_review"
+  ],
+  "new_repository_assessment": {
+    "required": false,
+    "reviewed_repository": "EduLinked-coder/McLoughlin.World",
+    "unmet_capability": null,
+    "reason": "The existing repository can absorb public release, concept registry, provenance, validation and interoperability artefacts without creating another source of truth."
+  }
+}
