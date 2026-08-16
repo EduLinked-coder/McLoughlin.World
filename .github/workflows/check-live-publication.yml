@@ -1,0 +1,30 @@
+name: Check live publication
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "17 21 * * *"
+  push:
+    branches:
+      - main
+    paths:
+      - "scripts/check_live_publication.py"
+      - ".github/workflows/check-live-publication.yml"
+
+permissions:
+  contents: read
+
+jobs:
+  check-live-publication:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out repository
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+
+      - name: Check live publication
+        run: python scripts/check_live_publication.py
