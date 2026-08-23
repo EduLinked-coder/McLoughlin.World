@@ -69,6 +69,10 @@ Repository resources:
 - [93-concept v0.1.0 registry](concepts/ssa-ontology-v0.1.0/README.md)
 - [Glossary and concept-scheme index](glossaries/README.md)
 
+### Release-number boundary
+
+The root [`release-manifest.json`](release-manifest.json) and [`CHANGELOG.md`](CHANGELOG.md) describe the historical `v0.2.0` site-export package. They do not supersede the canonical SSA Ontology `v0.1.0` release record under [`releases/ssa-ontology/v0.1.0/`](releases/ssa-ontology/v0.1.0/). The root manifest preserves packaging-time byte counts and hashes; because root working files have since changed, those values must not be treated as integrity claims for the current working tree.
+
 The legacy repository route `/ssa/` is retained for compatibility only and must not be treated as the canonical ontology root.
 
 McLoughlin.world publishes human-readable and machine-readable controlled vocabularies through the **SSA Lexicon**. These glossaries are designed so people, AI systems, software, researchers, safeguarding systems, and data pipelines can refer to the same concepts using stable identifiers, explicit provenance, versioned definitions, and clear decision boundaries.

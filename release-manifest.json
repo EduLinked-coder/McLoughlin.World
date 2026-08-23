@@ -1,4 +1,6 @@
 {
+  "objectType": "site_export_release_manifest",
+  "releaseScope": "historical_site_export_package",
   "name": "Strategic Self-Advocacy Lexicon",
   "version": "0.2.0",
   "releaseDate": "2026-07-29",
@@ -52,5 +54,20 @@
       "bytes": 574,
       "sha256": "ac189abe26a1c0246c155648f734ed4912b4d5284a8549e484c4b5ab908b9aaf"
     }
-  ]
+  ],
+  "ontologyReleaseBoundary": {
+    "currentPublicVersion": "0.1.0",
+    "canonicalManifest": "releases/ssa-ontology/v0.1.0/release-manifest.json",
+    "rule": "This site-export package version does not supersede the canonical SSA Ontology release version."
+  },
+  "integrity": {
+    "status": "historical_packaging_record",
+    "recordedArtifactsAreHistorical": true,
+    "currentRepositoryFilesVerifiedAgainstRecordedHashes": false,
+    "knownByteCountMismatches": [
+      "ssa-concepts.csv",
+      "README.md"
+    ],
+    "rule": "The files array records packaging-time byte counts and SHA-256 values. Do not treat them as hashes of mutable files currently at the repository root."
+  }
 }

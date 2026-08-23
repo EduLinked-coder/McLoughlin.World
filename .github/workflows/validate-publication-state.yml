@@ -4,6 +4,9 @@ on:
   pull_request:
     paths:
       - "README.md"
+      - "release-manifest.json"
+      - "CHANGELOG.md"
+      - "PUBLICATION-RULES.md"
       - "CITATION.cff"
       - "docs/LICENSING.md"
       - "ssa/**"
@@ -19,6 +22,9 @@ on:
       - main
     paths:
       - "README.md"
+      - "release-manifest.json"
+      - "CHANGELOG.md"
+      - "PUBLICATION-RULES.md"
       - "CITATION.cff"
       - "docs/LICENSING.md"
       - "ssa/**"
