@@ -42,6 +42,7 @@ def read_json(path: Path) -> dict:
 
 def main() -> None:
     manifest_path = ROOT / "releases/ssa-ontology/v0.1.0/release-manifest.json"
+    root_export_manifest_path = ROOT / "release-manifest.json"
     concepts_path = ROOT / "concepts/ssa-ontology-v0.1.0/README.md"
     root_readme_path = ROOT / "README.md"
     legacy_ssa_path = ROOT / "ssa/index.html"
@@ -54,6 +55,7 @@ def main() -> None:
 
     for path in (
         manifest_path,
+        root_export_manifest_path,
         concepts_path,
         root_readme_path,
         legacy_ssa_path,
@@ -67,12 +69,23 @@ def main() -> None:
         require(path.exists(), f"required publication file is missing: {path.relative_to(ROOT)}")
 
     manifest = read_json(manifest_path)
+    root_export_manifest = read_json(root_export_manifest_path)
     require(manifest.get("release") == EXPECTED_RELEASE, "release version mismatch")
     require(manifest.get("datePublished") == EXPECTED_DATE, "release date mismatch")
     require(manifest.get("canonicalOntology") == CANONICAL_ONTOLOGY, "canonical ontology mismatch")
     require(manifest.get("conceptCount") == EXPECTED_CONCEPTS, "concept count mismatch")
     require(manifest.get("schemeCount") == EXPECTED_SCHEMES, "scheme count mismatch")
     require(manifest.get("license") == EXPECTED_LICENSE, "knowledge licence mismatch")
+
+    require(root_export_manifest.get("objectType") == "site_export_release_manifest", "root export manifest object type mismatch")
+    require(root_export_manifest.get("releaseScope") == "historical_site_export_package", "root export manifest scope mismatch")
+    require(root_export_manifest.get("version") == "0.2.0", "historical site-export package version mismatch")
+    ontology_boundary = root_export_manifest.get("ontologyReleaseBoundary", {})
+    require(ontology_boundary.get("currentPublicVersion") == EXPECTED_RELEASE, "root export manifest confuses site-export and ontology versions")
+    require(ontology_boundary.get("canonicalManifest") == "releases/ssa-ontology/v0.1.0/release-manifest.json", "root export manifest does not identify the canonical ontology release manifest")
+    export_integrity = root_export_manifest.get("integrity", {})
+    require(export_integrity.get("recordedArtifactsAreHistorical") is True, "root export manifest must classify recorded artefacts as historical")
+    require(export_integrity.get("currentRepositoryFilesVerifiedAgainstRecordedHashes") is False, "root export manifest must not claim current working-tree hash verification")
 
     representation = manifest.get("repositoryRepresentation", {})
     require(
