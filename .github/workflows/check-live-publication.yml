@@ -9,10 +9,16 @@ on:
       - main
     paths:
       - "scripts/check_live_publication.py"
+      - "releases/ssa-ontology/v0.1.0/**"
+      - "docs/website/verification-status.json"
       - ".github/workflows/check-live-publication.yml"
 
 permissions:
   contents: read
+
+concurrency:
+  group: check-live-publication-${{ github.ref }}
+  cancel-in-progress: true
 
 jobs:
   check-live-publication:
@@ -26,5 +32,14 @@ jobs:
         with:
           python-version: "3.12"
 
-      - name: Check live publication
+      - name: Check live publication and hosted release integrity
         run: python scripts/check_live_publication.py
+
+      - name: Retain machine-readable hosted artifact integrity receipt
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: ssa-hosted-artifact-integrity-${{ github.run_id }}
+          path: docs/website/hosted-artifact-integrity-runtime.json
+          if-no-files-found: error
+          retention-days: 7
