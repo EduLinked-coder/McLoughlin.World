@@ -1,7 +1,7 @@
 {
   "object_type": "publication_verification_status",
   "schema_version": "1.0.0",
-  "verified_date": "2026-08-17",
+  "verified_date": "2026-08-27",
   "canonical_ontology": "https://www.mcloughlin.world/glossaries/ssa-lexicon/",
   "release": "0.1.0",
   "release_date": "2026-07-29",
@@ -31,7 +31,61 @@
     "byte_identity_verified": false,
     "tracking_issue": "https://github.com/EduLinked-coder/McLoughlin.World/issues/3",
     "required_hash_algorithm": "SHA-256",
-    "status": "pending_direct_byte_retrieval_and_comparison"
+    "status": "hosted_package_consistent_repository_byte_mismatch_observed",
+    "runtime_witness": {
+      "workflow": "Check live publication",
+      "run_id": 33020130614,
+      "job_id": 98348211209,
+      "head_sha": "86208471323fa69315ae1e543ecae0e2a34b7bdb",
+      "execution_integrity": "CHECK_EXECUTED_FAILED",
+      "artifact_id": 9626190604
+    },
+    "summary": {
+      "declared_artifacts": 10,
+      "hosted_artifacts_retrieved": 10,
+      "published_zip_member_comparisons": 9,
+      "published_zip_member_matches": 9,
+      "published_zip_member_mismatches": 0,
+      "repository_exact_copy_comparisons": 4,
+      "repository_exact_copy_matches": 0,
+      "repository_exact_copy_mismatches": 4,
+      "no_local_exact_copy": 6
+    },
+    "known_mismatches": [
+      {
+        "filename": "release-manifest.json",
+        "repository_path": "releases/ssa-ontology/v0.1.0/release-manifest.json",
+        "hosted_sha256": "2d981c98e15c24df8711ff48a8e4e0bb0026fa74e5e0b33dd09aa584734aecfb",
+        "repository_sha256": "2bba46e46704fe65d12a0728ad4f238f611bbe8a26ded7ff4d80c49a93bbfad5"
+      },
+      {
+        "filename": "CHANGELOG.md",
+        "repository_path": "releases/ssa-ontology/v0.1.0/CHANGELOG.md",
+        "hosted_sha256": "a9b39f77b171e77d065aeff0b9a3b5a5139e18e7c0d20c0d3088b2352b386239",
+        "repository_sha256": "e338f56ecd86b90fd1af8b8389a7f9fec8b22433156cc51269a7a5379dcc8c44"
+      },
+      {
+        "filename": "LICENSE.txt",
+        "repository_path": "releases/ssa-ontology/v0.1.0/LICENSE.txt",
+        "hosted_sha256": "e0459d1c0a4be68ce0897a4db179b3f3c2090a6609022e612b17c5ea2239fc97",
+        "repository_sha256": "81378311d6b7253010f7df208f6439d1d242ee3b0115c55e1ada9a42f2e49d0e"
+      },
+      {
+        "filename": "README.md",
+        "repository_path": "releases/ssa-ontology/v0.1.0/README.md",
+        "hosted_sha256": "d114cc5e2f7bc0d468de4625e548d667a7772336a72322729f62319d6b814857",
+        "repository_sha256": "29457d75af231bad4069d02032c4d51989d14bc4cda1fc062bff2551765916b1"
+      }
+    ],
+    "no_local_exact_copy": [
+      "ssa-ontology-v0.1.0.zip",
+      "ssa-ontology.jsonld",
+      "ssa-ontology.ttl",
+      "ssa-ontology.rdf",
+      "ssa-ontology.json",
+      "ssa-terms.csv"
+    ],
+    "claim_boundary": "Published ZIP consistency and recorded mismatches do not establish repository byte identity."
   },
   "repository_licensing": {
     "knowledge_content_license_verified": "CC BY 4.0",
