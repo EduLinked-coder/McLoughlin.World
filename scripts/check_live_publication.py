@@ -5,11 +5,13 @@ This script detects drift between repository expectations and the public site.
 It never changes canonical content and should be treated as a monitoring aid,
 not as publication authority.
 
-The SSA release-integrity check reuses the canonical release manifest. It
-records hosted SHA-256 hashes, compares exact repository-side copies where they
-actually exist, and compares separately hosted artefacts with matching members
-inside the published ZIP. Missing exact repository copies remain explicit and
-must never be promoted to byte-identity claims.
+The SSA release-integrity check reuses the canonical release manifest and the
+existing publication verification status. It records hosted SHA-256 hashes,
+compares exact repository-side copies where they actually exist, compares
+separately hosted artefacts with matching members inside the published ZIP, and
+fails only on a new or changed integrity signature. A durably recorded mismatch
+remains a mismatch; acknowledging it prevents routine monitoring from staying
+red forever without falsely promoting byte identity.
 """
 
 from __future__ import annotations
@@ -17,6 +19,7 @@ from __future__ import annotations
 import hashlib
 import io
 import json
+import re
 import sys
 import urllib.error
 import urllib.request
@@ -25,42 +28,28 @@ from datetime import datetime, timezone
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[1]
-USER_AGENT = "McLoughlin.World-publication-check/1.1"
+USER_AGENT = "McLoughlin.World-publication-check/1.2"
 TIMEOUT = 20
 RELEASE_MANIFEST = ROOT / "releases/ssa-ontology/v0.1.0/release-manifest.json"
+VERIFICATION_STATUS = ROOT / "docs/website/verification-status.json"
 INTEGRITY_RECEIPT = ROOT / "docs/website/hosted-artifact-integrity-runtime.json"
 
 PAGES = [
-    (
-        "https://www.mcloughlin.world/",
-        ["93", "17", "CC BY 4.0"],
-    ),
-    (
-        "https://www.mcloughlin.world/glossaries/ssa-lexicon/",
-        ["SSA", "0.1.0"],
-    ),
-    (
-        "https://www.mcloughlin.world/glossaries/ssa-lexicon/browse/",
-        ["Browse"],
-    ),
+    ("https://www.mcloughlin.world/", ["93", "17", "CC BY 4.0"]),
+    ("https://www.mcloughlin.world/glossaries/ssa-lexicon/", ["SSA", "0.1.0"]),
+    ("https://www.mcloughlin.world/glossaries/ssa-lexicon/browse/", ["Browse"]),
     (
         "https://www.mcloughlin.world/glossaries/ssa-lexicon/downloads/",
         ["JSON-LD", "Turtle", "CSV"],
     ),
-    (
-        "https://www.mcloughlin.world/glossaries/ssa-lexicon/releases/",
-        ["0.1.0"],
-    ),
-    (
-        "https://www.mcloughlin.world/datasets/",
-        ["Datasets", "SSA"],
-    ),
+    ("https://www.mcloughlin.world/glossaries/ssa-lexicon/releases/", ["0.1.0"]),
+    ("https://www.mcloughlin.world/datasets/", ["Datasets", "SSA"]),
 ]
 
-# Only these release records currently have repository files that purport to
-# represent the same published artefact byte-for-byte. The semantic data files
-# and ZIP are site-export-derived reconstructions or externally hosted package
-# artefacts; absence of an exact local copy must remain explicit.
+# Only these release records currently have repository files that are directly
+# comparable to published artefacts. The semantic serialisations and ZIP have
+# no local exact-copy representation; they remain explicitly unresolved rather
+# than being compared with differently derived source/export files.
 EXACT_REPOSITORY_COPIES = {
     "release-manifest.json": RELEASE_MANIFEST,
     "CHANGELOG.md": ROOT / "releases/ssa-ontology/v0.1.0/CHANGELOG.md",
@@ -89,18 +78,55 @@ def sha256(data: bytes) -> str:
 
 def zip_members_by_basename(zip_bytes: bytes) -> dict[str, bytes]:
     members: dict[str, bytes] = {}
+    duplicates: set[str] = set()
     with zipfile.ZipFile(io.BytesIO(zip_bytes)) as archive:
         for name in archive.namelist():
             if name.endswith("/"):
                 continue
             basename = Path(name).name
-            # Ambiguous duplicate basenames are intentionally excluded rather
-            # than guessed into a false comparison.
-            if basename in members:
+            if basename in members or basename in duplicates:
                 members.pop(basename, None)
+                duplicates.add(basename)
                 continue
             members[basename] = archive.read(name)
     return members
+
+
+def load_known_mismatches() -> dict[str, dict]:
+    try:
+        status = json.loads(VERIFICATION_STATUS.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {}
+    integrity = status.get("hosted_artifact_integrity", {})
+    rows = integrity.get("known_mismatches", [])
+    if not isinstance(rows, list):
+        return {}
+    return {
+        row.get("filename"): row
+        for row in rows
+        if isinstance(row, dict) and isinstance(row.get("filename"), str)
+    }
+
+
+def classify_difference(filename: str, hosted: bytes, local: bytes) -> str:
+    if filename.lower().endswith(".json"):
+        try:
+            if json.loads(hosted.decode("utf-8")) == json.loads(local.decode("utf-8")):
+                return "JSON_SERIALIZATION_ONLY"
+            return "JSON_CONTENT_DIFFERENCE"
+        except (UnicodeDecodeError, json.JSONDecodeError):
+            return "BINARY_OR_UNPARSEABLE_DIFFERENCE"
+
+    try:
+        hosted_text = hosted.decode("utf-8")
+        local_text = local.decode("utf-8")
+    except UnicodeDecodeError:
+        return "BINARY_DIFFERENCE"
+
+    normalize = lambda value: re.sub(r"\s+", " ", value).strip()
+    if normalize(hosted_text) == normalize(local_text):
+        return "WHITESPACE_ONLY"
+    return "TEXT_CONTENT_DIFFERENCE"
 
 
 def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
@@ -117,6 +143,7 @@ def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
     if not isinstance(declared, list) or not declared:
         return ["canonical release manifest declares no published artifacts"], {}
 
+    known_mismatches = load_known_mismatches()
     hosted: dict[str, bytes] = {}
     artifact_rows: list[dict] = []
 
@@ -149,7 +176,8 @@ def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
 
     exact_comparisons = 0
     exact_matches = 0
-    exact_mismatches = 0
+    acknowledged_mismatches = 0
+    unacknowledged_mismatches = 0
     package_comparisons = 0
     package_matches = 0
     package_mismatches = 0
@@ -159,37 +187,52 @@ def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
         if not isinstance(filename, str) or filename not in hosted:
             continue
         body = hosted[filename]
+        hosted_digest = sha256(body)
         row = {
             "filename": filename,
             "hosted_url": public_root.rstrip("/") + "/" + filename,
             "hosted_bytes": len(body),
-            "hosted_sha256": sha256(body),
+            "hosted_sha256": hosted_digest,
             "repository_exact_path": None,
             "repository_sha256": None,
             "repository_byte_identity": "NO_LOCAL_EXACT_COPY",
+            "difference_class": None,
             "package_member_sha256": None,
             "package_member_identity": "NOT_APPLICABLE" if filename == zip_name else "NOT_PRESENT",
         }
 
         local_path = EXACT_REPOSITORY_COPIES.get(filename)
         if local_path is not None:
-            row["repository_exact_path"] = str(local_path.relative_to(ROOT))
+            relative_path = str(local_path.relative_to(ROOT))
+            row["repository_exact_path"] = relative_path
             if not local_path.exists():
                 row["repository_byte_identity"] = "LOCAL_COPY_MISSING"
                 failures.append(f"{filename}: expected exact repository copy is missing")
             else:
                 local_bytes = local_path.read_bytes()
-                row["repository_sha256"] = sha256(local_bytes)
+                local_digest = sha256(local_bytes)
+                row["repository_sha256"] = local_digest
                 exact_comparisons += 1
                 if local_bytes == body:
                     row["repository_byte_identity"] = "MATCH"
                     exact_matches += 1
                 else:
-                    row["repository_byte_identity"] = "MISMATCH"
-                    exact_mismatches += 1
-                    failures.append(
-                        f"{filename}: hosted bytes differ from {local_path.relative_to(ROOT)}"
+                    row["difference_class"] = classify_difference(filename, body, local_bytes)
+                    expected = known_mismatches.get(filename, {})
+                    signature_known = (
+                        expected.get("repository_path") == relative_path
+                        and expected.get("hosted_sha256") == hosted_digest
+                        and expected.get("repository_sha256") == local_digest
                     )
+                    if signature_known:
+                        row["repository_byte_identity"] = "MISMATCH_ACKNOWLEDGED"
+                        acknowledged_mismatches += 1
+                    else:
+                        row["repository_byte_identity"] = "MISMATCH_UNACKNOWLEDGED"
+                        unacknowledged_mismatches += 1
+                        failures.append(
+                            f"{filename}: new hosted/repository mismatch signature at {relative_path}"
+                        )
 
         if filename != zip_name and filename in zip_members:
             member = zip_members[filename]
@@ -211,13 +254,23 @@ def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
     full_repository_identity = (
         len(artifact_rows) == len(declared)
         and local_exact_missing == 0
-        and exact_mismatches == 0
+        and acknowledged_mismatches == 0
+        and unacknowledged_mismatches == 0
         and exact_matches == len(declared)
     )
 
+    if failures:
+        receipt_status = "FAIL"
+    elif full_repository_identity:
+        receipt_status = "VERIFIED"
+    elif acknowledged_mismatches:
+        receipt_status = "KNOWN_MISMATCH_STABLE"
+    else:
+        receipt_status = "PARTIAL_VERIFIED"
+
     receipt = {
         "object_type": "ssa_hosted_artifact_integrity_receipt",
-        "schema_version": "1.0.0",
+        "schema_version": "1.1.0",
         "observed_at": datetime.now(timezone.utc).isoformat(),
         "canonical_release": manifest.get("release"),
         "canonical_manifest": str(RELEASE_MANIFEST.relative_to(ROOT)),
@@ -229,19 +282,21 @@ def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
             "hosted_artifacts_retrieved": len(hosted),
             "exact_repository_comparisons": exact_comparisons,
             "exact_repository_matches": exact_matches,
-            "exact_repository_mismatches": exact_mismatches,
+            "acknowledged_repository_mismatches": acknowledged_mismatches,
+            "unacknowledged_repository_mismatches": unacknowledged_mismatches,
             "no_local_exact_copy": local_exact_missing,
             "package_member_comparisons": package_comparisons,
             "package_member_matches": package_matches,
             "package_member_mismatches": package_mismatches,
             "full_repository_byte_identity_verified": full_repository_identity,
         },
-        "status": "FAIL" if failures else ("VERIFIED" if full_repository_identity else "PARTIAL_VERIFIED"),
+        "status": receipt_status,
         "claim_boundaries": [
             "HOSTED_RETRIEVAL != REPOSITORY_BYTE_IDENTITY",
             "PACKAGE_MEMBER_MATCH != REPOSITORY_BYTE_IDENTITY",
+            "ACKNOWLEDGED_MISMATCH != BYTE_IDENTITY",
             "NO_LOCAL_EXACT_COPY != MISMATCH",
-            "PARTIAL_VERIFIED != FULL_RELEASE_BYTE_IDENTITY",
+            "KNOWN_MISMATCH_STABLE != FULL_RELEASE_BYTE_IDENTITY",
         ],
     }
 
@@ -282,6 +337,7 @@ def main() -> None:
             "SSA hosted artifact integrity: "
             f"retrieved={summary['hosted_artifacts_retrieved']}/{summary['declared_artifacts']} "
             f"repo_matches={summary['exact_repository_matches']}/{summary['exact_repository_comparisons']} "
+            f"acknowledged_mismatches={summary['acknowledged_repository_mismatches']} "
             f"zip_matches={summary['package_member_matches']}/{summary['package_member_comparisons']} "
             f"status={receipt['status']}"
         )
