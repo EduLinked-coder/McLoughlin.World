@@ -8,6 +8,7 @@ replace human review of releases, licensing, safeguarding, or legal content.
 
 from __future__ import annotations
 
+import csv
 import json
 import re
 import sys
@@ -43,6 +44,8 @@ def read_json(path: Path) -> dict:
 def main() -> None:
     manifest_path = ROOT / "releases/ssa-ontology/v0.1.0/release-manifest.json"
     root_export_manifest_path = ROOT / "release-manifest.json"
+    root_jsonld_path = ROOT / "ssa-lexicon.jsonld"
+    root_csv_path = ROOT / "ssa-concepts.csv"
     concepts_path = ROOT / "concepts/ssa-ontology-v0.1.0/README.md"
     root_readme_path = ROOT / "README.md"
     legacy_ssa_path = ROOT / "ssa/index.html"
@@ -56,6 +59,8 @@ def main() -> None:
     for path in (
         manifest_path,
         root_export_manifest_path,
+        root_jsonld_path,
+        root_csv_path,
         concepts_path,
         root_readme_path,
         legacy_ssa_path,
@@ -83,6 +88,45 @@ def main() -> None:
     ontology_boundary = root_export_manifest.get("ontologyReleaseBoundary", {})
     require(ontology_boundary.get("currentPublicVersion") == EXPECTED_RELEASE, "root export manifest confuses site-export and ontology versions")
     require(ontology_boundary.get("canonicalManifest") == "releases/ssa-ontology/v0.1.0/release-manifest.json", "root export manifest does not identify the canonical ontology release manifest")
+    working_artifacts = {
+        item.get("path"): item
+        for item in ontology_boundary.get("workingSemanticArtifacts", [])
+    }
+    expected_working_artifacts = {"ssa-lexicon.jsonld", "ssa-concepts.csv"}
+    require(set(working_artifacts) == expected_working_artifacts, "root export manifest must classify both working semantic artefacts")
+    require(
+        all(item.get("declaredVersion") == "0.2.0" for item in working_artifacts.values()),
+        "root working semantic artefact version boundary mismatch",
+    )
+    require(
+        all(item.get("classification") == "historical_site_export_representation" for item in working_artifacts.values()),
+        "root working semantic artefact classification mismatch",
+    )
+    require(
+        ontology_boundary.get("workingArtifactsAreCanonicalReleaseFiles") is False,
+        "root working semantic artefacts must not be classified as canonical release files",
+    )
+
+    root_jsonld = read_json(root_jsonld_path)
+    graph = root_jsonld.get("@graph", [])
+    require(isinstance(graph, list), "root JSON-LD @graph must be an array")
+    dataset_nodes = [node for node in graph if node.get("@id") == f"{CANONICAL_ONTOLOGY}#dataset"]
+    require(len(dataset_nodes) == 1, "root JSON-LD must contain exactly one canonical dataset node")
+    require(dataset_nodes[0].get("schema:version") == "0.2.0", "root JSON-LD dataset must preserve the site-export version")
+    concept_nodes = [node for node in graph if "skos:Concept" in node.get("@type", [])]
+    scheme_nodes = [node for node in graph if "skos:ConceptScheme" in node.get("@type", [])]
+    require(len(concept_nodes) == EXPECTED_CONCEPTS, "root JSON-LD concept count mismatch")
+    require(len(scheme_nodes) == EXPECTED_SCHEMES, "root JSON-LD scheme count mismatch")
+    require(all(node.get("owl:versionInfo") == "0.2.0" for node in concept_nodes), "root JSON-LD concepts must preserve the site-export version")
+    require(all(node.get("schema:version") == "0.2.0" for node in scheme_nodes), "root JSON-LD schemes must preserve the site-export version")
+
+    try:
+        with root_csv_path.open(encoding="utf-8", newline="") as handle:
+            csv_rows = list(csv.DictReader(handle))
+    except OSError as exc:
+        fail(f"cannot read {root_csv_path.relative_to(ROOT)}: {exc}")
+    require(len(csv_rows) == EXPECTED_CONCEPTS, "root CSV concept count mismatch")
+    require({row.get("version") for row in csv_rows} == {"0.2.0"}, "root CSV concepts must preserve the site-export version")
     export_integrity = root_export_manifest.get("integrity", {})
     require(export_integrity.get("recordedArtifactsAreHistorical") is True, "root export manifest must classify recorded artefacts as historical")
     require(export_integrity.get("currentRepositoryFilesVerifiedAgainstRecordedHashes") is False, "root export manifest must not claim current working-tree hash verification")
@@ -174,6 +218,7 @@ def main() -> None:
     print(f"release={EXPECTED_RELEASE} concepts={EXPECTED_CONCEPTS} schemes={EXPECTED_SCHEMES}")
     print(f"canonical={CANONICAL_ONTOLOGY}")
     print("authority=validated verification_metadata=validated citations=validated licensing_boundary=validated")
+    print("root_semantic_artifacts=historical_site_export_representation declared_version=0.2.0")
 
 
 if __name__ == "__main__":
