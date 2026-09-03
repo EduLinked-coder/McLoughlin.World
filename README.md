@@ -71,7 +71,11 @@ Repository resources:
 
 ### Release-number boundary
 
-The root [`release-manifest.json`](release-manifest.json) and [`CHANGELOG.md`](CHANGELOG.md) describe the historical `v0.2.0` site-export package. They do not supersede the canonical SSA Ontology `v0.1.0` release record under [`releases/ssa-ontology/v0.1.0/`](releases/ssa-ontology/v0.1.0/). The root manifest preserves packaging-time byte counts and hashes; because root working files have since changed, those values must not be treated as integrity claims for the current working tree.
+The root [`release-manifest.json`](release-manifest.json) and [`CHANGELOG.md`](CHANGELOG.md) describe the historical `v0.2.0` site-export package. They do not supersede the canonical SSA Ontology `v0.1.0` release record under [`releases/ssa-ontology/v0.1.0/`](releases/ssa-ontology/v0.1.0/).
+
+The root [`ssa-lexicon.jsonld`](ssa-lexicon.jsonld) and [`ssa-concepts.csv`](ssa-concepts.csv) are working semantic representations derived from that site export. Their embedded `0.2.0` values record the source export version; they are not canonical `v0.1.0` release files and must not be silently relabelled as such. The root manifest records this classification explicitly.
+
+The root manifest preserves packaging-time byte counts and hashes; because root working files have since changed, those values must not be treated as integrity claims for the current working tree.
 
 The legacy repository route `/ssa/` is retained for compatibility only and must not be treated as the canonical ontology root.
 
