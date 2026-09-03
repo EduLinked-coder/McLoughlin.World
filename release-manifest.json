@@ -58,7 +58,20 @@
   "ontologyReleaseBoundary": {
     "currentPublicVersion": "0.1.0",
     "canonicalManifest": "releases/ssa-ontology/v0.1.0/release-manifest.json",
-    "rule": "This site-export package version does not supersede the canonical SSA Ontology release version."
+    "rule": "The site-export package version and embedded working-artifact versions do not supersede the canonical SSA Ontology release version.",
+    "workingSemanticArtifacts": [
+      {
+        "path": "ssa-lexicon.jsonld",
+        "declaredVersion": "0.2.0",
+        "classification": "historical_site_export_representation"
+      },
+      {
+        "path": "ssa-concepts.csv",
+        "declaredVersion": "0.2.0",
+        "classification": "historical_site_export_representation"
+      }
+    ],
+    "workingArtifactsAreCanonicalReleaseFiles": false
   },
   "integrity": {
     "status": "historical_packaging_record",
