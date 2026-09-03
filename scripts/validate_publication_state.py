@@ -118,7 +118,7 @@ def main() -> None:
     require(len(concept_nodes) == EXPECTED_CONCEPTS, "root JSON-LD concept count mismatch")
     require(len(scheme_nodes) == EXPECTED_SCHEMES, "root JSON-LD scheme count mismatch")
     require(all(node.get("owl:versionInfo") == "0.2.0" for node in concept_nodes), "root JSON-LD concepts must preserve the site-export version")
-    require(all(node.get("schema:version") == "0.2.0" for node in scheme_nodes), "root JSON-LD schemes must preserve the site-export version")
+    require(all(node.get("owl:versionInfo") == "0.2.0" for node in scheme_nodes), "root JSON-LD schemes must preserve the site-export version")
 
     try:
         with root_csv_path.open(encoding="utf-8", newline="") as handle:
