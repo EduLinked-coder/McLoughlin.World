@@ -13,6 +13,70 @@
     "research_repository",
     "archive_or_legacy_workspace"
   ],
+  "publication_projection_binding": {
+    "id": "MCLOUGHLIN-WORLD-PUBLICATION-PROJECTION-001",
+    "reviewed_date": "2026-09-10",
+    "source_repository": "EduLinked-coder/McLoughlin.World",
+    "source_repository_role": "canonical_repository_support",
+    "authoritative_human_facing_projection": {
+      "url": "https://www.mcloughlin.world/",
+      "authority_state": "CURRENT_LIVE_CANONICAL_PUBLIC_PAGE",
+      "presentation_platform": "Oncord",
+      "platform_evidence": "The live canonical homepage currently identifies itself as Website Powered by Oncord.",
+      "identity_is_platform_independent": true,
+      "source_authority_transfers_on_projection": false
+    },
+    "repository_projection": {
+      "url": "https://github.com/EduLinked-coder/McLoughlin.World",
+      "role": "open_source_development_documentation_semantic_interoperability_and_release_support",
+      "may_override_current_live_publication": false
+    },
+    "github_pages_projection": {
+      "enabled": true,
+      "repository_homepage": null,
+      "source_controlled_pages_workflow_present": false,
+      "observed_workflows": [
+        ".github/workflows/check-live-publication.yml",
+        ".github/workflows/validate-publication-state.yml"
+      ],
+      "state": "TECHNICAL_CONFIGURATION_PRESENT_NOT_CANONICAL_PUBLICATION_ROUTE",
+      "approved_public_destination": false,
+      "source_authority_transfers_on_projection": false
+    },
+    "invariants": [
+      "LIVE_CANONICAL_PUBLIC_PAGE > REPOSITORY_REPRESENTATION",
+      "ONCORD_PRESENTATION != CANONICAL_IDENTITY",
+      "GITHUB_PAGES_ENABLED != PUBLICATION_AUTHORITY",
+      "GITHUB_PAGES_ENABLED != LIVE_SITE_ROUTING_PROOF",
+      "REPOSITORY_VISIBILITY != PUBLICATION_APPROVAL",
+      "TECHNICAL_PROJECTION != SOURCE_AUTHORITY_TRANSFER"
+    ],
+    "continuation": {
+      "remaining_uncertainty": [
+        "the infrastructure route that publishes or synchronises repository-supported material to the live Oncord site",
+        "the exact GitHub Pages URL and what, if anything, its enabled technical configuration currently renders"
+      ],
+      "required_evidence_before_promotion": [
+        "source-owned deployment or synchronisation evidence for the live Oncord route",
+        "source-owned GitHub Pages configuration or deployment evidence before treating Pages as an active publication projection"
+      ],
+      "reentry_trigger": "new source-owned deployment evidence establishes either the live-site publishing route or the exact GitHub Pages projection"
+    },
+    "receipt": {
+      "inspected": [
+        "canonical repository ecosystem registry classification for EduLinked-coder/McLoughlin.World",
+        "repository README publication authority statement",
+        "PUBLICATION-RULES.md Oncord identity boundary",
+        "docs/ECOSYSTEM-AUTHORITY.json",
+        "repository metadata showing has_pages=true and homepage=null",
+        ".github/workflows directory",
+        "current live https://www.mcloughlin.world/ homepage"
+      ],
+      "changed": "Bound the already-authoritative live McLoughlin.world human-facing publication surface to its observed Oncord presentation layer while classifying GitHub Pages as technical configuration only, not publication authority.",
+      "source_authority": "Current live canonical public pages remain first in authority precedence; the repository remains canonical repository support and does not override live published state.",
+      "remaining_uncertainty_preserved": true
+    }
+  },
   "repositories": [
     {"repository":"EduLinked-coder/McLoughlin.World","classification":"canonical_repository_support","may_override_public_release":false},
     {"repository":"EduLinked-coder/SSA-Website","classification":"legacy_noncanonical","may_override_public_release":false},
