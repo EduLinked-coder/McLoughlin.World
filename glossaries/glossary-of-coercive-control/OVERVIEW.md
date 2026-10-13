@@ -142,3 +142,17 @@ Examples include:
 ## Governance principle
 
 People describe experiences. Machines identify candidate concepts. Evidence establishes context. Patterns support assessment. Jurisdiction rules determine legal relevance. Authorised humans make consequential decisions.
+
+## Repository validation boundary
+
+The repository mirrors and integrity-checks the CSV, JSON-LD, Turtle, and RDF/XML distributions plus the package manifest, schema, examples, and source registry. The published download names in `checksums.json` and `SHA256SUMS.txt` differ from the shorter repository filenames; each checksum URL identifies the corresponding repository mirror by its URL basename.
+
+The distribution manifest also declares a hosted `glossary.json` representation. That file is not present in this repository and is not covered by repository checksum validation. Do not infer repository possession or byte-level verification of that hosted representation.
+
+Run the repository-side checks with:
+
+```bash
+python scripts/validate_coercive_control_package.py
+```
+
+The check verifies JSON readability, canonical identity and version alignment, unique JSON-LD term codes, byte counts and SHA-256 values for mirrored files, and parity between the two checksum records. It does not apply `schema.json` to examples, validate RDF semantics, verify live URLs or time-sensitive legal sources, establish legal or safeguarding conclusions, or replace human review.
