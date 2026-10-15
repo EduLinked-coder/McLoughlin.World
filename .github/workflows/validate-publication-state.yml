@@ -15,9 +15,11 @@ on:
       - "_includes/ssa-master-schema.html"
       - "concepts/ssa-ontology-v0.1.0/**"
       - "releases/ssa-ontology/**"
+      - "glossaries/glossary-of-coercive-control/**"
       - "docs/ECOSYSTEM-AUTHORITY.json"
       - "docs/website/verification-status.json"
       - "scripts/validate_publication_state.py"
+      - "scripts/validate_coercive_control_package.py"
       - ".github/workflows/validate-publication-state.yml"
   push:
     branches:
@@ -35,9 +37,11 @@ on:
       - "_includes/ssa-master-schema.html"
       - "concepts/ssa-ontology-v0.1.0/**"
       - "releases/ssa-ontology/**"
+      - "glossaries/glossary-of-coercive-control/**"
       - "docs/ECOSYSTEM-AUTHORITY.json"
       - "docs/website/verification-status.json"
       - "scripts/validate_publication_state.py"
+      - "scripts/validate_coercive_control_package.py"
       - ".github/workflows/validate-publication-state.yml"
 
 permissions:
@@ -57,3 +61,6 @@ jobs:
 
       - name: Validate publication state
         run: python scripts/validate_publication_state.py
+
+      - name: Validate coercive-control glossary package
+        run: python scripts/validate_coercive_control_package.py
