@@ -347,7 +347,7 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
         rdap = fetch_public_json(f"https://rdap.org/domain/{host}")
         if str(rdap.get("ldhName", "")).lower().rstrip(".") == host:
             result["registration_rdap"] = "RDAP_RECORD_OBSERVED"
-            for event in rdap.get("events", []):
+            for event in (rdap.get("events") if isinstance(rdap.get("events"), list) else []):
                 if (
                     isinstance(event, dict)
                     and event.get("eventAction") == "expiration"
@@ -372,7 +372,7 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
             elif data.get("Status") == 0:
                 answers = [
                     item.get("data")
-                    for item in data.get("Answer", [])
+                    for item in (data.get("Answer") if isinstance(data.get("Answer"), list) else [])
                     if isinstance(item, dict)
                     and item.get("type") == record_type
                     and isinstance(item.get("data"), str)
