@@ -35,6 +35,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         with (
             patch.object(checker.socket, "getaddrinfo", return_value=[("ok",)]),
             patch.object(checker, "fetch_text", return_value=(200, "https://example.org/", "The Index Line")),
+            patch.object(checker, "lookup_domain_registry_and_dns", return_value={"registration_rdap": "UNKNOWN"}),
         ):
             row = checker.observe_related_public_surfaces((("candidate", url),))[0]
         self.assertEqual(row["http_observation"], "RESPONSE_NOT_SUFFICIENT_FOR_ROUTE_MATCH")
@@ -45,6 +46,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         with (
             patch.object(checker.socket, "getaddrinfo", side_effect=socket.gaierror("lookup failed")),
             patch.object(checker, "fetch_text", side_effect=urllib.error.URLError("unavailable")),
+            patch.object(checker, "lookup_domain_registry_and_dns", return_value={"registration_rdap": "UNKNOWN"}),
         ):
             row = checker.observe_related_public_surfaces((("candidate", url),))[0]
         self.assertEqual(row["address_resolution"], "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY")
@@ -58,10 +60,58 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         with (
             patch.object(checker.socket, "getaddrinfo", return_value=[("ok",)]),
             patch.object(checker, "fetch_text", side_effect=error),
+            patch.object(checker, "lookup_domain_registry_and_dns", return_value={"registration_rdap": "UNKNOWN"}),
         ):
             row = checker.observe_related_public_surfaces((("candidate", url),))[0]
         self.assertEqual(row["http_status"], 404)
         self.assertEqual(row["http_observation"], "HTTP_NON_200")
+
+
+    def test_public_rdap_and_dns_are_distinct_from_delivery_or_oncord(self):
+        def public_response(url):
+            if "rdap.org" in url:
+                return {
+                    "ldhName": "INDEXLINE.ORG",
+                    "events": [{"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}],
+                }
+            if "type=NS" in url:
+                return {"Status": 0, "Answer": [{"type": 2, "data": "ns1.example.net."}]}
+            if "type=MX" in url:
+                return {"Status": 0, "Answer": [{"type": 15, "data": "10 mx.example.net."}]}
+            raise AssertionError(f"Unexpected public-only query: {url}")
+
+        with patch.object(checker, "fetch_public_json", side_effect=public_response) as fetch:
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(fetch.call_count, 3)
+        self.assertEqual(details["registration_rdap"], "RDAP_RECORD_OBSERVED")
+        self.assertEqual(details["rdap_expiry_event"], "2027-07-04T00:00:00Z")
+        self.assertEqual(details["dns_ns"], "RECORDS_OBSERVED")
+        self.assertEqual(details["dns_mx"], "RECORDS_OBSERVED")
+        self.assertEqual(details["dns_ns_answers"], ["ns1.example.net."])
+        self.assertEqual(details["dns_mx_answers"], ["10 mx.example.net."])
+        self.assertNotIn("mail_delivery_verified", details)
+
+    def test_public_registry_and_dns_fail_closed(self):
+        with patch.object(
+            checker, "fetch_public_json", side_effect=urllib.error.URLError("offline")
+        ):
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(details["registration_rdap"], "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY")
+        self.assertEqual(details["dns_ns"], "DNS_LOOKUP_FAILED")
+        self.assertEqual(details["dns_mx"], "DNS_LOOKUP_FAILED")
+        self.assertIsNone(details["rdap_expiry_event"])
+
+    def test_nxdomain_response_does_not_prove_registrar_expiry(self):
+        def public_response(url):
+            if "rdap.org" in url:
+                return {"ldhName": "not-the-domain.example"}
+            return {"Status": 3}
+
+        with patch.object(checker, "fetch_public_json", side_effect=public_response):
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(details["registration_rdap"], "RDAP_RESPONSE_IDENTITY_UNVERIFIED")
+        self.assertEqual(details["dns_ns"], "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF")
+        self.assertEqual(details["dns_mx"], "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF")
 
 
 if __name__ == "__main__":
