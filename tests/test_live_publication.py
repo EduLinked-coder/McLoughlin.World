@@ -44,6 +44,33 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(row["http_observation"], "RESPONSE_NOT_SUFFICIENT_FOR_ROUTE_MATCH")
         self.assertEqual(row["oncord_connection"], "UNKNOWN")
 
+    def test_same_host_wrong_path_redirect_does_not_verify_requested_route(self):
+        url = "https://www.mcloughlin.world/theindexline/"
+        redirected = "https://www.mcloughlin.world/publications/"
+        with (
+            patch.object(checker.socket, "getaddrinfo", return_value=[("ok",)]),
+            patch.object(checker, "fetch_text", return_value=(200, redirected, "<h1>The Index Line</h1>")),
+        ):
+            row = checker.observe_related_public_surfaces((("historic_route", url),))[0]
+        self.assertEqual(row["http_status"], 200)
+        self.assertEqual(row["final_url"], redirected)
+        self.assertEqual(row["http_observation"], "RESPONSE_NOT_SUFFICIENT_FOR_ROUTE_MATCH")
+        self.assertEqual(row["publication_authorisation"], "NOT_VERIFIED")
+
+    def test_same_path_trailing_slash_normalisation_remains_observational(self):
+        url = "https://www.mcloughlin.world/theindexline/"
+        with (
+            patch.object(checker.socket, "getaddrinfo", return_value=[("ok",)]),
+            patch.object(
+                checker, "fetch_text",
+                return_value=(200, "https://www.mcloughlin.world/theindexline", "<h1>The Index Line</h1>"),
+            ),
+        ):
+            row = checker.observe_related_public_surfaces((("historic_route", url),))[0]
+        self.assertEqual(row["http_observation"], "HTTP_200_EXPECTED_MARKER_OBSERVED")
+        self.assertEqual(row["oncord_connection"], "UNKNOWN")
+        self.assertEqual(row["editorial_approval"], "NOT_VERIFIED")
+
     def test_failures_do_not_prove_expiry_or_change_authority(self):
         url = "https://indexline.org/"
         with (
