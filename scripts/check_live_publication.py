@@ -442,6 +442,9 @@ def observe_related_public_surfaces(
                 status == 200
                 and urlsplit(final_url).scheme == "https"
                 and urlsplit(final_url).hostname == host
+                # A same-host redirect to a different page is not route parity,
+                # even when the destination mentions The Index Line.
+                and urlsplit(final_url).path.rstrip("/") == urlsplit(url).path.rstrip("/")
                 and has_index_line_page_identity(body)
             ):
                 row["http_observation"] = "HTTP_200_EXPECTED_MARKER_OBSERVED"
