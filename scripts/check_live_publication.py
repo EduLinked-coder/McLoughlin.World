@@ -408,7 +408,7 @@ def main() -> None:
                 "UNKNOWN != PASS"
             ),
         }
-        INTEGRITY_RECEIPT.write_text(json.dumps(receipt, indent=2) + "\\n", encoding="utf-8")
+        INTEGRITY_RECEIPT.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
         for item in receipt["related_index_line_observations"]["observations"]:
             print(
                 f"Index Line diagnostic {item['surface_id']}: "
