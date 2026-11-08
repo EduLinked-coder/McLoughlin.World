@@ -27,12 +27,13 @@ import urllib.request
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
-from urllib.parse import urlsplit
+from urllib.parse import urlencode, urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 USER_AGENT = "McLoughlin.World-publication-check/1.2"
 TIMEOUT = 20
 RELATED_SURFACE_TIMEOUT = 6
+PUBLIC_METADATA_TIMEOUT = 5
 RELEASE_MANIFEST = ROOT / "releases/ssa-ontology/v0.1.0/release-manifest.json"
 VERIFICATION_STATUS = ROOT / "docs/website/verification-status.json"
 INTEGRITY_RECEIPT = ROOT / "docs/website/hosted-artifact-integrity-runtime.json"
@@ -316,6 +317,77 @@ def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
     return failures, receipt
 
 
+def fetch_public_json(url: str, timeout: float = PUBLIC_METADATA_TIMEOUT) -> dict:
+    """Fetch public registry/DNS metadata; never collect registrant contact data."""
+    request = urllib.request.Request(
+        url, headers={"User-Agent": USER_AGENT, "Accept": "application/json"}
+    )
+    with urllib.request.urlopen(request, timeout=timeout) as response:
+        payload = json.load(response)
+    if not isinstance(payload, dict):
+        raise ValueError("Expected a JSON object")
+    return payload
+
+
+def lookup_domain_registry_and_dns(host: str) -> dict:
+    """Independently observe RDAP registration and NS/MX DNS answers.
+
+    No result establishes the domain owner's authority, working email delivery,
+    an Oncord tenant, renewal payment or editorial rights.
+    """
+    result = {
+        "registration_rdap": "UNKNOWN",
+        "rdap_expiry_event": None,
+        "dns_ns": "UNKNOWN",
+        "dns_mx": "UNKNOWN",
+        "dns_ns_answers": [],
+        "dns_mx_answers": [],
+    }
+    try:
+        rdap = fetch_public_json(f"https://rdap.org/domain/{host}")
+        if str(rdap.get("ldhName", "")).lower().rstrip(".") == host:
+            result["registration_rdap"] = "RDAP_RECORD_OBSERVED"
+            for event in rdap.get("events", []):
+                if (
+                    isinstance(event, dict)
+                    and event.get("eventAction") == "expiration"
+                    and isinstance(event.get("eventDate"), str)
+                ):
+                    result["rdap_expiry_event"] = event["eventDate"]
+                    break
+        else:
+            result["registration_rdap"] = "RDAP_RESPONSE_IDENTITY_UNVERIFIED"
+    except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+        result["registration_rdap"] = "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+
+    for label, record_type in (("ns", 2), ("mx", 15)):
+        try:
+            data = fetch_public_json(
+                "https://dns.google/resolve?" + urlencode({
+                    "name": host, "type": label.upper()
+                })
+            )
+            if data.get("Status") == 3:
+                result[f"dns_{label}"] = "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF"
+            elif data.get("Status") == 0:
+                answers = [
+                    item.get("data")
+                    for item in data.get("Answer", [])
+                    if isinstance(item, dict)
+                    and item.get("type") == record_type
+                    and isinstance(item.get("data"), str)
+                ]
+                result[f"dns_{label}"] = (
+                    "RECORDS_OBSERVED" if answers else "NO_MATCHING_ANSWERS_OBSERVED"
+                )
+                result[f"dns_{label}_answers"] = answers[:20]
+            else:
+                result[f"dns_{label}"] = "DNS_RESPONSE_INCONCLUSIVE"
+        except (urllib.error.URLError, TimeoutError, OSError, ValueError):
+            result[f"dns_{label}"] = "DNS_LOOKUP_FAILED"
+    return result
+
+
 def observe_related_public_surfaces(
     targets: tuple[tuple[str, str], ...] = RELATED_INDEX_LINE_SURFACES,
 ) -> list[dict]:
@@ -367,6 +439,8 @@ def observe_related_public_surfaces(
             row["http_observation"] = "HTTP_NON_200"
         except (urllib.error.URLError, TimeoutError, OSError):
             row["http_observation"] = "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS"
+        if host == "indexline.org":
+            row.update(lookup_domain_registry_and_dns(host))
         observations.append(row)
     return observations
 
@@ -403,8 +477,9 @@ def main() -> None:
             "source": "docs/website/OTHER-PUBLIC-SURFACES.md",
             "observations": observe_related_public_surfaces(),
             "claim_boundary": (
-                "DNS_ADDRESS_OR_HTTP_RESPONSE != DOMAIN_REGISTRATION_OR_RENEWAL; "
-                "PAGE_MARKER != EDITORIAL_APPROVAL_OR_ONCORD_PUBLICATION; "
+                "RDAP_OR_DNS_ANSWERS != REGISTRANT_AUTHORITY_OR_RENEWAL_PAYMENT; "
+                "DNS_MX_RECORD != FUNCTIONING_EMAIL; "
+                "HTTP_PAGE_MARKER != EDITORIAL_APPROVAL_OR_ONCORD_PUBLICATION; "
                 "UNKNOWN != PASS"
             ),
         }
