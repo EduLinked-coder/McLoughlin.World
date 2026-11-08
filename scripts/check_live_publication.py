@@ -513,6 +513,75 @@ def append_index_line_actions_summary(observations: list[dict]) -> None:
         print(f"Actions summary unavailable: {type(exc).__name__}", file=sys.stderr)
 
 
+def verify_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> list[str]:
+    """Independently read back the existing scheduled/main receipt after writing.
+
+    Match source revision and run ID against GitHub-provided execution context.
+    This is technical receipt integrity only, never evidence or editorial approval.
+    Do not trigger another network lookup or write another tracking object.
+    """
+    failures: list[str] = []
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return ["existing hosted integrity receipt is missing or unreadable"]
+    if not isinstance(payload, dict) or payload.get("object_type") != "ssa_hosted_artifact_integrity_receipt":
+        return ["existing hosted integrity receipt has unexpected object type"]
+    related = payload.get("related_index_line_observations")
+    if not isinstance(related, dict):
+        return ["existing receipt has no Index Line observation section"]
+
+    expected_sha = os.environ.get("GITHUB_SHA", "")
+    expected_run = os.environ.get("GITHUB_RUN_ID", "")
+    if not re.fullmatch(r"[0-9a-fA-F]{40}", expected_sha):
+        failures.append("trusted GitHub source revision is missing or invalid")
+    elif related.get("source_revision") != expected_sha:
+        failures.append("recorded source revision does not match executing revision")
+    if not re.fullmatch(r"[0-9]+", expected_run):
+        failures.append("trusted GitHub run ID is missing or invalid")
+    elif related.get("run_id") != expected_run:
+        failures.append("recorded run ID does not match executing run")
+    if related.get("source") != "docs/website/OTHER-PUBLIC-SURFACES.md":
+        failures.append("Index Line route source is not the established site-export manifest")
+
+    observed = related.get("observations")
+    if not isinstance(observed, list):
+        return failures + ["Index Line observation population is absent or invalid"]
+    expected_surfaces = dict(RELATED_INDEX_LINE_SURFACES)
+    seen: set[str] = set()
+    for item in observed:
+        if not isinstance(item, dict):
+            failures.append("Index Line observation row is not a mapping")
+            continue
+        surface = item.get("surface_id")
+        if not isinstance(surface, str) or surface not in expected_surfaces or surface in seen:
+            failures.append("Index Line observation has an unexpected or duplicate identity")
+            continue
+        seen.add(surface)
+        if item.get("url") != expected_surfaces[surface]:
+            failures.append(f"{surface}: observed URL differs from the known diagnostic target")
+        if not isinstance(item.get("observed_at"), str):
+            failures.append(f"{surface}: observation timestamp missing")
+        # Technical diagnostics must never be converted into editorial or Oncord approvals.
+        if (item.get("oncord_connection") != "UNKNOWN"
+                or item.get("editorial_approval") != "NOT_VERIFIED"
+                or item.get("publication_authorisation") != "NOT_VERIFIED"):
+            failures.append(f"{surface}: protected authority boundary changed")
+    if seen != set(expected_surfaces):
+        failures.append("Index Line diagnostic observation population is incomplete")
+    return failures
+
+
+def run_index_line_receipt_readback() -> None:
+    """Fail the existing CI job on corrupt/misattributed persisted observations."""
+    problems = verify_index_line_receipt_readback()
+    if problems:
+        for problem in problems:
+            print(f"Index Line receipt readback failed: {problem}", file=sys.stderr)
+        raise SystemExit(1)
+    print("Index Line receipt readback passed: source SHA, run ID, targets, protected gates.")
+
+
 def show_related_index_line_observations() -> None:
     """Print safe public diagnostics to the existing Actions job log.
 
@@ -615,7 +684,12 @@ def main() -> None:
 if __name__ == "__main__":
     if sys.argv[1:] == ["--related-index-line-only"]:
         show_related_index_line_observations()
+    elif sys.argv[1:] == ["--verify-index-line-receipt"]:
+        run_index_line_receipt_readback()
     elif len(sys.argv) == 1:
         main()
     else:
-        raise SystemExit("Usage: check_live_publication.py [--related-index-line-only]")
+        raise SystemExit(
+            "Usage: check_live_publication.py "
+            "[--related-index-line-only|--verify-index-line-receipt]"
+        )
