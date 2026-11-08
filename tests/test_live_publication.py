@@ -222,6 +222,8 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         }
         observed = [{
             "surface_id": "indexline_org_unverified_domain",
+            "address_resolution": "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+            "http_observation": "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS",
             "registration": "UNKNOWN",
             "oncord_connection": "UNKNOWN",
             "editorial_approval": "NOT_VERIFIED",
@@ -230,6 +232,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             destination = Path(tmp) / "hosted-artifact-integrity-runtime.json"
             with (
+                patch.object(checker, "ROOT", Path(tmp)),
                 patch.object(checker, "PAGES", []),
                 patch.object(checker, "INTEGRITY_RECEIPT", destination),
                 patch.object(checker, "verify_hosted_release_artifacts", return_value=([], base)),
@@ -269,6 +272,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             destination = Path(tmp) / "hosted-artifact-integrity-runtime.json"
             with (
+                patch.object(checker, "ROOT", Path(tmp)),
                 patch.object(checker, "PAGES", []),
                 patch.object(checker, "INTEGRITY_RECEIPT", destination),
                 patch.object(checker, "verify_hosted_release_artifacts", return_value=(["fixture release drift"], base)),
