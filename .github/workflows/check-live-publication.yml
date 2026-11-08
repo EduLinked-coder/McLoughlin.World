@@ -1,6 +1,11 @@
 name: Check live publication
 
 on:
+  pull_request:
+    paths:
+      - "scripts/check_live_publication.py"
+      - "tests/test_live_publication.py"
+      - ".github/workflows/check-live-publication.yml"
   workflow_dispatch:
   schedule:
     - cron: "17 21 * * *"
@@ -37,10 +42,11 @@ jobs:
         run: python -m unittest discover -s tests -p "test_live_publication.py" -v
 
       - name: Check live publication and hosted release integrity
+        if: github.event_name != 'pull_request'
         run: python scripts/check_live_publication.py
 
       - name: Retain machine-readable hosted artifact integrity receipt
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: ssa-hosted-artifact-integrity-${{ github.run_id }}
