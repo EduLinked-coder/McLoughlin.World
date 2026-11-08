@@ -79,3 +79,13 @@ jobs:
               exit 1
             }
           echo "Retained Index Line receipt matches producing bytes."
+          receipt_sha="$(sha256sum "${{ runner.temp }}/index-line-retained-receipt/hosted-artifact-integrity-runtime.json" | cut -d ' ' -f1)"
+          {
+            echo "### The Index Line — retained artifact integrity"
+            echo ""
+            echo "- GitHub run ID: \`${GITHUB_RUN_ID}\`"
+            echo "- Source revision: \`${GITHUB_SHA}\`"
+            echo "- Retained artifact SHA-256: \`${receipt_sha}\`"
+            echo "- Transport verification: \`BYTES_MATCH_PRODUCER\`"
+            echo "- Boundary: technical artifact evidence only; editorial approval, domain and Oncord remain separately governed."
+          } >> "${GITHUB_STEP_SUMMARY}"
