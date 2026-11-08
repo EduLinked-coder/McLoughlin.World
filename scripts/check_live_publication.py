@@ -20,16 +20,19 @@ import hashlib
 import io
 import json
 import re
+import socket
 import sys
 import urllib.error
 import urllib.request
 import zipfile
 from datetime import datetime, timezone
 from pathlib import Path
+from urllib.parse import urlsplit
 
 ROOT = Path(__file__).resolve().parents[1]
 USER_AGENT = "McLoughlin.World-publication-check/1.2"
 TIMEOUT = 20
+RELATED_SURFACE_TIMEOUT = 6
 RELEASE_MANIFEST = ROOT / "releases/ssa-ontology/v0.1.0/release-manifest.json"
 VERIFICATION_STATUS = ROOT / "docs/website/verification-status.json"
 INTEGRITY_RECEIPT = ROOT / "docs/website/hosted-artifact-integrity-runtime.json"
@@ -46,6 +49,14 @@ PAGES = [
     ("https://www.mcloughlin.world/datasets/", ["Datasets", "SSA"]),
 ]
 
+# These are observational targets, not approved Index Line publishing routes.
+# The McLoughlin.world route originates in docs/website/OTHER-PUBLIC-SURFACES.md
+# (7 August 2026 export). indexline.org remains independently unverified.
+RELATED_INDEX_LINE_SURFACES = (
+    ("mcloughlin_world_index_line_export_route", "https://www.mcloughlin.world/theindexline/"),
+    ("indexline_org_unverified_domain", "https://indexline.org/"),
+)
+
 # Only these release records currently have repository files that are directly
 # comparable to published artefacts. The semantic serialisations and ZIP have
 # no local exact-copy representation; they remain explicitly unresolved rather
@@ -58,17 +69,17 @@ EXACT_REPOSITORY_COPIES = {
 }
 
 
-def fetch_bytes(url: str) -> tuple[int, str, bytes]:
+def fetch_bytes(url: str, timeout: float = TIMEOUT) -> tuple[int, str, bytes]:
     request = urllib.request.Request(
         url,
         headers={"User-Agent": USER_AGENT, "Accept": "*/*"},
     )
-    with urllib.request.urlopen(request, timeout=TIMEOUT) as response:
+    with urllib.request.urlopen(request, timeout=timeout) as response:
         return response.getcode(), response.geturl(), response.read()
 
 
-def fetch_text(url: str) -> tuple[int, str, str]:
-    status, final_url, body = fetch_bytes(url)
+def fetch_text(url: str, timeout: float = TIMEOUT) -> tuple[int, str, str]:
+    status, final_url, body = fetch_bytes(url, timeout=timeout)
     return status, final_url, body.decode("utf-8", errors="replace")
 
 
@@ -305,6 +316,61 @@ def verify_hosted_release_artifacts() -> tuple[list[str], dict]:
     return failures, receipt
 
 
+def observe_related_public_surfaces(
+    targets: tuple[tuple[str, str], ...] = RELATED_INDEX_LINE_SURFACES,
+) -> list[dict]:
+    """Bounded, read-only observations; no claim of ownership or publication approval.
+
+    DNS address resolution is independent of an HTTP response. Neither confirms
+    domain registration/renewal, MX/email service, Oncord, rights or editorial
+    release. Failures here are informative and never change the SSA release gate.
+    """
+    observations = []
+    for surface_id, url in targets:
+        host = urlsplit(url).hostname
+        row = {
+            "surface_id": surface_id,
+            "url": url,
+            "observed_at": datetime.now(timezone.utc).isoformat(),
+            "address_resolution": "UNKNOWN",
+            "http_status": None,
+            "final_url": None,
+            "http_observation": "UNKNOWN",
+            "registration": "UNKNOWN",
+            "mail_mx_and_delivery": "UNKNOWN",
+            "oncord_connection": "UNKNOWN",
+            "editorial_approval": "NOT_VERIFIED",
+            "publication_authorisation": "NOT_VERIFIED",
+        }
+        try:
+            socket.getaddrinfo(host, 443, type=socket.SOCK_STREAM)
+            row["address_resolution"] = "RESOLVED"
+        except (socket.gaierror, OSError):
+            row["address_resolution"] = "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+
+        try:
+            status, final_url, body = fetch_text(url, timeout=RELATED_SURFACE_TIMEOUT)
+            row["http_status"] = status
+            row["final_url"] = final_url
+            if (
+                status == 200
+                and urlsplit(final_url).scheme == "https"
+                and urlsplit(final_url).hostname == host
+                and "the index line" in body.lower()
+            ):
+                row["http_observation"] = "HTTP_200_EXPECTED_MARKER_OBSERVED"
+            else:
+                row["http_observation"] = "RESPONSE_NOT_SUFFICIENT_FOR_ROUTE_MATCH"
+        except urllib.error.HTTPError as exc:
+            row["http_status"] = exc.code
+            row["final_url"] = exc.geturl()
+            row["http_observation"] = "HTTP_NON_200"
+        except (urllib.error.URLError, TimeoutError, OSError):
+            row["http_observation"] = "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS"
+        observations.append(row)
+    return observations
+
+
 def main() -> None:
     failures: list[str] = []
 
@@ -332,6 +398,22 @@ def main() -> None:
     integrity_failures, receipt = verify_hosted_release_artifacts()
     failures.extend(integrity_failures)
     if receipt:
+        receipt["related_index_line_observations"] = {
+            "purpose": "non_authoritative_public_route_diagnostics",
+            "source": "docs/website/OTHER-PUBLIC-SURFACES.md",
+            "observations": observe_related_public_surfaces(),
+            "claim_boundary": (
+                "DNS_ADDRESS_OR_HTTP_RESPONSE != DOMAIN_REGISTRATION_OR_RENEWAL; "
+                "PAGE_MARKER != EDITORIAL_APPROVAL_OR_ONCORD_PUBLICATION; "
+                "UNKNOWN != PASS"
+            ),
+        }
+        INTEGRITY_RECEIPT.write_text(json.dumps(receipt, indent=2) + "\\n", encoding="utf-8")
+        for item in receipt["related_index_line_observations"]["observations"]:
+            print(
+                f"Index Line diagnostic {item['surface_id']}: "
+                f"address={item['address_resolution']} http={item['http_observation']}"
+            )
         summary = receipt["summary"]
         print(
             "SSA hosted artifact integrity: "
