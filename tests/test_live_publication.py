@@ -292,5 +292,56 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(receipt["related_index_line_observations"]["observations"], [])
 
 
+    def test_actions_summary_reuses_existing_review_surface_and_scrubs_untrusted_text(self):
+        rows = [{
+            "surface_id": "indexline_org_unverified_domain",
+            "address_resolution": "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+            "http_observation": "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS",
+            "registration_rdap": "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+            "dns_ns": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+            "dns_mx": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+            "oncord_connection": "UNKNOWN",
+            "editorial_approval": "NOT_VERIFIED",
+            "publication_authorisation": "<script>untrusted</script>",
+        }]
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "summary.md"
+            path.write_text("Existing job evidence\n", encoding="utf-8")
+            with patch.dict(checker.os.environ, {"GITHUB_STEP_SUMMARY": str(path)}):
+                checker.append_index_line_actions_summary(rows)
+            summary = path.read_text(encoding="utf-8")
+        self.assertTrue(summary.startswith("Existing job evidence\n"))
+        self.assertIn("indexline_org_unverified_domain", summary)
+        self.assertIn("NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF", summary)
+        self.assertIn("NOT_VERIFIED | UNKNOWN |", summary)
+        self.assertIn("UNKNOWN != PASS", summary)
+        self.assertNotIn("<script>", summary)
+        self.assertNotIn("registrant_email", summary)
+
+    def test_pr_diagnostic_observes_once_and_writes_native_job_summary(self):
+        observations = [{
+            "surface_id": "historic_route",
+            "http_observation": "HTTP_200_EXPECTED_MARKER_OBSERVED",
+            "editorial_approval": "NOT_VERIFIED",
+            "publication_authorisation": "NOT_VERIFIED",
+        }]
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "summary.md"
+            output = io.StringIO()
+            with (
+                patch.object(checker, "observe_related_public_surfaces", return_value=observations) as probe,
+                patch.dict(checker.os.environ, {"GITHUB_STEP_SUMMARY": str(path)}),
+                redirect_stdout(output),
+            ):
+                checker.show_related_index_line_observations()
+            summary = path.read_text(encoding="utf-8")
+        self.assertEqual(probe.call_count, 1)
+        self.assertEqual(json.loads(output.getvalue())["observations"], observations)
+        self.assertIn("HTTP_200_EXPECTED_MARKER_OBSERVED", summary)
+        self.assertIn("author rights", summary)
+        self.assertIn("UNKNOWN != PASS", summary)
+
+
+
 if __name__ == "__main__":
     unittest.main()
