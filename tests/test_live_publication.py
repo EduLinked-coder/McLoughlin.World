@@ -377,5 +377,74 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
 
 
 
+class ReceiptReadbackTests(unittest.TestCase):
+    """Offline verification of the existing scheduled receipt, without new probes."""
+
+    @staticmethod
+    def sample_receipt():
+        return {
+            "object_type": "ssa_hosted_artifact_integrity_receipt",
+            "status": "KNOWN_MISMATCH_STABLE",
+            "related_index_line_observations": {
+                "source": "docs/website/OTHER-PUBLIC-SURFACES.md",
+                "source_revision": "a" * 40,
+                "run_id": "42524656628",
+                "observations": [
+                    {
+                        "surface_id": surface_id, "url": url,
+                        "observed_at": "2026-11-08T21:20:00+00:00",
+                        "oncord_connection": "UNKNOWN",
+                        "editorial_approval": "NOT_VERIFIED",
+                        "publication_authorisation": "NOT_VERIFIED",
+                    }
+                    for surface_id, url in checker.RELATED_INDEX_LINE_SURFACES
+                ],
+            },
+        }
+
+    def readback(self, receipt):
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "hosted-artifact-integrity-runtime.json"
+            path.write_text(json.dumps(receipt), encoding="utf-8")
+            with patch.dict(checker.os.environ, {
+                "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "42524656628",
+            }):
+                return checker.verify_index_line_receipt_readback(path)
+
+    def test_valid_scheduled_receipt_reuses_existing_artifact_without_network(self):
+        with patch.object(checker, "observe_related_public_surfaces",
+                          side_effect=AssertionError("readback must not probe")):
+            self.assertEqual(self.readback(self.sample_receipt()), [])
+
+    def test_stale_or_misattributed_run_provenance_is_rejected(self):
+        receipt = self.sample_receipt()
+        receipt["related_index_line_observations"]["run_id"] = "42521669058"
+        receipt["related_index_line_observations"]["source_revision"] = "b" * 40
+        failures = self.readback(receipt)
+        self.assertTrue(any("source revision" in failure for failure in failures))
+        self.assertTrue(any("run ID" in failure for failure in failures))
+
+    def test_missing_or_duplicate_target_cannot_be_reported_complete(self):
+        receipt = self.sample_receipt()
+        related = receipt["related_index_line_observations"]
+        related["observations"] = [related["observations"][0], related["observations"][0]]
+        failures = self.readback(receipt)
+        self.assertTrue(any("duplicate identity" in failure for failure in failures))
+        self.assertTrue(any("incomplete" in failure for failure in failures))
+
+    def test_technical_receipt_cannot_fabricate_editorial_or_oncord_approval(self):
+        receipt = self.sample_receipt()
+        row = receipt["related_index_line_observations"]["observations"][0]
+        row["oncord_connection"] = "VERIFIED"
+        row["publication_authorisation"] = "APPROVED"
+        failures = self.readback(receipt)
+        self.assertTrue(any("protected authority boundary" in failure for failure in failures))
+
+    def test_unreadable_receipt_fails_closed(self):
+        with TemporaryDirectory() as tmp:
+            path = Path(tmp) / "missing.json"
+            self.assertTrue(checker.verify_index_line_receipt_readback(path))
+
+
 if __name__ == "__main__":
     unittest.main()

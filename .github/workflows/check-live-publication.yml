@@ -49,6 +49,10 @@ jobs:
         if: github.event_name != 'pull_request'
         run: python scripts/check_live_publication.py
 
+      - name: Read back Index Line observations against this exact run and source revision
+        if: always() && github.event_name != 'pull_request'
+        run: python scripts/check_live_publication.py --verify-index-line-receipt
+
       - name: Retain machine-readable hosted artifact integrity receipt
         if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
