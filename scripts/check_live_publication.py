@@ -463,15 +463,67 @@ def observe_related_public_surfaces(
     return observations
 
 
+
+def append_index_line_actions_summary(observations: list[dict]) -> None:
+    """Make existing Actions run evidence skimmable without another receipt store.
+
+    Only fixed, bounded observation fields enter the native job summary. Never
+    copy registrant data, HTML, untrusted URLs, or protected editorial material.
+    An absent or unwritable summary must not alter the SSA release gate.
+    """
+    summary_path = os.environ.get("GITHUB_STEP_SUMMARY")
+    if not summary_path:
+        return
+
+    def bounded(value: object) -> str:
+        if isinstance(value, str) and re.fullmatch(r"[A-Za-z0-9_]{1,90}", value):
+            return value
+        return "UNKNOWN"
+
+    columns = (
+        "surface_id", "address_resolution", "http_observation",
+        "registration_rdap", "dns_ns", "dns_mx", "oncord_connection",
+        "editorial_approval", "publication_authorisation",
+    )
+    lines = [
+        "### The Index Line — read-only publishing surface observations",
+        "",
+        "| Surface | Address | HTTP route | RDAP | DNS NS | DNS MX | Oncord | Editorial | Publication |",
+        "| --- | --- | --- | --- | --- | --- | --- | --- | --- |",
+    ]
+    for row in observations:
+        if isinstance(row, dict):
+            lines.append("| " + " | ".join(bounded(row.get(key)) for key in columns) + " |")
+    lines.extend([
+        "",
+        "A responding page is **not** an approved article. DNS/RDAP results cannot "
+        "establish registrar account control, payment or renewal; MX cannot prove "
+        "email delivery. Oncord tenant, named Lead Editor, author rights, "
+        "source protection, editorial and publication permissions require "
+        "their separate authorised readbacks. **UNKNOWN != PASS.**",
+        "",
+        "Technical checks use this existing GitHub Actions job; scheduled/main "
+        "runs retain the separate existing integrity receipt.",
+        "",
+    ])
+    try:
+        with open(summary_path, "a", encoding="utf-8") as summary:
+            summary.write("\n".join(lines) + "\n")
+    except OSError as exc:
+        print(f"Actions summary unavailable: {type(exc).__name__}", file=sys.stderr)
+
+
 def show_related_index_line_observations() -> None:
     """Print safe public diagnostics to the existing Actions job log.
 
     This does not execute the SSA hosted-release check, produce a new
     publisher record, or approve any article or domain configuration.
     """
+    observations = observe_related_public_surfaces()
+    append_index_line_actions_summary(observations)
     print(json.dumps({
         "purpose": "read_only_index_line_public_surface_diagnostics",
-        "observations": observe_related_public_surfaces(),
+        "observations": observations,
         "claim_boundary": (
             "HTTP_OR_DNS_OR_RDAP != EDITORIAL_APPROVAL; "
             "MX != EMAIL_DELIVERY; WEBSITE != ONCORD_CONNECTION; UNKNOWN != PASS"
@@ -530,6 +582,7 @@ def main() -> None:
             ),
         }
         INTEGRITY_RECEIPT.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
+        append_index_line_actions_summary(receipt["related_index_line_observations"]["observations"])
         for item in receipt["related_index_line_observations"]["observations"]:
             print(
                 f"Index Line diagnostic {item['surface_id']}: "
