@@ -445,6 +445,29 @@ class ReceiptReadbackTests(unittest.TestCase):
             path = Path(tmp) / "missing.json"
             self.assertTrue(checker.verify_index_line_receipt_readback(path))
 
+    def test_retained_artifact_exact_byte_readback_uses_existing_workflow(self):
+        """The upload must be read back from GitHub before the job can pass."""
+        workflow = (checker.ROOT / ".github/workflows/check-live-publication.yml").read_text(
+            encoding="utf-8"
+        )
+        upload = workflow.index("name: Retain machine-readable hosted artifact integrity receipt")
+        download = workflow.index("name: Download retained Index Line receipt for exact artifact readback")
+        compare = workflow.index("name: Verify retained Index Line receipt matches producing bytes")
+        self.assertLess(upload, download)
+        self.assertLess(download, compare)
+        self.assertIn("actions/upload-artifact@v4", workflow[upload:download])
+        self.assertIn("actions/download-artifact@v4", workflow[download:compare])
+        self.assertIn("name: ssa-hosted-artifact-integrity-${{ github.run_id }}",
+                      workflow[upload:compare])
+        self.assertIn("path: ${{ runner.temp }}/index-line-retained-receipt",
+                      workflow[download:compare])
+        self.assertIn("cmp --silent docs/website/hosted-artifact-integrity-runtime.json",
+                      workflow[compare:])
+        self.assertIn("if: always() && github.event_name != 'pull_request'",
+                      workflow[download:compare])
+        self.assertIn("if: always() && github.event_name != 'pull_request'",
+                      workflow[compare:])
+
 
 if __name__ == "__main__":
     unittest.main()
