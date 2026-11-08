@@ -479,7 +479,7 @@ class ReceiptReadbackTests(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             producer = Path(tmp) / "produced.json"
             downloaded = Path(tmp) / "retained.json"
-            producer.write_bytes(b'{"status":"NOT_VERIFIED"}\\n')
+            producer.write_bytes(b'{"status":"NOT_VERIFIED"}')
             downloaded.write_bytes(producer.read_bytes())
 
             def compared():
@@ -489,7 +489,7 @@ class ReceiptReadbackTests(unittest.TestCase):
                 ).returncode
 
             self.assertEqual(compared(), 0)
-            downloaded.write_bytes(b'{"status":"YES_VERIFIED"}\\n')
+            downloaded.write_bytes(b'{"status":"YES_VERIFIED"}')
             self.assertNotEqual(compared(), 0)
             downloaded.unlink()
             self.assertNotEqual(compared(), 0)
