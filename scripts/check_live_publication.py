@@ -17,6 +17,7 @@ red forever without falsely promoting byte identity.
 from __future__ import annotations
 
 import hashlib
+from html import unescape
 import io
 import json
 import re
@@ -388,6 +389,19 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
     return result
 
 
+def has_index_line_page_identity(body: str) -> bool:
+    """Find an identifying page title or heading, not an unrelated footer link.
+
+    A matching heading is a diagnostic observation only. It is not proof of
+    editorial approval, ownership, Oncord connection or publication authority.
+    """
+    for match in re.finditer(r"(?is)<(title|h1|h2)\b[^>]*>(.*?)</\1>", body):
+        label = unescape(re.sub(r"(?s)<[^>]*>", " ", match.group(2)))
+        if re.search(r"\bthe\s+index\s+line\b", label, flags=re.IGNORECASE):
+            return True
+    return False
+
+
 def observe_related_public_surfaces(
     targets: tuple[tuple[str, str], ...] = RELATED_INDEX_LINE_SURFACES,
 ) -> list[dict]:
@@ -428,7 +442,7 @@ def observe_related_public_surfaces(
                 status == 200
                 and urlsplit(final_url).scheme == "https"
                 and urlsplit(final_url).hostname == host
-                and "the index line" in body.lower()
+                and has_index_line_page_identity(body)
             ):
                 row["http_observation"] = "HTTP_200_EXPECTED_MARKER_OBSERVED"
             else:
@@ -443,6 +457,22 @@ def observe_related_public_surfaces(
             row.update(lookup_domain_registry_and_dns(host))
         observations.append(row)
     return observations
+
+
+def show_related_index_line_observations() -> None:
+    """Print safe public diagnostics to the existing Actions job log.
+
+    This does not execute the SSA hosted-release check, produce a new
+    publisher record, or approve any article or domain configuration.
+    """
+    print(json.dumps({
+        "purpose": "read_only_index_line_public_surface_diagnostics",
+        "observations": observe_related_public_surfaces(),
+        "claim_boundary": (
+            "HTTP_OR_DNS_OR_RDAP != EDITORIAL_APPROVAL; "
+            "MX != EMAIL_DELIVERY; WEBSITE != ONCORD_CONNECTION; UNKNOWN != PASS"
+        ),
+    }, indent=2))
 
 
 def main() -> None:
@@ -510,4 +540,9 @@ def main() -> None:
 
 
 if __name__ == "__main__":
-    main()
+    if sys.argv[1:] == ["--related-index-line-only"]:
+        show_related_index_line_observations()
+    elif len(sys.argv) == 1:
+        main()
+    else:
+        raise SystemExit("Usage: check_live_publication.py [--related-index-line-only]")
