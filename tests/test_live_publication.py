@@ -7,6 +7,7 @@ authorise editorial release or classify domain renewal from DNS/HTTP.
 import io
 import json
 import socket
+import subprocess
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -467,6 +468,31 @@ class ReceiptReadbackTests(unittest.TestCase):
                       workflow[download:compare])
         self.assertIn("if: always() && github.event_name != 'pull_request'",
                       workflow[compare:])
+        self.assertIn("exit 1", workflow[compare:])
+        self.assertIn("sha256sum", workflow[compare:])
+        self.assertIn("Retained artifact SHA-256", workflow[compare:])
+        self.assertIn("BYTES_MATCH_PRODUCER", workflow[compare:])
+        self.assertIn("GITHUB_STEP_SUMMARY", workflow[compare:])
+
+    def test_retained_artifact_comparison_rejects_missing_or_altered_bytes(self):
+        """Byte identity must fail closed even when JSON parses or has the same length."""
+        with TemporaryDirectory() as tmp:
+            producer = Path(tmp) / "produced.json"
+            downloaded = Path(tmp) / "retained.json"
+            producer.write_bytes(b'{"status":"NOT_VERIFIED"}\\n')
+            downloaded.write_bytes(producer.read_bytes())
+
+            def compared():
+                return subprocess.run(
+                    ["cmp", "--silent", str(producer), str(downloaded)],
+                    capture_output=True, check=False,
+                ).returncode
+
+            self.assertEqual(compared(), 0)
+            downloaded.write_bytes(b'{"status":"YES_VERIFIED"}\\n')
+            self.assertNotEqual(compared(), 0)
+            downloaded.unlink()
+            self.assertNotEqual(compared(), 0)
 
 
 if __name__ == "__main__":
