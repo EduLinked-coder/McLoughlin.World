@@ -101,6 +101,20 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(details["dns_mx"], "DNS_LOOKUP_FAILED")
         self.assertIsNone(details["rdap_expiry_event"])
 
+    def test_missing_dns_answers_and_rdap_events_do_not_crash(self):
+        def public_response(url):
+            if "rdap.org" in url:
+                return {"ldhName": "indexline.org", "events": None}
+            return {"Status": 0, "Answer": None}
+
+        with patch.object(checker, "fetch_public_json", side_effect=public_response):
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(details["registration_rdap"], "RDAP_RECORD_OBSERVED")
+        self.assertIsNone(details["rdap_expiry_event"])
+        self.assertEqual(details["dns_ns"], "NO_MATCHING_ANSWERS_OBSERVED")
+        self.assertEqual(details["dns_mx"], "NO_MATCHING_ANSWERS_OBSERVED")
+
+
     def test_nxdomain_response_does_not_prove_registrar_expiry(self):
         def public_response(url):
             if "rdap.org" in url:
