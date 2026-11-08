@@ -20,6 +20,7 @@ import hashlib
 from html import unescape
 import io
 import json
+import os
 import re
 import socket
 import sys
@@ -508,6 +509,18 @@ def main() -> None:
         receipt["related_index_line_observations"] = {
             "purpose": "non_authoritative_public_route_diagnostics",
             "source": "docs/website/OTHER-PUBLIC-SURFACES.md",
+            # These identify the existing Actions run and tested source revision.
+            # They are technical provenance, never an editorial or domain approval.
+            "source_revision": (
+                os.environ.get("GITHUB_SHA")
+                if re.fullmatch(r"[0-9a-fA-F]{40}", os.environ.get("GITHUB_SHA", ""))
+                else None
+            ),
+            "run_id": (
+                os.environ.get("GITHUB_RUN_ID")
+                if os.environ.get("GITHUB_RUN_ID", "").isdigit()
+                else None
+            ),
             "observations": observe_related_public_surfaces(),
             "claim_boundary": (
                 "RDAP_OR_DNS_ANSWERS != REGISTRANT_AUTHORITY_OR_RENEWAL_PAYMENT; "
