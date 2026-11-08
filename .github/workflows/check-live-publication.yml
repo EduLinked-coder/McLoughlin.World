@@ -41,6 +41,10 @@ jobs:
       - name: Offline regression tests for related public route observations
         run: python -m unittest discover -s tests -p "test_live_publication.py" -v
 
+      - name: Read-only Index Line public diagnostics (PR branch, no release)
+        if: github.event_name == 'pull_request'
+        run: python scripts/check_live_publication.py --related-index-line-only
+
       - name: Check live publication and hosted release integrity
         if: github.event_name != 'pull_request'
         run: python scripts/check_live_publication.py
