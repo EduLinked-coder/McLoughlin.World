@@ -1,6 +1,11 @@
 name: Check live publication
 
 on:
+  pull_request:
+    paths:
+      - "scripts/check_live_publication.py"
+      - "tests/test_live_publication.py"
+      - ".github/workflows/check-live-publication.yml"
   workflow_dispatch:
   schedule:
     - cron: "17 21 * * *"
@@ -9,6 +14,7 @@ on:
       - main
     paths:
       - "scripts/check_live_publication.py"
+      - "tests/test_live_publication.py"
       - "releases/ssa-ontology/v0.1.0/**"
       - "docs/website/verification-status.json"
       - ".github/workflows/check-live-publication.yml"
@@ -32,11 +38,19 @@ jobs:
         with:
           python-version: "3.12"
 
+      - name: Offline regression tests for related public route observations
+        run: python -m unittest discover -s tests -p "test_live_publication.py" -v
+
+      - name: Read-only Index Line public diagnostics (PR branch, no release)
+        if: github.event_name == 'pull_request'
+        run: python scripts/check_live_publication.py --related-index-line-only
+
       - name: Check live publication and hosted release integrity
+        if: github.event_name != 'pull_request'
         run: python scripts/check_live_publication.py
 
       - name: Retain machine-readable hosted artifact integrity receipt
-        if: always()
+        if: always() && github.event_name != 'pull_request'
         uses: actions/upload-artifact@v4
         with:
           name: ssa-hosted-artifact-integrity-${{ github.run_id }}
