@@ -292,6 +292,40 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(receipt["related_index_line_observations"]["observations"], [])
 
 
+    def test_ssa_manifest_failure_still_emits_index_line_diagnostics_once(self):
+        """Unrelated release failure must not suppress public diagnostic evidence."""
+        observed = [{
+            "surface_id": "indexline_org_unverified_domain",
+            "address_resolution": "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+            "http_observation": "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS",
+            "editorial_approval": "NOT_VERIFIED",
+            "publication_authorisation": "NOT_VERIFIED",
+        }]
+        with TemporaryDirectory() as tmp:
+            destination = Path(tmp) / "hosted-artifact-integrity-runtime.json"
+            summary_path = Path(tmp) / "summary.md"
+            output, errors = io.StringIO(), io.StringIO()
+            with (
+                patch.object(checker, "ROOT", Path(tmp)),
+                patch.object(checker, "PAGES", []),
+                patch.object(checker, "INTEGRITY_RECEIPT", destination),
+                patch.object(checker, "verify_hosted_release_artifacts",
+                             return_value=(["canonical manifest unreadable"], {})),
+                patch.object(checker, "observe_related_public_surfaces",
+                             return_value=observed) as probe,
+                patch.dict(checker.os.environ, {"GITHUB_STEP_SUMMARY": str(summary_path)}),
+                redirect_stdout(output), redirect_stderr(errors),
+            ):
+                with self.assertRaises(SystemExit) as result:
+                    checker.main()
+            self.assertEqual(result.exception.code, 1)
+            self.assertEqual(probe.call_count, 1)
+            self.assertFalse(destination.exists())
+            self.assertIn("indexline_org_unverified_domain", summary_path.read_text(encoding="utf-8"))
+            self.assertIn("UNKNOWN != PASS", summary_path.read_text(encoding="utf-8"))
+            self.assertIn("Index Line diagnostic indexline_org_unverified_domain", output.getvalue())
+            self.assertIn("canonical manifest unreadable", errors.getvalue())
+
     def test_actions_summary_reuses_existing_review_surface_and_scrubs_untrusted_text(self):
         rows = [{
             "surface_id": "indexline_org_unverified_domain",

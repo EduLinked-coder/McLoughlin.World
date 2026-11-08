@@ -557,6 +557,16 @@ def main() -> None:
 
     integrity_failures, receipt = verify_hosted_release_artifacts()
     failures.extend(integrity_failures)
+    # Public route observations have independent diagnostic value even when a
+    # missing/corrupt SSA release manifest prevents an integrity receipt.
+    # Keep SSA failure fatal; never present these observations as release approval.
+    related_observations = observe_related_public_surfaces()
+    append_index_line_actions_summary(related_observations)
+    for item in related_observations:
+        print(
+            f"Index Line diagnostic {item['surface_id']}: "
+            f"address={item['address_resolution']} http={item['http_observation']}"
+        )
     if receipt:
         receipt["related_index_line_observations"] = {
             "purpose": "non_authoritative_public_route_diagnostics",
@@ -573,7 +583,7 @@ def main() -> None:
                 if os.environ.get("GITHUB_RUN_ID", "").isdigit()
                 else None
             ),
-            "observations": observe_related_public_surfaces(),
+            "observations": related_observations,
             "claim_boundary": (
                 "RDAP_OR_DNS_ANSWERS != REGISTRANT_AUTHORITY_OR_RENEWAL_PAYMENT; "
                 "DNS_MX_RECORD != FUNCTIONING_EMAIL; "
@@ -582,12 +592,6 @@ def main() -> None:
             ),
         }
         INTEGRITY_RECEIPT.write_text(json.dumps(receipt, indent=2) + "\n", encoding="utf-8")
-        append_index_line_actions_summary(receipt["related_index_line_observations"]["observations"])
-        for item in receipt["related_index_line_observations"]["observations"]:
-            print(
-                f"Index Line diagnostic {item['surface_id']}: "
-                f"address={item['address_resolution']} http={item['http_observation']}"
-            )
         summary = receipt["summary"]
         print(
             "SSA hosted artifact integrity: "
