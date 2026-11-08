@@ -4,7 +4,10 @@ Only read-only public route observations are covered. These tests never
 authorise editorial release or classify domain renewal from DNS/HTTP.
 """
 
+import io
+import json
 import socket
+from contextlib import redirect_stdout
 import unittest
 import urllib.error
 from unittest.mock import patch
@@ -126,6 +129,51 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(details["registration_rdap"], "RDAP_RESPONSE_IDENTITY_UNVERIFIED")
         self.assertEqual(details["dns_ns"], "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF")
         self.assertEqual(details["dns_mx"], "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF")
+
+
+    def test_page_identity_rejects_footer_only_and_script_only_mentions(self):
+        self.assertFalse(checker.has_index_line_page_identity(
+            "<html><title>Unrelated page</title><footer>"
+            "<a href='/theindexline/'>The Index Line</a></footer></html>"
+        ))
+        self.assertFalse(checker.has_index_line_page_identity(
+            "<html><script>const x = 'The Index Line';</script></html>"
+        ))
+        self.assertTrue(checker.has_index_line_page_identity(
+            "<html><h1>The <span>Index</span> Line</h1></html>"
+        ))
+        self.assertTrue(checker.has_index_line_page_identity(
+            "<title>The&nbsp;Index Line - public archive</title>"
+        ))
+
+    def test_footer_marker_does_not_mark_unrelated_route_as_matching(self):
+        url = "https://www.mcloughlin.world/theindexline/"
+        unrelated = "<title>Page unavailable</title><footer>The Index Line</footer>"
+        with (
+            patch.object(checker.socket, "getaddrinfo", return_value=[("ok",)]),
+            patch.object(checker, "fetch_text", return_value=(200, url, unrelated)),
+        ):
+            row = checker.observe_related_public_surfaces((("historic_route", url),))[0]
+        self.assertEqual(row["http_observation"], "RESPONSE_NOT_SUFFICIENT_FOR_ROUTE_MATCH")
+        self.assertEqual(row["editorial_approval"], "NOT_VERIFIED")
+
+    def test_related_only_diagnostic_has_no_ssa_check_or_approval(self):
+        expected = [{"surface_id": "historic_route", "http_observation": "UNKNOWN"}]
+        buffer = io.StringIO()
+        with (
+            patch.object(checker, "observe_related_public_surfaces", return_value=expected),
+            patch.object(
+                checker, "verify_hosted_release_artifacts",
+                side_effect=AssertionError("SSA release must not run in diagnostic mode")
+            ),
+            redirect_stdout(buffer),
+        ):
+            checker.show_related_index_line_observations()
+        payload = json.loads(buffer.getvalue())
+        self.assertEqual(payload["observations"], expected)
+        self.assertEqual(payload["purpose"], "read_only_index_line_public_surface_diagnostics")
+        self.assertIn("UNKNOWN != PASS", payload["claim_boundary"])
+        self.assertNotIn("editorial_approved", payload)
 
 
 if __name__ == "__main__":
