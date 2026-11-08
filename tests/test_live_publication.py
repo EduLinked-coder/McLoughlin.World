@@ -7,7 +7,9 @@ authorise editorial release or classify domain renewal from DNS/HTTP.
 import io
 import json
 import socket
-from contextlib import redirect_stdout
+from contextlib import redirect_stderr, redirect_stdout
+from pathlib import Path
+from tempfile import TemporaryDirectory
 import unittest
 import urllib.error
 from unittest.mock import patch
@@ -201,6 +203,89 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(payload["purpose"], "read_only_index_line_public_surface_diagnostics")
         self.assertIn("UNKNOWN != PASS", payload["claim_boundary"])
         self.assertNotIn("editorial_approved", payload)
+
+
+    def test_main_writes_index_line_observations_into_existing_actions_receipt(self):
+        """The scheduled main path must not require a manual copy from CI logs."""
+        base = {
+            "object_type": "ssa_hosted_artifact_integrity_receipt",
+            "status": "PARTIAL_VERIFIED",
+            "summary": {
+                "hosted_artifacts_retrieved": 2,
+                "declared_artifacts": 2,
+                "exact_repository_matches": 1,
+                "exact_repository_comparisons": 1,
+                "acknowledged_repository_mismatches": 0,
+                "package_member_matches": 0,
+                "package_member_comparisons": 0,
+            },
+        }
+        observed = [{
+            "surface_id": "indexline_org_unverified_domain",
+            "registration": "UNKNOWN",
+            "oncord_connection": "UNKNOWN",
+            "editorial_approval": "NOT_VERIFIED",
+            "publication_authorisation": "NOT_VERIFIED",
+        }]
+        with TemporaryDirectory() as tmp:
+            destination = Path(tmp) / "hosted-artifact-integrity-runtime.json"
+            with (
+                patch.object(checker, "PAGES", []),
+                patch.object(checker, "INTEGRITY_RECEIPT", destination),
+                patch.object(checker, "verify_hosted_release_artifacts", return_value=([], base)),
+                patch.object(checker, "observe_related_public_surfaces", return_value=observed),
+                patch.dict(checker.os.environ, {
+                    "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "42501401002",
+                }),
+                redirect_stdout(io.StringIO()),
+            ):
+                checker.main()
+            receipt = json.loads(destination.read_text(encoding="utf-8"))
+        self.assertEqual(receipt["status"], "PARTIAL_VERIFIED")
+        self.assertEqual(receipt["object_type"], "ssa_hosted_artifact_integrity_receipt")
+        related = receipt["related_index_line_observations"]
+        self.assertEqual(related["source_revision"], "a" * 40)
+        self.assertEqual(related["run_id"], "42501401002")
+        self.assertEqual(related["source"], "docs/website/OTHER-PUBLIC-SURFACES.md")
+        self.assertEqual(related["observations"], observed)
+        self.assertIn("UNKNOWN != PASS", related["claim_boundary"])
+        self.assertEqual(related["observations"][0]["publication_authorisation"], "NOT_VERIFIED")
+
+    def test_main_preserves_ssa_failure_and_marks_invalid_run_provenance_unknown(self):
+        """Independent public observations must not turn release drift into PASS."""
+        base = {
+            "object_type": "ssa_hosted_artifact_integrity_receipt",
+            "status": "FAIL",
+            "summary": {
+                "hosted_artifacts_retrieved": 0,
+                "declared_artifacts": 1,
+                "exact_repository_matches": 0,
+                "exact_repository_comparisons": 0,
+                "acknowledged_repository_mismatches": 0,
+                "package_member_matches": 0,
+                "package_member_comparisons": 0,
+            },
+        }
+        with TemporaryDirectory() as tmp:
+            destination = Path(tmp) / "hosted-artifact-integrity-runtime.json"
+            with (
+                patch.object(checker, "PAGES", []),
+                patch.object(checker, "INTEGRITY_RECEIPT", destination),
+                patch.object(checker, "verify_hosted_release_artifacts", return_value=(["fixture release drift"], base)),
+                patch.object(checker, "observe_related_public_surfaces", return_value=[]),
+                patch.dict(checker.os.environ, {
+                    "GITHUB_SHA": "unverified", "GITHUB_RUN_ID": "not-a-run",
+                }),
+                redirect_stdout(io.StringIO()), redirect_stderr(io.StringIO()),
+            ):
+                with self.assertRaises(SystemExit) as exit_result:
+                    checker.main()
+            receipt = json.loads(destination.read_text(encoding="utf-8"))
+        self.assertEqual(exit_result.exception.code, 1)
+        self.assertEqual(receipt["status"], "FAIL")
+        self.assertIsNone(receipt["related_index_line_observations"]["source_revision"])
+        self.assertIsNone(receipt["related_index_line_observations"]["run_id"])
+        self.assertEqual(receipt["related_index_line_observations"]["observations"], [])
 
 
 if __name__ == "__main__":
