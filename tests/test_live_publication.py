@@ -429,8 +429,11 @@ class ReceiptReadbackTests(unittest.TestCase):
                         "publication_authorisation": "NOT_VERIFIED",
                         **({
                             "registration_rdap": "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF",
+                            "rdap_expiry_event": None,
                             "dns_ns": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                            "dns_ns_answers": [],
                             "dns_mx": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                            "dns_mx_answers": [],
                         } if surface_id == "indexline_org_unverified_domain" else {}),
                     }
                     for surface_id, url in checker.RELATED_INDEX_LINE_SURFACES
@@ -502,6 +505,34 @@ class ReceiptReadbackTests(unittest.TestCase):
         self.assertEqual(self.readback(receipt), [])
         del domain["registration_rdap"]
         self.assertTrue(any("registry observation" in f for f in self.readback(receipt)))
+
+    def test_domain_receipt_rejects_contradictory_dns_and_expiry(self):
+        receipt = self.sample_receipt()
+        domain = next(row for row in
+                      receipt["related_index_line_observations"]["observations"]
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["rdap_expiry_event"] = "2027-07-04T00:00:00Z"
+        domain["dns_ns_answers"] = ["ns.example.org."]
+        domain["dns_mx"] = "RECORDS_OBSERVED"
+        failures = self.readback(receipt)
+        self.assertTrue(any("registry expiry contradicts" in f for f in failures))
+        self.assertTrue(any("DNS NS status and answers contradict" in f for f in failures))
+        self.assertTrue(any("DNS MX status and answers contradict" in f for f in failures))
+
+    def test_domain_receipt_accepts_consistent_public_records_without_approval(self):
+        receipt = self.sample_receipt()
+        domain = next(row for row in
+                      receipt["related_index_line_observations"]["observations"]
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["registration_rdap"] = "RDAP_RECORD_OBSERVED"
+        domain["rdap_expiry_event"] = "2027-07-04T00:00:00Z"
+        domain["dns_ns"] = "RECORDS_OBSERVED"
+        domain["dns_ns_answers"] = ["ns1.example.org."]
+        domain["dns_mx"] = "RECORDS_OBSERVED"
+        domain["dns_mx_answers"] = ["10 mx.example.org."]
+        self.assertEqual(self.readback(receipt), [])
+        domain["dns_ns_answers"] = ["<untrusted>" * 60]
+        self.assertTrue(any("DNS NS answers are invalid" in f for f in self.readback(receipt)))
 
     def test_unreadable_receipt_fails_closed(self):
         with TemporaryDirectory() as tmp:
