@@ -473,6 +473,44 @@ class ReceiptReadbackTests(unittest.TestCase):
         self.assertIn("Retained artifact SHA-256", workflow[compare:])
         self.assertIn("BYTES_MATCH_PRODUCER", workflow[compare:])
         self.assertIn("GITHUB_STEP_SUMMARY", workflow[compare:])
+        self.assertIn("--verify-index-line-receipt-file", workflow[compare:])
+        self.assertLess(
+            workflow.index("cmp --silent", compare),
+            workflow.index("--verify-index-line-receipt-file", compare),
+        )
+        self.assertLess(
+            workflow.index("--verify-index-line-receipt-file", compare),
+            workflow.index("receipt_sha=", compare),
+        )
+
+    def test_downloaded_receipt_independently_checks_run_identity_and_permissions(self):
+        """A byte-identical transport does not substitute for source-bound readback."""
+        with TemporaryDirectory() as tmp:
+            downloaded = Path(tmp) / "downloaded.json"
+            receipt = self.sample_receipt()
+            downloaded.write_text(json.dumps(receipt), encoding="utf-8")
+            with (
+                patch.dict(checker.os.environ, {
+                    "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "42524656628",
+                }),
+                redirect_stdout(io.StringIO()),
+            ):
+                checker.run_index_line_receipt_readback(downloaded)
+                receipt["related_index_line_observations"]["run_id"] = "999"
+                downloaded.write_text(json.dumps(receipt), encoding="utf-8")
+                with redirect_stderr(io.StringIO()) as errors:
+                    with self.assertRaises(SystemExit) as failed:
+                        checker.run_index_line_receipt_readback(downloaded)
+                self.assertEqual(failed.exception.code, 1)
+                self.assertIn("recorded run ID", errors.getvalue())
+                receipt["related_index_line_observations"]["run_id"] = "42524656628"
+                receipt["related_index_line_observations"]["observations"][0]["publication_authorisation"] = "APPROVED"
+                downloaded.write_text(json.dumps(receipt), encoding="utf-8")
+                with redirect_stderr(io.StringIO()) as errors:
+                    with self.assertRaises(SystemExit) as failed:
+                        checker.run_index_line_receipt_readback(downloaded)
+                self.assertEqual(failed.exception.code, 1)
+                self.assertIn("protected authority boundary", errors.getvalue())
 
     def test_retained_artifact_comparison_rejects_missing_or_altered_bytes(self):
         """Byte identity must fail closed even when JSON parses or has the same length."""
