@@ -600,10 +600,28 @@ def verify_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> list[s
             if item.get("registration_rdap") not in rdap_observations:
                 failures.append(f"{surface}: registry observation is not an allowed public status")
             for record in ("ns", "mx"):
-                if item.get(f"dns_{record}") not in dns_observations:
+                status = item.get(f"dns_{record}")
+                if status not in dns_observations:
                     failures.append(
                         f"{surface}: DNS {record.upper()} observation is not an allowed public status"
                     )
+                answers = item.get(f"dns_{record}_answers")
+                if (not isinstance(answers, list)
+                        or len(answers) > 20
+                        or any(not isinstance(answer, str) or not answer.strip()
+                               or len(answer) > 512 for answer in answers)):
+                    failures.append(f"{surface}: DNS {record.upper()} answers are invalid")
+                elif (status == "RECORDS_OBSERVED") != bool(answers):
+                    failures.append(f"{surface}: DNS {record.upper()} status and answers contradict")
+            # Public expiry metadata is meaningful only alongside a matching
+            # registry record; a 404/failure must never carry an expiry claim.
+            expiry = item.get("rdap_expiry_event")
+            if expiry is not None and (
+                item.get("registration_rdap") != "RDAP_RECORD_OBSERVED"
+                or not isinstance(expiry, str)
+                or not expiry.strip()
+            ):
+                failures.append(f"{surface}: registry expiry contradicts observation")
     if seen != set(expected_surfaces):
         failures.append("Index Line diagnostic observation population is incomplete")
     return failures
