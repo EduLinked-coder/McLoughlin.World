@@ -570,8 +570,47 @@ def verify_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> list[s
         seen.add(surface)
         if item.get("url") != expected_surfaces[surface]:
             failures.append(f"{surface}: observed URL differs from the known diagnostic target")
-        if not isinstance(item.get("observed_at"), str):
-            failures.append(f"{surface}: observation timestamp missing")
+        # Bound the public-route evidence vocabulary as strictly as the domain
+        # metadata. Otherwise a retained receipt could claim a successful live
+        # route using a contradictory status or unrelated redirect destination.
+        timestamp = item.get("observed_at")
+        try:
+            if not isinstance(timestamp, str) or datetime.fromisoformat(
+                timestamp.replace("Z", "+00:00")
+            ).tzinfo is None:
+                raise ValueError("timestamp must be timezone-aware")
+        except ValueError:
+            failures.append(f"{surface}: observation timestamp missing or invalid")
+        if item.get("address_resolution") not in {
+            "RESOLVED", "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+        }:
+            failures.append(f"{surface}: address observation is not an allowed public status")
+        http_observation = item.get("http_observation")
+        http_status = item.get("http_status")
+        final_url = item.get("final_url")
+        if http_observation not in {
+            "HTTP_200_EXPECTED_MARKER_OBSERVED",
+            "RESPONSE_NOT_SUFFICIENT_FOR_ROUTE_MATCH",
+            "HTTP_NON_200",
+            "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS",
+        }:
+            failures.append(f"{surface}: HTTP observation is not an allowed public status")
+        elif http_observation == "HTTP_200_EXPECTED_MARKER_OBSERVED":
+            expected = urlsplit(expected_surfaces[surface])
+            actual = urlsplit(final_url) if isinstance(final_url, str) else None
+            if (
+                type(http_status) is not int or http_status != 200
+                or actual is None or actual.scheme != "https"
+                or actual.hostname != expected.hostname
+                or actual.path.rstrip("/") != expected.path.rstrip("/")
+            ):
+                failures.append(f"{surface}: successful HTTP route observation contradicts response")
+        elif http_observation == "HTTP_NON_200":
+            if type(http_status) is not int or not 300 <= http_status <= 599:
+                failures.append(f"{surface}: non-success HTTP observation contradicts response")
+        elif http_observation == "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS":
+            if http_status is not None or final_url is not None:
+                failures.append(f"{surface}: failed HTTP fetch contradicts response")
         # Technical diagnostics must never be converted into editorial or Oncord approvals.
         if (item.get("oncord_connection") != "UNKNOWN"
                 or item.get("editorial_approval") != "NOT_VERIFIED"
