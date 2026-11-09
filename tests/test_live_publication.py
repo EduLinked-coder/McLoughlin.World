@@ -422,9 +422,16 @@ class ReceiptReadbackTests(unittest.TestCase):
                     {
                         "surface_id": surface_id, "url": url,
                         "observed_at": "2026-11-08T21:20:00+00:00",
+                        "registration": "UNKNOWN",
+                        "mail_mx_and_delivery": "UNKNOWN",
                         "oncord_connection": "UNKNOWN",
                         "editorial_approval": "NOT_VERIFIED",
                         "publication_authorisation": "NOT_VERIFIED",
+                        **({
+                            "registration_rdap": "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF",
+                            "dns_ns": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                            "dns_mx": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                        } if surface_id == "indexline_org_unverified_domain" else {}),
                     }
                     for surface_id, url in checker.RELATED_INDEX_LINE_SURFACES
                 ],
@@ -468,6 +475,33 @@ class ReceiptReadbackTests(unittest.TestCase):
         row["publication_authorisation"] = "APPROVED"
         failures = self.readback(receipt)
         self.assertTrue(any("protected authority boundary" in failure for failure in failures))
+
+    def test_retained_domain_receipt_rejects_fabricated_registrar_and_email_claims(self):
+        receipt = self.sample_receipt()
+        rows = receipt["related_index_line_observations"]["observations"]
+        domain = next(row for row in rows
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["registration"] = "RENEWED"
+        domain["mail_mx_and_delivery"] = "EMAIL_VERIFIED"
+        domain["registration_rdap"] = "REGISTRAR_CONTROL_CONFIRMED"
+        domain["dns_mx"] = "DELIVERY_CONFIRMED"
+        failures = self.readback(receipt)
+        self.assertTrue(any("domain or email authority boundary" in f for f in failures))
+        self.assertTrue(any("registry observation" in f for f in failures))
+        self.assertTrue(any("DNS MX observation" in f for f in failures))
+
+    def test_retained_domain_receipt_accepts_inconclusive_public_observations(self):
+        receipt = self.sample_receipt()
+        domain = next(
+            row for row in receipt["related_index_line_observations"]["observations"]
+            if row["surface_id"] == "indexline_org_unverified_domain"
+        )
+        domain["registration_rdap"] = "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+        domain["dns_ns"] = "DNS_RESPONSE_INCONCLUSIVE"
+        domain["dns_mx"] = "DNS_LOOKUP_FAILED"
+        self.assertEqual(self.readback(receipt), [])
+        del domain["registration_rdap"]
+        self.assertTrue(any("registry observation" in f for f in self.readback(receipt)))
 
     def test_unreadable_receipt_fails_closed(self):
         with TemporaryDirectory() as tmp:
