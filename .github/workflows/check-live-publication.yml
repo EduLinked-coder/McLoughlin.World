@@ -61,3 +61,35 @@ jobs:
           path: docs/website/hosted-artifact-integrity-runtime.json
           if-no-files-found: error
           retention-days: 7
+
+      - name: Download retained Index Line receipt for exact artifact readback
+        if: always() && github.event_name != 'pull_request'
+        uses: actions/download-artifact@v4
+        with:
+          name: ssa-hosted-artifact-integrity-${{ github.run_id }}
+          path: ${{ runner.temp }}/index-line-retained-receipt
+
+      - name: Verify retained Index Line receipt matches producing bytes
+        if: always() && github.event_name != 'pull_request'
+        shell: bash
+        run: |
+          cmp --silent docs/website/hosted-artifact-integrity-runtime.json \
+            "${{ runner.temp }}/index-line-retained-receipt/hosted-artifact-integrity-runtime.json" || {
+              echo "Persisted artifact is missing or differs from the producing receipt" >&2
+              exit 1
+            }
+          # Validate the downloaded artifact itself, not only its producing copy.
+          # This is the same read-only provenance/authority validator used above.
+          python scripts/check_live_publication.py --verify-index-line-receipt-file \
+            "${{ runner.temp }}/index-line-retained-receipt/hosted-artifact-integrity-runtime.json"
+          echo "Retained Index Line receipt matches producing bytes and trusted run provenance."
+          receipt_sha="$(sha256sum "${{ runner.temp }}/index-line-retained-receipt/hosted-artifact-integrity-runtime.json" | cut -d ' ' -f1)"
+          {
+            echo "### The Index Line — retained artifact integrity"
+            echo ""
+            echo "- GitHub run ID: \`${GITHUB_RUN_ID}\`"
+            echo "- Source revision: \`${GITHUB_SHA}\`"
+            echo "- Retained artifact SHA-256: \`${receipt_sha}\`"
+            echo "- Transport verification: \`BYTES_MATCH_PRODUCER\`"
+            echo "- Boundary: technical artifact evidence only; editorial approval, domain and Oncord remain separately governed."
+          } >> "${GITHUB_STEP_SUMMARY}"

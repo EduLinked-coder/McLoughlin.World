@@ -7,6 +7,7 @@ authorise editorial release or classify domain renewal from DNS/HTTP.
 import io
 import json
 import socket
+import subprocess
 from contextlib import redirect_stderr, redirect_stdout
 from pathlib import Path
 from tempfile import TemporaryDirectory
@@ -444,6 +445,92 @@ class ReceiptReadbackTests(unittest.TestCase):
         with TemporaryDirectory() as tmp:
             path = Path(tmp) / "missing.json"
             self.assertTrue(checker.verify_index_line_receipt_readback(path))
+
+    def test_retained_artifact_exact_byte_readback_uses_existing_workflow(self):
+        """The upload must be read back from GitHub before the job can pass."""
+        workflow = (checker.ROOT / ".github/workflows/check-live-publication.yml").read_text(
+            encoding="utf-8"
+        )
+        upload = workflow.index("name: Retain machine-readable hosted artifact integrity receipt")
+        download = workflow.index("name: Download retained Index Line receipt for exact artifact readback")
+        compare = workflow.index("name: Verify retained Index Line receipt matches producing bytes")
+        self.assertLess(upload, download)
+        self.assertLess(download, compare)
+        self.assertIn("actions/upload-artifact@v4", workflow[upload:download])
+        self.assertIn("actions/download-artifact@v4", workflow[download:compare])
+        self.assertIn("name: ssa-hosted-artifact-integrity-${{ github.run_id }}",
+                      workflow[upload:compare])
+        self.assertIn("path: ${{ runner.temp }}/index-line-retained-receipt",
+                      workflow[download:compare])
+        self.assertIn("cmp --silent docs/website/hosted-artifact-integrity-runtime.json",
+                      workflow[compare:])
+        self.assertIn("if: always() && github.event_name != 'pull_request'",
+                      workflow[download:compare])
+        self.assertIn("if: always() && github.event_name != 'pull_request'",
+                      workflow[compare:])
+        self.assertIn("exit 1", workflow[compare:])
+        self.assertIn("sha256sum", workflow[compare:])
+        self.assertIn("Retained artifact SHA-256", workflow[compare:])
+        self.assertIn("BYTES_MATCH_PRODUCER", workflow[compare:])
+        self.assertIn("GITHUB_STEP_SUMMARY", workflow[compare:])
+        self.assertIn("--verify-index-line-receipt-file", workflow[compare:])
+        self.assertLess(
+            workflow.index("cmp --silent", compare),
+            workflow.index("--verify-index-line-receipt-file", compare),
+        )
+        self.assertLess(
+            workflow.index("--verify-index-line-receipt-file", compare),
+            workflow.index("receipt_sha=", compare),
+        )
+
+    def test_downloaded_receipt_independently_checks_run_identity_and_permissions(self):
+        """A byte-identical transport does not substitute for source-bound readback."""
+        with TemporaryDirectory() as tmp:
+            downloaded = Path(tmp) / "downloaded.json"
+            receipt = self.sample_receipt()
+            downloaded.write_text(json.dumps(receipt), encoding="utf-8")
+            with (
+                patch.dict(checker.os.environ, {
+                    "GITHUB_SHA": "a" * 40, "GITHUB_RUN_ID": "42524656628",
+                }),
+                redirect_stdout(io.StringIO()),
+            ):
+                checker.run_index_line_receipt_readback(downloaded)
+                receipt["related_index_line_observations"]["run_id"] = "999"
+                downloaded.write_text(json.dumps(receipt), encoding="utf-8")
+                with redirect_stderr(io.StringIO()) as errors:
+                    with self.assertRaises(SystemExit) as failed:
+                        checker.run_index_line_receipt_readback(downloaded)
+                self.assertEqual(failed.exception.code, 1)
+                self.assertIn("recorded run ID", errors.getvalue())
+                receipt["related_index_line_observations"]["run_id"] = "42524656628"
+                receipt["related_index_line_observations"]["observations"][0]["publication_authorisation"] = "APPROVED"
+                downloaded.write_text(json.dumps(receipt), encoding="utf-8")
+                with redirect_stderr(io.StringIO()) as errors:
+                    with self.assertRaises(SystemExit) as failed:
+                        checker.run_index_line_receipt_readback(downloaded)
+                self.assertEqual(failed.exception.code, 1)
+                self.assertIn("protected authority boundary", errors.getvalue())
+
+    def test_retained_artifact_comparison_rejects_missing_or_altered_bytes(self):
+        """Byte identity must fail closed even when JSON parses or has the same length."""
+        with TemporaryDirectory() as tmp:
+            producer = Path(tmp) / "produced.json"
+            downloaded = Path(tmp) / "retained.json"
+            producer.write_bytes(b'{"status":"NOT_VERIFIED"}')
+            downloaded.write_bytes(producer.read_bytes())
+
+            def compared():
+                return subprocess.run(
+                    ["cmp", "--silent", str(producer), str(downloaded)],
+                    capture_output=True, check=False,
+                ).returncode
+
+            self.assertEqual(compared(), 0)
+            downloaded.write_bytes(b'{"status":"YES_VERIFIED"}')
+            self.assertNotEqual(compared(), 0)
+            downloaded.unlink()
+            self.assertNotEqual(compared(), 0)
 
 
 if __name__ == "__main__":

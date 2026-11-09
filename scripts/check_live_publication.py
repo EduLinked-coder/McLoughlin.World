@@ -572,9 +572,9 @@ def verify_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> list[s
     return failures
 
 
-def run_index_line_receipt_readback() -> None:
-    """Fail the existing CI job on corrupt/misattributed persisted observations."""
-    problems = verify_index_line_receipt_readback()
+def run_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> None:
+    """Fail closed on corrupt or misattributed producer OR downloaded receipts."""
+    problems = verify_index_line_receipt_readback(path)
     if problems:
         for problem in problems:
             print(f"Index Line receipt readback failed: {problem}", file=sys.stderr)
@@ -686,10 +686,15 @@ if __name__ == "__main__":
         show_related_index_line_observations()
     elif sys.argv[1:] == ["--verify-index-line-receipt"]:
         run_index_line_receipt_readback()
+    elif len(sys.argv) == 3 and sys.argv[1] == "--verify-index-line-receipt-file":
+        # Verify a previously downloaded artifact in-place; no network access,
+        # new registry, or authority transition is involved.
+        run_index_line_receipt_readback(Path(sys.argv[2]))
     elif len(sys.argv) == 1:
         main()
     else:
         raise SystemExit(
             "Usage: check_live_publication.py "
-            "[--related-index-line-only|--verify-index-line-receipt]"
+            "[--related-index-line-only|--verify-index-line-receipt|"
+            "--verify-index-line-receipt-file PATH]"
         )
