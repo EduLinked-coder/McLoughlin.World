@@ -346,8 +346,16 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
         "dns_mx_answers": [],
     }
     try:
-        rdap = fetch_public_json(f"https://rdap.org/domain/{host}")
-        if str(rdap.get("ldhName", "")).lower().rstrip(".") == host:
+        # .org registry endpoint verified in IANA's current root record.
+        # RDAP observations never prove registrar-account control or renewal.
+        rdap = fetch_public_json(
+            f"https://rdap.publicinterestregistry.org/rdap/domain/{host}"
+        )
+        # An arbitrary JSON response with a matching ldhName is not a
+        # validated domain RDAP object (IANA RDAP conformance requirement).
+        if (rdap.get("objectClassName") == "domain"
+                and isinstance(rdap.get("ldhName"), str)
+                and rdap["ldhName"].lower().rstrip(".") == host):
             result["registration_rdap"] = "RDAP_RECORD_OBSERVED"
             for event in (rdap.get("events") if isinstance(rdap.get("events"), list) else []):
                 if (
@@ -355,10 +363,23 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
                     and event.get("eventAction") == "expiration"
                     and isinstance(event.get("eventDate"), str)
                 ):
-                    result["rdap_expiry_event"] = event["eventDate"]
+                    date = event["eventDate"]
+                    try:
+                        parsed = datetime.fromisoformat(date.replace("Z", "+00:00"))
+                    except ValueError:
+                        continue
+                    if parsed.tzinfo is None:
+                        continue
+                    result["rdap_expiry_event"] = date
                     break
         else:
             result["registration_rdap"] = "RDAP_RESPONSE_IDENTITY_UNVERIFIED"
+    except urllib.error.HTTPError as exc:
+        # A registry 404 does not establish domain expiry or registrar ownership.
+        result["registration_rdap"] = (
+            "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF" if exc.code == 404
+            else "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+        )
     except (urllib.error.URLError, TimeoutError, OSError, ValueError):
         result["registration_rdap"] = "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
 
@@ -560,13 +581,103 @@ def verify_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> list[s
         seen.add(surface)
         if item.get("url") != expected_surfaces[surface]:
             failures.append(f"{surface}: observed URL differs from the known diagnostic target")
-        if not isinstance(item.get("observed_at"), str):
-            failures.append(f"{surface}: observation timestamp missing")
+        # Bound the public-route evidence vocabulary as strictly as the domain
+        # metadata. Otherwise a retained receipt could claim a successful live
+        # route using a contradictory status or unrelated redirect destination.
+        timestamp = item.get("observed_at")
+        try:
+            if not isinstance(timestamp, str) or datetime.fromisoformat(
+                timestamp.replace("Z", "+00:00")
+            ).tzinfo is None:
+                raise ValueError("timestamp must be timezone-aware")
+        except ValueError:
+            failures.append(f"{surface}: observation timestamp missing or invalid")
+        if item.get("address_resolution") not in {
+            "RESOLVED", "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+        }:
+            failures.append(f"{surface}: address observation is not an allowed public status")
+        http_observation = item.get("http_observation")
+        http_status = item.get("http_status")
+        final_url = item.get("final_url")
+        if http_observation not in {
+            "HTTP_200_EXPECTED_MARKER_OBSERVED",
+            "RESPONSE_NOT_SUFFICIENT_FOR_ROUTE_MATCH",
+            "HTTP_NON_200",
+            "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS",
+        }:
+            failures.append(f"{surface}: HTTP observation is not an allowed public status")
+        elif http_observation == "HTTP_200_EXPECTED_MARKER_OBSERVED":
+            expected = urlsplit(expected_surfaces[surface])
+            actual = urlsplit(final_url) if isinstance(final_url, str) else None
+            if (
+                type(http_status) is not int or http_status != 200
+                or actual is None or actual.scheme != "https"
+                or actual.hostname != expected.hostname
+                or actual.path.rstrip("/") != expected.path.rstrip("/")
+            ):
+                failures.append(f"{surface}: successful HTTP route observation contradicts response")
+        elif http_observation == "HTTP_NON_200":
+            if type(http_status) is not int or not 300 <= http_status <= 599:
+                failures.append(f"{surface}: non-success HTTP observation contradicts response")
+        elif http_observation == "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS":
+            if http_status is not None or final_url is not None:
+                failures.append(f"{surface}: failed HTTP fetch contradicts response")
         # Technical diagnostics must never be converted into editorial or Oncord approvals.
         if (item.get("oncord_connection") != "UNKNOWN"
                 or item.get("editorial_approval") != "NOT_VERIFIED"
                 or item.get("publication_authorisation") != "NOT_VERIFIED"):
             failures.append(f"{surface}: protected authority boundary changed")
+        # A byte-identical receipt is not a registration, email, or DNS
+        # authority grant. Refuse unexpected status labels (or missing fields)
+        # before a downstream reader can mistake them for verified services.
+        if (item.get("registration") != "UNKNOWN"
+                or item.get("mail_mx_and_delivery") != "UNKNOWN"):
+            failures.append(f"{surface}: domain or email authority boundary changed")
+        if surface == "indexline_org_unverified_domain":
+            rdap_observations = {
+                "RDAP_RECORD_OBSERVED",
+                "RDAP_RESPONSE_IDENTITY_UNVERIFIED",
+                "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF",
+                "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+            }
+            dns_observations = {
+                "RECORDS_OBSERVED",
+                "NO_MATCHING_ANSWERS_OBSERVED",
+                "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                "DNS_RESPONSE_INCONCLUSIVE",
+                "DNS_LOOKUP_FAILED",
+            }
+            if item.get("registration_rdap") not in rdap_observations:
+                failures.append(f"{surface}: registry observation is not an allowed public status")
+            for record in ("ns", "mx"):
+                status = item.get(f"dns_{record}")
+                if status not in dns_observations:
+                    failures.append(
+                        f"{surface}: DNS {record.upper()} observation is not an allowed public status"
+                    )
+                answers = item.get(f"dns_{record}_answers")
+                if (not isinstance(answers, list)
+                        or len(answers) > 20
+                        or any(not isinstance(answer, str) or not answer.strip()
+                               or len(answer) > 512 for answer in answers)):
+                    failures.append(f"{surface}: DNS {record.upper()} answers are invalid")
+                elif (status == "RECORDS_OBSERVED") != bool(answers):
+                    failures.append(f"{surface}: DNS {record.upper()} status and answers contradict")
+            # Public expiry metadata is meaningful only alongside a matching
+            # registry record; a 404/failure must never carry an expiry claim.
+            expiry = item.get("rdap_expiry_event")
+            if expiry is not None:
+                valid_timestamp = False
+                if isinstance(expiry, str):
+                    try:
+                        valid_timestamp = datetime.fromisoformat(
+                            expiry.replace("Z", "+00:00")
+                        ).tzinfo is not None
+                    except ValueError:
+                        pass
+                if (item.get("registration_rdap") != "RDAP_RECORD_OBSERVED"
+                        or not valid_timestamp):
+                    failures.append(f"{surface}: registry expiry contradicts observation")
     if seen != set(expected_surfaces):
         failures.append("Index Line diagnostic observation population is incomplete")
     return failures

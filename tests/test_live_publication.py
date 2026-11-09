@@ -102,8 +102,9 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
 
     def test_public_rdap_and_dns_are_distinct_from_delivery_or_oncord(self):
         def public_response(url):
-            if "rdap.org" in url:
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
                 return {
+                    "objectClassName": "domain",
                     "ldhName": "INDEXLINE.ORG",
                     "events": [{"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}],
                 }
@@ -124,6 +125,63 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(details["dns_mx_answers"], ["10 mx.example.net."])
         self.assertNotIn("mail_delivery_verified", details)
 
+    def test_registry_record_requires_domain_object_and_valid_expiry_event(self):
+        """Matching ldhName alone must not establish a valid RDAP domain record."""
+        responses = [
+            {"ldhName": "indexline.org", "events": [
+                {"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}]},
+            {"objectClassName": "entity", "ldhName": "indexline.org"},
+            {"objectClassName": "domain", "ldhName": "INDEXLINE.ORG", "events": [
+                {"eventAction": "expiration", "eventDate": "not-a-date"},
+                {"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00"},
+                {"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}]},
+        ]
+        for payload in responses:
+            def public_response(url, current=payload):
+                if "rdap.publicinterestregistry.org" in url:
+                    return current
+                return {"Status": 3}
+            with self.subTest(payload=payload), patch.object(
+                checker, "fetch_public_json", side_effect=public_response
+            ):
+                result = checker.lookup_domain_registry_and_dns("indexline.org")
+                if payload.get("objectClassName") != "domain":
+                    self.assertEqual(
+                        result["registration_rdap"], "RDAP_RESPONSE_IDENTITY_UNVERIFIED"
+                    )
+                    self.assertIsNone(result["rdap_expiry_event"])
+                else:
+                    self.assertEqual(result["registration_rdap"], "RDAP_RECORD_OBSERVED")
+                    self.assertEqual(result["rdap_expiry_event"], "2027-07-04T00:00:00Z")
+
+    def test_registry_404_does_not_establish_expiry_or_renewal(self):
+        def public_response(url):
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
+                raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
+            return {"Status": 3}
+
+        with patch.object(checker, "fetch_public_json", side_effect=public_response) as fetch:
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(fetch.call_count, 3)
+        self.assertEqual(
+            fetch.call_args_list[0].args[0],
+            "https://rdap.publicinterestregistry.org/rdap/domain/indexline.org",
+        )
+        self.assertEqual(details["registration_rdap"], "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF")
+        self.assertIsNone(details["rdap_expiry_event"])
+        self.assertEqual(details["dns_ns"], "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF")
+
+    def test_registry_http_503_remains_inconclusive(self):
+        def public_response(url):
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
+                raise urllib.error.HTTPError(url, 503, "Unavailable", {}, None)
+            return {"Status": 0, "Answer": None}
+
+        with patch.object(checker, "fetch_public_json", side_effect=public_response):
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(details["registration_rdap"], "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY")
+        self.assertEqual(details["dns_ns"], "NO_MATCHING_ANSWERS_OBSERVED")
+
     def test_public_registry_and_dns_fail_closed(self):
         with patch.object(
             checker, "fetch_public_json", side_effect=urllib.error.URLError("offline")
@@ -136,8 +194,8 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
 
     def test_missing_dns_answers_and_rdap_events_do_not_crash(self):
         def public_response(url):
-            if "rdap.org" in url:
-                return {"ldhName": "indexline.org", "events": None}
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
+                return {"objectClassName": "domain", "ldhName": "indexline.org", "events": None}
             return {"Status": 0, "Answer": None}
 
         with patch.object(checker, "fetch_public_json", side_effect=public_response):
@@ -150,7 +208,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
 
     def test_nxdomain_response_does_not_prove_registrar_expiry(self):
         def public_response(url):
-            if "rdap.org" in url:
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
                 return {"ldhName": "not-the-domain.example"}
             return {"Status": 3}
 
@@ -394,9 +452,34 @@ class ReceiptReadbackTests(unittest.TestCase):
                     {
                         "surface_id": surface_id, "url": url,
                         "observed_at": "2026-11-08T21:20:00+00:00",
+                        "address_resolution": (
+                            "RESOLVED" if surface_id == "mcloughlin_world_index_line_export_route"
+                            else "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+                        ),
+                        "http_status": (
+                            200 if surface_id == "mcloughlin_world_index_line_export_route" else None
+                        ),
+                        "final_url": (
+                            url if surface_id == "mcloughlin_world_index_line_export_route" else None
+                        ),
+                        "http_observation": (
+                            "HTTP_200_EXPECTED_MARKER_OBSERVED"
+                            if surface_id == "mcloughlin_world_index_line_export_route"
+                            else "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS"
+                        ),
+                        "registration": "UNKNOWN",
+                        "mail_mx_and_delivery": "UNKNOWN",
                         "oncord_connection": "UNKNOWN",
                         "editorial_approval": "NOT_VERIFIED",
                         "publication_authorisation": "NOT_VERIFIED",
+                        **({
+                            "registration_rdap": "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF",
+                            "rdap_expiry_event": None,
+                            "dns_ns": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                            "dns_ns_answers": [],
+                            "dns_mx": "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                            "dns_mx_answers": [],
+                        } if surface_id == "indexline_org_unverified_domain" else {}),
                     }
                     for surface_id, url in checker.RELATED_INDEX_LINE_SURFACES
                 ],
@@ -440,6 +523,112 @@ class ReceiptReadbackTests(unittest.TestCase):
         row["publication_authorisation"] = "APPROVED"
         failures = self.readback(receipt)
         self.assertTrue(any("protected authority boundary" in failure for failure in failures))
+
+    def test_retained_domain_receipt_rejects_fabricated_registrar_and_email_claims(self):
+        receipt = self.sample_receipt()
+        rows = receipt["related_index_line_observations"]["observations"]
+        domain = next(row for row in rows
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["registration"] = "RENEWED"
+        domain["mail_mx_and_delivery"] = "EMAIL_VERIFIED"
+        domain["registration_rdap"] = "REGISTRAR_CONTROL_CONFIRMED"
+        domain["dns_mx"] = "DELIVERY_CONFIRMED"
+        failures = self.readback(receipt)
+        self.assertTrue(any("domain or email authority boundary" in f for f in failures))
+        self.assertTrue(any("registry observation" in f for f in failures))
+        self.assertTrue(any("DNS MX observation" in f for f in failures))
+
+    def test_retained_domain_receipt_accepts_inconclusive_public_observations(self):
+        receipt = self.sample_receipt()
+        domain = next(
+            row for row in receipt["related_index_line_observations"]["observations"]
+            if row["surface_id"] == "indexline_org_unverified_domain"
+        )
+        domain["registration_rdap"] = "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+        domain["dns_ns"] = "DNS_RESPONSE_INCONCLUSIVE"
+        domain["dns_mx"] = "DNS_LOOKUP_FAILED"
+        self.assertEqual(self.readback(receipt), [])
+        del domain["registration_rdap"]
+        self.assertTrue(any("registry observation" in f for f in self.readback(receipt)))
+
+    def test_domain_receipt_rejects_contradictory_dns_and_expiry(self):
+        receipt = self.sample_receipt()
+        domain = next(row for row in
+                      receipt["related_index_line_observations"]["observations"]
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["rdap_expiry_event"] = "2027-07-04T00:00:00Z"
+        domain["dns_ns_answers"] = ["ns.example.org."]
+        domain["dns_mx"] = "RECORDS_OBSERVED"
+        failures = self.readback(receipt)
+        self.assertTrue(any("registry expiry contradicts" in f for f in failures))
+        self.assertTrue(any("DNS NS status and answers contradict" in f for f in failures))
+        self.assertTrue(any("DNS MX status and answers contradict" in f for f in failures))
+
+    def test_retained_domain_receipt_rejects_invalid_expiry_timestamp(self):
+        receipt = self.sample_receipt()
+        domain = next(row for row in
+                      receipt["related_index_line_observations"]["observations"]
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["registration_rdap"] = "RDAP_RECORD_OBSERVED"
+        for invalid in ("tomorrow", "2027-07-04T00:00:00", "", 123):
+            with self.subTest(expiry=invalid):
+                domain["rdap_expiry_event"] = invalid
+                self.assertTrue(any(
+                    "registry expiry contradicts" in failure
+                    for failure in self.readback(receipt)
+                ))
+        domain["rdap_expiry_event"] = "2027-07-04T00:00:00Z"
+        self.assertEqual(self.readback(receipt), [])
+
+    def test_domain_receipt_accepts_consistent_public_records_without_approval(self):
+        receipt = self.sample_receipt()
+        domain = next(row for row in
+                      receipt["related_index_line_observations"]["observations"]
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["registration_rdap"] = "RDAP_RECORD_OBSERVED"
+        domain["rdap_expiry_event"] = "2027-07-04T00:00:00Z"
+        domain["dns_ns"] = "RECORDS_OBSERVED"
+        domain["dns_ns_answers"] = ["ns1.example.org."]
+        domain["dns_mx"] = "RECORDS_OBSERVED"
+        domain["dns_mx_answers"] = ["10 mx.example.org."]
+        self.assertEqual(self.readback(receipt), [])
+        domain["dns_ns_answers"] = ["<untrusted>" * 60]
+        self.assertTrue(any("DNS NS answers are invalid" in f for f in self.readback(receipt)))
+
+    def test_public_route_receipt_rejects_fabricated_success_or_redirect(self):
+        receipt = self.sample_receipt()
+        historical = receipt["related_index_line_observations"]["observations"][0]
+        historical["final_url"] = "https://example.org/theindexline/"
+        self.assertTrue(any(
+            "successful HTTP route observation contradicts" in f
+            for f in self.readback(receipt)
+        ))
+        historical["final_url"] = historical["url"]
+        historical["http_status"] = 404
+        self.assertTrue(any(
+            "successful HTTP route observation contradicts" in f
+            for f in self.readback(receipt)
+        ))
+        historical["http_observation"] = "HTTP_NON_200"
+        self.assertEqual(self.readback(receipt), [])
+
+    def test_public_route_receipt_rejects_invalid_status_and_timestamps(self):
+        receipt = self.sample_receipt()
+        historical = receipt["related_index_line_observations"]["observations"][0]
+        historical["observed_at"] = "tomorrow"
+        historical["address_resolution"] = "DOMAIN_OWNERSHIP_VERIFIED"
+        historical["http_observation"] = "LIVE_ACCESSIBLE"
+        failures = self.readback(receipt)
+        self.assertTrue(any("timestamp missing or invalid" in f for f in failures))
+        self.assertTrue(any("address observation" in f for f in failures))
+        self.assertTrue(any("HTTP observation" in f for f in failures))
+        historical["observed_at"] = "2026-11-08T21:20:00+00:00"
+        historical["address_resolution"] = "RESOLVED"
+        historical["http_observation"] = "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS"
+        self.assertTrue(any(
+            "failed HTTP fetch contradicts response" in f
+            for f in self.readback(receipt)
+        ))
 
     def test_unreadable_receipt_fails_closed(self):
         with TemporaryDirectory() as tmp:
