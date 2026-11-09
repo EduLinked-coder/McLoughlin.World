@@ -104,6 +104,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         def public_response(url):
             if "rdap.publicinterestregistry.org/rdap/domain/" in url:
                 return {
+                    "objectClassName": "domain",
                     "ldhName": "INDEXLINE.ORG",
                     "events": [{"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}],
                 }
@@ -123,6 +124,35 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(details["dns_ns_answers"], ["ns1.example.net."])
         self.assertEqual(details["dns_mx_answers"], ["10 mx.example.net."])
         self.assertNotIn("mail_delivery_verified", details)
+
+    def test_registry_record_requires_domain_object_and_valid_expiry_event(self):
+        """Matching ldhName alone must not establish a valid RDAP domain record."""
+        responses = [
+            {"ldhName": "indexline.org", "events": [
+                {"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}]},
+            {"objectClassName": "entity", "ldhName": "indexline.org"},
+            {"objectClassName": "domain", "ldhName": "INDEXLINE.ORG", "events": [
+                {"eventAction": "expiration", "eventDate": "not-a-date"},
+                {"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00"},
+                {"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}]},
+        ]
+        for payload in responses:
+            def public_response(url, current=payload):
+                if "rdap.publicinterestregistry.org" in url:
+                    return current
+                return {"Status": 3}
+            with self.subTest(payload=payload), patch.object(
+                checker, "fetch_public_json", side_effect=public_response
+            ):
+                result = checker.lookup_domain_registry_and_dns("indexline.org")
+                if payload.get("objectClassName") != "domain":
+                    self.assertEqual(
+                        result["registration_rdap"], "RDAP_RESPONSE_IDENTITY_UNVERIFIED"
+                    )
+                    self.assertIsNone(result["rdap_expiry_event"])
+                else:
+                    self.assertEqual(result["registration_rdap"], "RDAP_RECORD_OBSERVED")
+                    self.assertEqual(result["rdap_expiry_event"], "2027-07-04T00:00:00Z")
 
     def test_registry_404_does_not_establish_expiry_or_renewal(self):
         def public_response(url):
@@ -165,7 +195,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
     def test_missing_dns_answers_and_rdap_events_do_not_crash(self):
         def public_response(url):
             if "rdap.publicinterestregistry.org/rdap/domain/" in url:
-                return {"ldhName": "indexline.org", "events": None}
+                return {"objectClassName": "domain", "ldhName": "indexline.org", "events": None}
             return {"Status": 0, "Answer": None}
 
         with patch.object(checker, "fetch_public_json", side_effect=public_response):
@@ -533,6 +563,22 @@ class ReceiptReadbackTests(unittest.TestCase):
         self.assertTrue(any("registry expiry contradicts" in f for f in failures))
         self.assertTrue(any("DNS NS status and answers contradict" in f for f in failures))
         self.assertTrue(any("DNS MX status and answers contradict" in f for f in failures))
+
+    def test_retained_domain_receipt_rejects_invalid_expiry_timestamp(self):
+        receipt = self.sample_receipt()
+        domain = next(row for row in
+                      receipt["related_index_line_observations"]["observations"]
+                      if row["surface_id"] == "indexline_org_unverified_domain")
+        domain["registration_rdap"] = "RDAP_RECORD_OBSERVED"
+        for invalid in ("tomorrow", "2027-07-04T00:00:00", "", 123):
+            with self.subTest(expiry=invalid):
+                domain["rdap_expiry_event"] = invalid
+                self.assertTrue(any(
+                    "registry expiry contradicts" in failure
+                    for failure in self.readback(receipt)
+                ))
+        domain["rdap_expiry_event"] = "2027-07-04T00:00:00Z"
+        self.assertEqual(self.readback(receipt), [])
 
     def test_domain_receipt_accepts_consistent_public_records_without_approval(self):
         receipt = self.sample_receipt()
