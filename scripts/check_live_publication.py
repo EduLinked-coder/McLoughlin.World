@@ -577,6 +577,33 @@ def verify_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> list[s
                 or item.get("editorial_approval") != "NOT_VERIFIED"
                 or item.get("publication_authorisation") != "NOT_VERIFIED"):
             failures.append(f"{surface}: protected authority boundary changed")
+        # A byte-identical receipt is not a registration, email, or DNS
+        # authority grant. Refuse unexpected status labels (or missing fields)
+        # before a downstream reader can mistake them for verified services.
+        if (item.get("registration") != "UNKNOWN"
+                or item.get("mail_mx_and_delivery") != "UNKNOWN"):
+            failures.append(f"{surface}: domain or email authority boundary changed")
+        if surface == "indexline_org_unverified_domain":
+            rdap_observations = {
+                "RDAP_RECORD_OBSERVED",
+                "RDAP_RESPONSE_IDENTITY_UNVERIFIED",
+                "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF",
+                "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY",
+            }
+            dns_observations = {
+                "RECORDS_OBSERVED",
+                "NO_MATCHING_ANSWERS_OBSERVED",
+                "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF",
+                "DNS_RESPONSE_INCONCLUSIVE",
+                "DNS_LOOKUP_FAILED",
+            }
+            if item.get("registration_rdap") not in rdap_observations:
+                failures.append(f"{surface}: registry observation is not an allowed public status")
+            for record in ("ns", "mx"):
+                if item.get(f"dns_{record}") not in dns_observations:
+                    failures.append(
+                        f"{surface}: DNS {record.upper()} observation is not an allowed public status"
+                    )
     if seen != set(expected_surfaces):
         failures.append("Index Line diagnostic observation population is incomplete")
     return failures
