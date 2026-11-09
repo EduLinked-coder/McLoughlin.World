@@ -422,6 +422,21 @@ class ReceiptReadbackTests(unittest.TestCase):
                     {
                         "surface_id": surface_id, "url": url,
                         "observed_at": "2026-11-08T21:20:00+00:00",
+                        "address_resolution": (
+                            "RESOLVED" if surface_id == "mcloughlin_world_index_line_export_route"
+                            else "LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+                        ),
+                        "http_status": (
+                            200 if surface_id == "mcloughlin_world_index_line_export_route" else None
+                        ),
+                        "final_url": (
+                            url if surface_id == "mcloughlin_world_index_line_export_route" else None
+                        ),
+                        "http_observation": (
+                            "HTTP_200_EXPECTED_MARKER_OBSERVED"
+                            if surface_id == "mcloughlin_world_index_line_export_route"
+                            else "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS"
+                        ),
                         "registration": "UNKNOWN",
                         "mail_mx_and_delivery": "UNKNOWN",
                         "oncord_connection": "UNKNOWN",
@@ -533,6 +548,41 @@ class ReceiptReadbackTests(unittest.TestCase):
         self.assertEqual(self.readback(receipt), [])
         domain["dns_ns_answers"] = ["<untrusted>" * 60]
         self.assertTrue(any("DNS NS answers are invalid" in f for f in self.readback(receipt)))
+
+    def test_public_route_receipt_rejects_fabricated_success_or_redirect(self):
+        receipt = self.sample_receipt()
+        historical = receipt["related_index_line_observations"]["observations"][0]
+        historical["final_url"] = "https://example.org/theindexline/"
+        self.assertTrue(any(
+            "successful HTTP route observation contradicts" in f
+            for f in self.readback(receipt)
+        ))
+        historical["final_url"] = historical["url"]
+        historical["http_status"] = 404
+        self.assertTrue(any(
+            "successful HTTP route observation contradicts" in f
+            for f in self.readback(receipt)
+        ))
+        historical["http_observation"] = "HTTP_NON_200"
+        self.assertEqual(self.readback(receipt), [])
+
+    def test_public_route_receipt_rejects_invalid_status_and_timestamps(self):
+        receipt = self.sample_receipt()
+        historical = receipt["related_index_line_observations"]["observations"][0]
+        historical["observed_at"] = "tomorrow"
+        historical["address_resolution"] = "DOMAIN_OWNERSHIP_VERIFIED"
+        historical["http_observation"] = "LIVE_ACCESSIBLE"
+        failures = self.readback(receipt)
+        self.assertTrue(any("timestamp missing or invalid" in f for f in failures))
+        self.assertTrue(any("address observation" in f for f in failures))
+        self.assertTrue(any("HTTP observation" in f for f in failures))
+        historical["observed_at"] = "2026-11-08T21:20:00+00:00"
+        historical["address_resolution"] = "RESOLVED"
+        historical["http_observation"] = "FETCH_FAILED_NOT_PROOF_OF_DOMAIN_STATUS"
+        self.assertTrue(any(
+            "failed HTTP fetch contradicts response" in f
+            for f in self.readback(receipt)
+        ))
 
     def test_unreadable_receipt_fails_closed(self):
         with TemporaryDirectory() as tmp:
