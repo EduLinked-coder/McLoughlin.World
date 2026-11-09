@@ -78,7 +78,11 @@ jobs:
               echo "Persisted artifact is missing or differs from the producing receipt" >&2
               exit 1
             }
-          echo "Retained Index Line receipt matches producing bytes."
+          # Validate the downloaded artifact itself, not only its producing copy.
+          # This is the same read-only provenance/authority validator used above.
+          python scripts/check_live_publication.py --verify-index-line-receipt-file \
+            "${{ runner.temp }}/index-line-retained-receipt/hosted-artifact-integrity-runtime.json"
+          echo "Retained Index Line receipt matches producing bytes and trusted run provenance."
           receipt_sha="$(sha256sum "${{ runner.temp }}/index-line-retained-receipt/hosted-artifact-integrity-runtime.json" | cut -d ' ' -f1)"
           {
             echo "### The Index Line — retained artifact integrity"
