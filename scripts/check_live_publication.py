@@ -346,7 +346,11 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
         "dns_mx_answers": [],
     }
     try:
-        rdap = fetch_public_json(f"https://rdap.org/domain/{host}")
+        # .org registry endpoint verified in IANA's current root record.
+        # RDAP observations never prove registrar-account control or renewal.
+        rdap = fetch_public_json(
+            f"https://rdap.publicinterestregistry.org/rdap/domain/{host}"
+        )
         if str(rdap.get("ldhName", "")).lower().rstrip(".") == host:
             result["registration_rdap"] = "RDAP_RECORD_OBSERVED"
             for event in (rdap.get("events") if isinstance(rdap.get("events"), list) else []):
@@ -359,6 +363,12 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
                     break
         else:
             result["registration_rdap"] = "RDAP_RESPONSE_IDENTITY_UNVERIFIED"
+    except urllib.error.HTTPError as exc:
+        # A registry 404 does not establish domain expiry or registrar ownership.
+        result["registration_rdap"] = (
+            "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF" if exc.code == 404
+            else "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
+        )
     except (urllib.error.URLError, TimeoutError, OSError, ValueError):
         result["registration_rdap"] = "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY"
 
