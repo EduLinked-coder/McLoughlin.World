@@ -102,7 +102,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
 
     def test_public_rdap_and_dns_are_distinct_from_delivery_or_oncord(self):
         def public_response(url):
-            if "rdap.org" in url:
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
                 return {
                     "ldhName": "INDEXLINE.ORG",
                     "events": [{"eventAction": "expiration", "eventDate": "2027-07-04T00:00:00Z"}],
@@ -124,6 +124,34 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
         self.assertEqual(details["dns_mx_answers"], ["10 mx.example.net."])
         self.assertNotIn("mail_delivery_verified", details)
 
+    def test_registry_404_does_not_establish_expiry_or_renewal(self):
+        def public_response(url):
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
+                raise urllib.error.HTTPError(url, 404, "Not Found", {}, None)
+            return {"Status": 3}
+
+        with patch.object(checker, "fetch_public_json", side_effect=public_response) as fetch:
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(fetch.call_count, 3)
+        self.assertEqual(
+            fetch.call_args_list[0].args[0],
+            "https://rdap.publicinterestregistry.org/rdap/domain/indexline.org",
+        )
+        self.assertEqual(details["registration_rdap"], "RDAP_404_NO_RECORD_NOT_REGISTRAR_PROOF")
+        self.assertIsNone(details["rdap_expiry_event"])
+        self.assertEqual(details["dns_ns"], "NXDOMAIN_RESPONSE_NOT_REGISTRAR_PROOF")
+
+    def test_registry_http_503_remains_inconclusive(self):
+        def public_response(url):
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
+                raise urllib.error.HTTPError(url, 503, "Unavailable", {}, None)
+            return {"Status": 0, "Answer": None}
+
+        with patch.object(checker, "fetch_public_json", side_effect=public_response):
+            details = checker.lookup_domain_registry_and_dns("indexline.org")
+        self.assertEqual(details["registration_rdap"], "RDAP_LOOKUP_FAILED_NOT_PROOF_OF_EXPIRY")
+        self.assertEqual(details["dns_ns"], "NO_MATCHING_ANSWERS_OBSERVED")
+
     def test_public_registry_and_dns_fail_closed(self):
         with patch.object(
             checker, "fetch_public_json", side_effect=urllib.error.URLError("offline")
@@ -136,7 +164,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
 
     def test_missing_dns_answers_and_rdap_events_do_not_crash(self):
         def public_response(url):
-            if "rdap.org" in url:
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
                 return {"ldhName": "indexline.org", "events": None}
             return {"Status": 0, "Answer": None}
 
@@ -150,7 +178,7 @@ class RelatedIndexLineSurfaceTests(unittest.TestCase):
 
     def test_nxdomain_response_does_not_prove_registrar_expiry(self):
         def public_response(url):
-            if "rdap.org" in url:
+            if "rdap.publicinterestregistry.org/rdap/domain/" in url:
                 return {"ldhName": "not-the-domain.example"}
             return {"Status": 3}
 
