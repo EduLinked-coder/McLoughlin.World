@@ -351,7 +351,11 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
         rdap = fetch_public_json(
             f"https://rdap.publicinterestregistry.org/rdap/domain/{host}"
         )
-        if str(rdap.get("ldhName", "")).lower().rstrip(".") == host:
+        # An arbitrary JSON response with a matching ldhName is not a
+        # validated domain RDAP object (IANA RDAP conformance requirement).
+        if (rdap.get("objectClassName") == "domain"
+                and isinstance(rdap.get("ldhName"), str)
+                and rdap["ldhName"].lower().rstrip(".") == host):
             result["registration_rdap"] = "RDAP_RECORD_OBSERVED"
             for event in (rdap.get("events") if isinstance(rdap.get("events"), list) else []):
                 if (
@@ -359,7 +363,14 @@ def lookup_domain_registry_and_dns(host: str) -> dict:
                     and event.get("eventAction") == "expiration"
                     and isinstance(event.get("eventDate"), str)
                 ):
-                    result["rdap_expiry_event"] = event["eventDate"]
+                    date = event["eventDate"]
+                    try:
+                        parsed = datetime.fromisoformat(date.replace("Z", "+00:00"))
+                    except ValueError:
+                        continue
+                    if parsed.tzinfo is None:
+                        continue
+                    result["rdap_expiry_event"] = date
                     break
         else:
             result["registration_rdap"] = "RDAP_RESPONSE_IDENTITY_UNVERIFIED"
@@ -655,12 +666,18 @@ def verify_index_line_receipt_readback(path: Path = INTEGRITY_RECEIPT) -> list[s
             # Public expiry metadata is meaningful only alongside a matching
             # registry record; a 404/failure must never carry an expiry claim.
             expiry = item.get("rdap_expiry_event")
-            if expiry is not None and (
-                item.get("registration_rdap") != "RDAP_RECORD_OBSERVED"
-                or not isinstance(expiry, str)
-                or not expiry.strip()
-            ):
-                failures.append(f"{surface}: registry expiry contradicts observation")
+            if expiry is not None:
+                valid_timestamp = False
+                if isinstance(expiry, str):
+                    try:
+                        valid_timestamp = datetime.fromisoformat(
+                            expiry.replace("Z", "+00:00")
+                        ).tzinfo is not None
+                    except ValueError:
+                        pass
+                if (item.get("registration_rdap") != "RDAP_RECORD_OBSERVED"
+                        or not valid_timestamp):
+                    failures.append(f"{surface}: registry expiry contradicts observation")
     if seen != set(expected_surfaces):
         failures.append("Index Line diagnostic observation population is incomplete")
     return failures
